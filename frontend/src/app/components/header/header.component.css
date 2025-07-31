@@ -1,0 +1,35 @@
+.custom-navbar {
+  background-color: var(--nav) !important;
+  color:black !important;
+
+}
+.btn{
+  background-color: var(--primera);
+  color: white;
+  box-shadow: 5px 5px  black;
+  transition: transform 200ms,box-shadow 200ms;
+  border-radius: 0;
+  width:100px;
+
+}
+.btn:active{
+  transform: translateY(4px) translateX(4px);
+  background-color: var(--primera);
+  color: white;
+  box-shadow: none;
+  border:none;
+
+}
+
+
+ .custom-rounded:hover {/*dont left space between custom-rounded:hover <------*/
+  background-color: var(--primera);
+   color: white;
+}
+.custom-rounded {
+  border-radius: 6px;
+  padding: 6px 12px;
+  transition: background-color 0.3s ease;
+}
+
+

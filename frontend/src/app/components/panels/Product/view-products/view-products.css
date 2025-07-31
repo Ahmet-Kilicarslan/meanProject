@@ -1,0 +1,40 @@
+.card-img-top-container{
+  position: relative;
+  overflow: hidden;
+
+}
+.card-img-top{
+  object-fit: cover;
+}
+.card{
+  transition:transform 0.2s ease-in-out;
+  background-color: var(--backg);
+}
+.card:hover {
+  transform: translateY(-5px); /*lift cards up*/
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.container-fluid{
+  background-color:var(--backg);
+  padding: 30px;
+}
+
+.btn{
+  background-color: var(--primera);
+  color: white;
+  box-shadow: 5px 5px  black;
+  transition: transform 200ms,box-shadow 200ms;
+  border-radius: 0;
+  width:150px;
+  border:none;
+
+}
+.btn:active{
+  transform: translateY(4px) translateX(4px);
+  background-color: var(--primera);
+  color: white;
+  box-shadow: none;
+  border:none;
+
+}

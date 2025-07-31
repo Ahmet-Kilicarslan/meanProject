@@ -1,0 +1,90 @@
+<div class="container-fluid vh-100  px-md-4 px-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Suppliers</h2>
+    <button class="btn" (click)="openAddSupplierModal()"><i class="bi-plus-circle"></i>Add</button>
+  </div>
+  <div class="d-flex flex-column gap-3">
+    @for (supplier of suppliers; track supplier.id) {
+      <div class="supplier-item">
+        <div class="card">
+          <div
+            class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+            <div>
+              <h5 class="card-title mb-1">{{ supplier.name }}</h5>
+              <p class="card-text mb-0">Contact: {{ supplier.contact }}</p>
+            </div>
+            <!--<div class="text-start text-md-end">
+              <p class="mb-1">Email: {{supplier.email}}</p>
+              <p class="mb-0">Location: {{supplier.location}}</p>
+            </div>-->
+            <div>
+              <button class="btn btn-outline-primary w-100 w-md-auto"
+                      (click)="toggleProducts(supplier.id)">
+                <i class="bi" [class]="getIcon(supplier.id)"></i>
+                Products
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      @if(isExpanded(supplier.id)){
+
+        <div class="mt-1">
+          <div class="card border-0 bg-light">
+            <div class="card-body ">
+              @if(productsBySupplier.length>0){
+                <div class="table-responsive">
+                  <div class="table table-hover table-sm table-borderless mb-0 w-100">
+                    <thead>
+                    <tr>
+                      <th>name</th>
+                      <th>price</th>
+                      <th>amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                     @for(product of productsBySupplier;track product.id){
+
+                       <tr>
+                         <td class="fw-medium">{{ product.name }}</td>
+                         <td class="text-muted">${{ product.price }}</td>
+                         <td class="text-muted">{{ product.amount }}</td>
+                       </tr>
+                     }
+                    </tbody>
+                  </div>
+                </div>
+
+              }   @else {
+                <p class="text-muted text-center mb-0 py-2">
+                  <i class="bi bi-inbox me-1"></i>
+                  No products found for this supplier
+                </p>
+              }
+
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<div class="modal fade" id="addSupplierModal" tabindex="-1">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Supply
+        </h5>
+      </div>
+      <div class="modal-body">
+        <app-add-supplier
+          [supplierData]="selectedSupplier"
+          (onSave)="handleSave($event)"
+          (onCancel)="handleCancel()">
+        </app-add-supplier>
+      </div>
+    </div>
+  </div>
+</div>

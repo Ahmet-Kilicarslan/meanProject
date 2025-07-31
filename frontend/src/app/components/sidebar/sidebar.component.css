@@ -1,0 +1,83 @@
+
+
+.sidebar {
+    background: var(--nav);
+  color: white;
+  width: 250px;
+  height: 100vh;
+  transition: width 0.3s ease;
+  padding: 1rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* When collapsed class is applied from parent */
+:host(.collapsed) .sidebar {
+  width: 70px;
+}
+
+.toggle-btn {
+  background: var(--nav);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.toggle-btn:hover {
+  background: var(--primera);
+}
+
+.nav-links {
+  font-size: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.nav-links li:hover {
+  background-color: var(--primera);
+}
+
+.nav-links li i {
+  color: white;
+  font-size: 1.5rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+.link-label {
+  transition: opacity 0.3s ease, width 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 500;
+}
+
+
+:host(.collapsed) .link-label {
+  opacity: 0;
+  width: 0;
+  pointer-events: none;
+}
+
+/* Adjust toggle button when collapsed */
+:host(.collapsed) .toggle-btn {
+  text-align: center;
+}

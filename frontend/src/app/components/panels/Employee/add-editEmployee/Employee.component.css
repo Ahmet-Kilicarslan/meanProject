@@ -1,0 +1,18 @@
+.btn{
+  background-color: var(--primera);
+  color: white;
+  box-shadow: 5px 5px  black;
+  transition: transform 200ms,box-shadow 200ms;
+  border-radius: 0;
+  width:100px;
+
+}
+.btn:active{
+  transform: translateY(4px) translateX(4px);
+  background-color: var(--primera);
+  color: white;
+  box-shadow: none;
+
+}
+
+

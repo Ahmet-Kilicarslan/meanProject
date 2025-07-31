@@ -1,0 +1,12 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "assets/bootstrap-icons/bootstrap-icons.css";
+
+:root {
+
+  --light: #495057;
+  --dark: #343a40;
+  --backg:white;
+  --bar: #C0C9EE;
+  --nav:#A2AADB;
+  --primera: #898AC4;
+}

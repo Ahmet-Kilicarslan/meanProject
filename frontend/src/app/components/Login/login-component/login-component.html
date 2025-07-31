@@ -1,0 +1,63 @@
+<!-- Pills navs -->
+<ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="tab-login" data-mdb-pill-init href="#pills-login" role="tab"
+       aria-controls="pills-login" aria-selected="true">Login</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="tab-register" data-mdb-pill-init href="#pills-register" role="tab"
+       aria-controls="pills-register" aria-selected="false">Register</a>
+  </li>
+</ul>
+<!-- Pills navs -->
+
+<!-- Pills content
+ ****    Login     *************************************************************************-->
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+    <form (ngSubmit)="handleLogin()" >
+      <!-- Email input -->
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input type="email" [(ngModel)]="loginData.username" [ngModelOptions]="{standalone: true}"  id="loginName" class="form-control"/>
+        <label class="form-label" for="loginName">Email or username</label>
+      </div>
+
+      <!-- Password input -->
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input type="password" [(ngModel)]="loginData.password"  [ngModelOptions]="{standalone: true}" id="loginPassword" class="form-control"/>
+        <label class="form-label" for="loginPassword">Password</label>
+      </div>
+      <!-- Submit button -->
+      <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Login
+      </button>
+    </form>
+  </div>
+
+  <!--Register*************************************************************************************-->
+  <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+    <form (ngSubmit)="handleRegister()">
+      <!-- Username input -->
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" [(ngModel)]="registerData.username"  [ngModelOptions]="{standalone: true}" id="registerUsername" class="form-control"/>
+        <label class="form-label" for="registerUsername">Username</label>
+      </div>
+
+      <!-- Email input -->
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input type="email" [(ngModel)]="registerData.email" [ngModelOptions]="{standalone: true}"  id="registerEmail" class="form-control"/>
+        <label class="form-label" for="registerEmail">Email</label>
+      </div>
+
+      <!-- Password input -->
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input type="password" [(ngModel)]="registerData.password"  [ngModelOptions]="{standalone: true}"  id="registerPassword" class="form-control"/>
+        <label class="form-label" for="registerPassword">Password</label>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-3">Register
+      </button>
+    </form>
+  </div>
+</div>
+<!-- Pills content -->

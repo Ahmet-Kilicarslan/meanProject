@@ -1,0 +1,54 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <form class="row g-3 needs-validation" novalidate (ngSubmit)="onSubmit()">
+
+        <div class="col-12 mb-3 ">
+          <input type="text" [(ngModel)]="product.name" [ngModelOptions]="{standalone: true}"  required class="form-control"
+                 placeholder="Product Name" aria-label="Product Name">
+          <div class="invalid-feedback">
+           Product name is necessary!
+          </div>
+        </div>
+
+
+
+        <div class="col-6 mb-3 input-group">
+          <span class="input-group-text">
+            <i class="bi bi-box"></i>
+          </span>
+          <input type="text" [(ngModel)]="product.amount" [ngModelOptions]="{standalone: true}"  required class="form-control"
+                 placeholder="Amount" aria-label="Amount">
+          <div class="invalid-feedback">
+            Amount is necessary!
+          </div>
+        </div>
+
+        <div class="col6 mb-3 input-group" >
+          <span class="input-group-text">₺</span>
+          <input type="text" [(ngModel)]="product.price" [ngModelOptions]="{standalone: true}"  required class="form-control"
+                 placeholder="Price" aria-label="Price">
+          <span class="input-group-text">.00</span>
+          <div class="invalid-feedback">
+            price is necessary!
+          </div>
+        </div>
+
+        <div class="col-12 mb-3 ">
+          <input  [(ngModel)]="typedSupplier" (input)=getSupplierId()
+                  [ngModelOptions]="{standalone: true}"  required class="form-control"
+                  placeholder="Supplier" aria-label="Supplier">
+        </div>
+
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button type="button" class="btn " (click)="onCancelClick()">
+            Cancel
+          </button>
+          <button class="btn " type="submit">
+            {{isEditMode ? 'Update' : 'Create'}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
