@@ -36,6 +36,15 @@ export default class ProductDAO {
 
 
     }
+    static async getProductBySupplier(supplier) {
+        try{
+            const sql='select * from products where supplier=?';
+            const [result] = await pool.query(sql, [supplier]);
+            return result.map(product => new Product(product.id, product.name, product.amount, product.price, product.supplier));
+        }catch(err){
+            console.log(err);
+        }
+    }
 
     static async getAllProducts() {
         try{

@@ -8,6 +8,18 @@ router.post("/", async (req,res)=>{
     res.json(newProduct);
 
 })
+
+
+/*get by supplier*/
+router.get('/:supplier',async(req,res)=>{
+    try{
+        const fetchedProducts=await ProductDAO.getProductBySupplier(req.params.supplier);
+        res.status(200).json(fetchedProducts);
+    }catch(error){
+
+        res.status(404).json({error:error.message});
+    }
+})
 /*get all*/
 router.get("/",async (req,res)=>{
     const allProducts=await ProductDAO.getAllProducts();

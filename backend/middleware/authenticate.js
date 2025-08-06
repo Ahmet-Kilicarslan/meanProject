@@ -23,7 +23,7 @@ export function requireRole(requiredRole) {
     return function(req, res, next) {
         console.log(`🔍 Checking role: ${requiredRole}`);
 
-        // First check if user is authenticated
+
         if (!req.session || !req.session.userId) {
             return res.status(401).json({ error: 'Authentication required' });
         }
@@ -31,7 +31,7 @@ export function requireRole(requiredRole) {
         const userRole = req.session.role;
         console.log(`User role: ${userRole}, Required: ${requiredRole}`);
 
-        // Allow if user has the required role OR is admin
+
         if (userRole === requiredRole || userRole === 'admin') {
             console.log('✅ Role authorized');
             return next();
@@ -48,4 +48,8 @@ export function requireRole(requiredRole) {
 
 export function requireAdmin(req, res, next) {
     return requireRole('admin')( req, res, next);
+}
+
+export function requireClient(req, res, next) {
+    return requireRole('user')( req, res, next);
 }

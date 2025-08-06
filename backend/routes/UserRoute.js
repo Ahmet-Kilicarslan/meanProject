@@ -1,6 +1,6 @@
 import express from 'express';
 import userDao from '../DAOs/UserDAO.js';
-import { requireAuth,}from '../middleware/authenticate.js';
+import { requireAuth,requireClient,requireAdmin}from '../middleware/authenticate.js';
 import hash from "../Utilities/hash.js";
 import User from "../models/User.js";
 
@@ -140,6 +140,7 @@ router.post("/logout", async (req, res) => {
 
 // Check authentication status
 router.get('/status', (req, res) => {
+    try{
     console.log('🔍 Status check - Session data:', req.session);
 
     if (req.session && req.session.userId) {
@@ -154,6 +155,12 @@ router.get('/status', (req, res) => {
         });
     } else {
         res.json({ isAuthenticated: false });
+    }}catch(error){
+        console.error('❌ Status check error:', error);
+        res.status(500).json({
+            error: 'Failed to get status',
+            message: error.message
+        });
     }
 });
 
