@@ -1,15 +1,135 @@
-import {User,loginRequest,registerRequest} from '../models/User'
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
-
-
+import {User, loginRequest, registerRequest, loginResponse} from '../models/User'
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {Observable, BehaviorSubject, throwError} from 'rxjs';
+import {tap, catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
+export default class UserService {
+  private apiUrl = "http://localhost:3000/User";
+  private currentUser: any = null;
+  private isLoggedIn: boolean = false;
+
+  constructor(private http: HttpClient) {
+  }
+
+  getCurrentUser(): any {
+    return this.currentUser;
+  }
+
+  isAuthenticated(): boolean {
+    return this.isLoggedIn && this.currentUser !== null;
+  }
+
+  isAdmin(): boolean {
+    return this.isAuthenticated() && this.currentUser?.role === 'admin';
+  }
+
+  isClient(): boolean {
+    return this.isAuthenticated() && this.currentUser?.role === 'user';
+  }
+
+  login(credentials: loginRequest): Observable<any> {
+    console.log('🔍 DEBUGGING: Data being sent to backend:', credentials);
+    console.log('🔍 DEBUGGING: Data type:', typeof credentials);
+    console.log('🔍 DEBUGGING: Object keys:', Object.keys(credentials));
+    return this.http.post<any>(this.apiUrl + "/login", credentials, {withCredentials: true}).pipe(
+      tap((response: any) => {
+        console.log('Full server response:', response);
+
+        if (response.user) {
+          this.currentUser = response.user;
+          this.isLoggedIn = true;
+          console.log('✅ Login successful - session created');
+        } else {
+          console.error('❌ Server response missing user:', response);
+        }
+      }),
+      catchError((error) => {
+        console.error('❌ Login failed:', error);
+        console.log('backend error details',error.error);
+        return throwError(error);
+      })
+    );
+  }
+
+  register(userData: registerRequest): Observable<any> {
+    return this.http.post<any>(this.apiUrl + "/register", userData, {withCredentials: true}).pipe(
+      tap((response: any) => {
+        console.log('✅ Registration successful:', response);
+      }),
+      catchError((error) => {
+        console.error('❌ Registration failed:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  logout(): Observable<any> {
+    return this.http.post<any>(this.apiUrl + "/logout", {}, {withCredentials: true}).pipe(
+      tap((response: any) => {
+        this.currentUser = null;
+        this.isLoggedIn = false;
+        console.log('✅ Logout successful - session cleared');
+      }),
+      catchError((error) => {
+        console.error('❌ Logout failed:', error);
+        // Clear local data even if server logout fails
+        this.currentUser = null;
+        this.isLoggedIn = false;
+        return throwError(error);
+      })
+    );
+  }
+
+  checkAuthStatus(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + "/status", {withCredentials: true}).pipe(
+      tap((response: any) => {
+        console.log('📊 Auth status response:', response);
+
+        // Match your backend response structure
+        if (response.isAuthenticated) {
+          console.log('✅ Session is still valid');
+          if (response.user) {
+            this.currentUser = response.user;
+            this.isLoggedIn = true;
+          }
+        } else {
+          console.log('❌ Session expired or invalid');
+          this.currentUser = null;
+          this.isLoggedIn = false;
+        }
+      }),
+      catchError((error) => {
+        console.error('❌ Checking status failed:', error);
+        // If server can't verify, clear local data
+        this.currentUser = null;
+        this.isLoggedIn = false;
+        return throwError(error);
+      })
+    );
+  }
+
+  getProfile(): Observable<User> {
+    return this.http.get<User>(this.apiUrl + "/profile", {withCredentials: true}).pipe(
+      tap((response: any) => {
+        console.log("✅ Fetched user profile:", response);
+
+        if (response.user) {
+          this.currentUser = response.user;
+        }
+      }),
+      catchError((error) => {
+        console.error('❌ Getting profile failed:', error);
+        return throwError(error);
+      })
+    );
+  }
+}
+
 /*Behaivoral Subject--->
 * What is BehaviorSubject?
 BehaviorSubject is like a smart variable that can:
@@ -40,18 +160,17 @@ A way to handle asynchronous operations
 * Lazy (cold)                           Eager (hot)
 * Cancellable                           Not cancellable
 * Rich operators (map, filter, etc.)    Limited chaining
-*/
+
 export default class UserService {
   private apiUrl = "http://localhost:3000/User";
 
 
   private isLoggedInBehaviorSubject = new BehaviorSubject<boolean>(false);
-  private isLoggedIn$ = this.isLoggedInBehaviorSubject.asObservable();
+  isLoggedIn$ = this.isLoggedInBehaviorSubject.asObservable();
 
   private currentUserBehaviorSubject = new BehaviorSubject<User | null>(null);
-  private currentUser$ = this.currentUserBehaviorSubject.asObservable();
+  currentUser$ = this.currentUserBehaviorSubject.asObservable();
 
-  //helper methods
 
   isAuthenticated():boolean {
     return this.isLoggedInBehaviorSubject.value;
@@ -65,9 +184,9 @@ export default class UserService {
     return user ? user.role === role : false;
 
   }
-  isAdmin(): boolean {
-    return this.hasRole('admin');
-  }
+
+
+
 
 
   constructor(
@@ -92,9 +211,9 @@ export default class UserService {
 
       }),
       catchError((error) => {
-        // CLEAR PURPOSE: Handle errors
+
         console.error('❌ Login failed:', error);
-        throw error; // Re-throw for component to handle
+        throw error;
       })
     );
 
@@ -118,7 +237,7 @@ export default class UserService {
   }
 
   checkAuthStatus():Observable<any> {
-    return this.http.post(`${this.apiUrl}/status`, {withCredentials: true}).pipe(
+    return this.http.get(`${this.apiUrl}/status`, {withCredentials: true}).pipe(
       tap((response: any) => {
         console.log('📊 Auth status response:', response);
 
@@ -143,5 +262,5 @@ export default class UserService {
   }
 
 
-}
+}*/
 

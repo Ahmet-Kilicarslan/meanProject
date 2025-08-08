@@ -1,12 +1,20 @@
 <div class="app-container">
-  <app-header></app-header>
+  @if (!isLoginPage) {
+    @if (isAdmin) {
+      <app-header></app-header>
+    } @else if(isClient) {
+      <app-client-header></app-client-header>
+    }
+  }
   <div class="layout">
-    <div class="sidebar">
-      <app-sidebar
-        [class.collapsed]="isCollapsed"
-        (toggle)="toggleSidebar()">
-      </app-sidebar>
-    </div>
+    @if (!isLoginPage && isAdmin) {
+      <div class="sidebar">
+        <app-sidebar
+          [class.collapsed]="isCollapsed"
+          (toggle)="toggleSidebar()">
+        </app-sidebar>
+      </div>
+    }
     <div class="main-content" [class.expanded]="isCollapsed">
       <router-outlet></router-outlet>
     </div>

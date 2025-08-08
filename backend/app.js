@@ -9,7 +9,7 @@ import 'dotenv/config';
 import EmployeeRoute from './routes/EmployeeRoute.js';
 import ProductRoute from './routes/ProductRoute.js';
 import SupplierRoute from "./routes/SupplierRoute.js";
-import TransactionRoute from "./routes/TransactionRoute.js";
+
 import UserRoute from "./routes/UserRoute.js";
 
 const MysqlStore = new MySQLStoreFactory(session);
@@ -66,7 +66,7 @@ app.use('/Employee', EmployeeRoute);
 app.use('/Product', ProductRoute);
 app.use('/User', UserRoute);
 app.use('/Supplier', SupplierRoute);
-app.use('/Transaction', TransactionRoute);
+
 /*
 2xx Success
 

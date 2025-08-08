@@ -1,25 +1,43 @@
 <!-- sidebar.component.html -->
-<div class="sidebar">
+<div class="sidebar d-flex flex-column vh-100">
   <button (click)="toggleSidebar()" class="toggle-btn">
     <i class="bi bi-list"></i>
   </button>
 
   <ul class="nav-links">
     <li>
-      <i class="bi bi-train-freight-front-fill"></i>
-      <span class="link-label">Train</span>
+      <i class="bi bi-speedometer2"></i>
+
+      <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active" aria-current="page" >Dashboard</a>
+    </li>
+    <li>
+      <i class="bi bi-people"></i>
+      <a class="nav-link " routerLink="/Employee" routerLinkActive="active">Employee</a>
+    </li>
+    <li>
+      <i class="bi bi-box-seam"></i>
+      <a class="nav-link " routerLink="/Inventory" routerLinkActive="active">Inventory</a>
     </li>
     <li>
       <i class="bi bi-truck"></i>
-      <span class="link-label">Truck</span>
+      <a class="nav-link " routerLink="/Supplier" routerLinkActive="active">Suppliers</a>
+
     </li>
     <li>
-      <i class="bi bi-airplane-engines-fill"></i>
-      <span class="link-label">Aircraft</span>
-    </li>
-    <li>
-      <i class="bi bi-tux"></i>
-      <span class="link-label">Tux</span>
+      <i class="bi bi-receipt"></i>
+      <span class="link-label">Transactions</span>
     </li>
   </ul>
+
+  <div class="mt-auto p-3 border-top mb-5">
+    <button class="btn w-100" (click)="handleLogout()" [disabled]="logoutLoading">
+      @if (logoutLoading) {
+        <i class="bi bi-arrow-clockwise"></i>
+        Logging out...
+      } @else {
+        <i class="bi bi-power"></i>
+        Logout
+      }
+    </button>
+  </div>
 </div>

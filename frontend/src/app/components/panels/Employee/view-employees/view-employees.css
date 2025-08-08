@@ -3,9 +3,10 @@
   color: white;
   box-shadow: 5px 5px  black;
   transition: transform 200ms,box-shadow 200ms;
-  border-radius: 0;
+  border-radius: 12px;
   width:100px;
   border:none;
+
 
 }
 .btn:active{

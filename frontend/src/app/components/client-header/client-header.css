@@ -1,0 +1,34 @@
+.custom-navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color:black !important;
+
+}
+.btn{
+  background: linear-gradient(135deg, var(--reddo) 0%, var(--sarı) 100%);
+  color: white;
+  box-shadow: 5px 5px  black;
+  transition: transform 200ms,box-shadow 200ms;
+  border-radius: 12px;
+  width:100px;
+
+}
+.btn:active{
+  transform: translateY(4px) translateX(4px);
+  background: linear-gradient(135deg, var(--reddo) 0%, var(--sarı) 100%);
+  color: white;
+  box-shadow: none;
+  border:none;
+
+}
+
+
+.custom-rounded:hover {/*dont left space between custom-rounded:hover <------*/
+  color: white;
+}
+.custom-rounded {
+  border-radius: 6px;
+  padding: 6px 12px;
+  transition: background-color 0.3s ease;
+}
+
+

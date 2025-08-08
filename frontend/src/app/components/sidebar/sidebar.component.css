@@ -1,7 +1,7 @@
 
 
 .sidebar {
-    background: var(--nav);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   width: 250px;
   height: 100vh;
@@ -17,7 +17,7 @@
 }
 
 .toggle-btn {
-  background: var(--nav);
+  background: none;
   border: none;
   color: white;
   font-size: 2rem;
@@ -30,7 +30,7 @@
 }
 
 .toggle-btn:hover {
-  background: var(--primera);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
 }
 
 .nav-links {
@@ -53,8 +53,7 @@
 }
 
 .nav-links li:hover {
-  background-color: var(--primera);
-}
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);}
 
 .nav-links li i {
   color: white;
@@ -71,7 +70,7 @@
 }
 
 
-:host(.collapsed) .link-label {
+:host(.collapsed) .nav-link {
   opacity: 0;
   width: 0;
   pointer-events: none;

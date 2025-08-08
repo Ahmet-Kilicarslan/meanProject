@@ -1,63 +1,168 @@
-<!-- Pills navs -->
-<ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="tab-login" data-mdb-pill-init href="#pills-login" role="tab"
-       aria-controls="pills-login" aria-selected="true">Login</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="tab-register" data-mdb-pill-init href="#pills-register" role="tab"
-       aria-controls="pills-register" aria-selected="false">Register</a>
-  </li>
-</ul>
-<!-- Pills navs -->
+<!-- login-component.html -->
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <h2 class="text-center mb-4">Welcome</h2>
 
-<!-- Pills content
- ****    Login     *************************************************************************-->
-<div class="tab-content">
-  <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-    <form (ngSubmit)="handleLogin()" >
-      <!-- Email input -->
-      <div data-mdb-input-init class="form-outline mb-4">
-        <input type="email" [(ngModel)]="loginData.username" [ngModelOptions]="{standalone: true}"  id="loginName" class="form-control"/>
-        <label class="form-label" for="loginName">Email or username</label>
+      <!-- Tab Navigation -->
+      <ul class="nav nav-pills nav-justified mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active"
+                  id="login-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#login-panel"
+                  type="button"
+                  role="tab">
+            Login
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link"
+                  id="register-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#register-panel"
+                  type="button"
+                  role="tab">
+            Register
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Login Panel -->
+        <div class="tab-pane fade show active"
+             id="login-panel"
+             role="tabpanel">
+          <form (ngSubmit)="handleLogin()">
+            <!-- Username/Email -->
+            <div class="form-floating mb-3">
+              <input type="email"
+                     [(ngModel)]="loginData.username"
+                     [ngModelOptions]="{standalone: true}"
+                     id="loginEmail"
+                     class="form-control"
+                     [disabled]="isLoginLoading"
+                     placeholder="name@example.com"
+                     required>
+              <label for="loginEmail">Email or Username</label>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating mb-3">
+              <input type="password"
+                     [(ngModel)]="loginData.password"
+                     [ngModelOptions]="{standalone: true}"
+                     id="loginPassword"
+                     class="form-control"
+                     [disabled]="isLoginLoading"
+                     placeholder="Password"
+                     required>
+              <label for="loginPassword">Password</label>
+            </div>
+
+            <!-- Error Message -->
+            @if (loginError) {
+              <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ loginError }}
+              </div>
+            }
+
+            <!-- Login Button -->
+            <button type="submit"
+                    class="btn btn-primary btn-lg w-100 mb-3"
+                    [disabled]="isLoginLoading">
+              @if (isLoginLoading) {
+                <span>
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Logging in...
+              </span>
+              }
+              @if (!isLoginLoading) {
+                <span>Login</span>
+              }
+            </button>
+          </form>
+        </div>
+
+        <!-- Register Panel -->
+        <div class="tab-pane fade"
+             id="register-panel"
+             role="tabpanel">
+          <form (ngSubmit)="handleRegister()">
+            <!-- Username -->
+            <div class="form-floating mb-3">
+              <input type="text"
+                     [(ngModel)]="registerData.username"
+                     [ngModelOptions]="{standalone: true}"
+                     id="registerUsername"
+                     class="form-control"
+                     [disabled]="isRegisterLoading"
+                     placeholder="Username"
+                     required>
+              <label for="registerUsername">Username</label>
+            </div>
+
+            <!-- Email -->
+            <div class="form-floating mb-3">
+              <input type="email"
+                     [(ngModel)]="registerData.email"
+                     [ngModelOptions]="{standalone: true}"
+                     id="registerEmail"
+                     class="form-control"
+                     [disabled]="isRegisterLoading"
+                     placeholder="name@example.com"
+                     required>
+              <label for="registerEmail">Email</label>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating mb-3">
+              <input type="password"
+                     [(ngModel)]="registerData.password"
+                     [ngModelOptions]="{standalone: true}"
+                     id="registerPassword"
+                     class="form-control"
+                     [disabled]="isRegisterLoading"
+                     placeholder="Password"
+                     required>
+              <label for="registerPassword">Password</label>
+            </div>
+
+            <!-- Error Message -->
+            @if (registerError) {
+              <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ registerError }}
+              </div>
+            }
+
+            <!-- Success Message -->
+            @if (registerSuccess) {
+              <div class="alert alert-success" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ registerSuccess }}
+              </div>
+            }
+
+            <!-- Register Button -->
+            <button type="submit"
+                    class="btn btn-success btn-lg w-100 mb-3"
+                    [disabled]="isRegisterLoading">
+              @if (isRegisterLoading) {
+                <span>
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Registering...
+              </span>
+              }
+              @if (!isRegisterLoading) {
+                <span>Register</span>
+              }
+            </button>
+          </form>
+        </div>
       </div>
-
-      <!-- Password input -->
-      <div data-mdb-input-init class="form-outline mb-4">
-        <input type="password" [(ngModel)]="loginData.password"  [ngModelOptions]="{standalone: true}" id="loginPassword" class="form-control"/>
-        <label class="form-label" for="loginPassword">Password</label>
-      </div>
-      <!-- Submit button -->
-      <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Login
-      </button>
-    </form>
-  </div>
-
-  <!--Register*************************************************************************************-->
-  <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-    <form (ngSubmit)="handleRegister()">
-      <!-- Username input -->
-      <div data-mdb-input-init class="form-outline mb-4">
-        <input type="text" [(ngModel)]="registerData.username"  [ngModelOptions]="{standalone: true}" id="registerUsername" class="form-control"/>
-        <label class="form-label" for="registerUsername">Username</label>
-      </div>
-
-      <!-- Email input -->
-      <div data-mdb-input-init class="form-outline mb-4">
-        <input type="email" [(ngModel)]="registerData.email" [ngModelOptions]="{standalone: true}"  id="registerEmail" class="form-control"/>
-        <label class="form-label" for="registerEmail">Email</label>
-      </div>
-
-      <!-- Password input -->
-      <div data-mdb-input-init class="form-outline mb-4">
-        <input type="password" [(ngModel)]="registerData.password"  [ngModelOptions]="{standalone: true}"  id="registerPassword" class="form-control"/>
-        <label class="form-label" for="registerPassword">Password</label>
-      </div>
-
-      <!-- Submit button -->
-      <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-3">Register
-      </button>
-    </form>
+    </div>
   </div>
 </div>
-<!-- Pills content -->

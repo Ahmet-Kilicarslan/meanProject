@@ -1,12 +1,29 @@
-.card-img-top-container{
-  position: relative;
-  overflow: hidden;
+.card-img-top-container {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center; /* Center image horizontally */
+  align-items: center;     /* Center image vertically */
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+.card-img-top {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 
 }
-.card-img-top{
-  object-fit: cover;
+
+.card-body{
+  text-align: center;
+  padding: 25px;
+
 }
+
 .card{
+  border-radius: 10px;
+  border-top: var(--primera) solid 5px;
   transition:transform 0.2s ease-in-out;
   background-color: var(--backg);
 }
@@ -25,7 +42,7 @@
   color: white;
   box-shadow: 5px 5px  black;
   transition: transform 200ms,box-shadow 200ms;
-  border-radius: 0;
+  border-radius: 12px;
   width:150px;
   border:none;
 

@@ -7,12 +7,16 @@
     @for (product of products;track product.id  ){
 
     <div class="col-lg-3 col-md-4 col-sm-6">
-      <div class="card h-20">
+      <div class="card h-100">
         <!-- Product Image Section -->
         <div class="card-img-top-container">
-          <div class="placeholder-image">
-             <h5> image goes here</h5>
-          </div>
+          <img
+            src="https://github.githubassets.com/images/mona-loading-default.gif"
+            width="150"
+            height="150"
+            alt="Product placeholder"
+            class="card-img-top"
+          />
         </div>
 
         <!-- Card Body -->
@@ -38,7 +42,7 @@
           <!-- Action Buttons -->
           <div class="d-grid gap-2 d-md-flex">
             <button class="btn btn-outline-primary btn-sm"  (click)="openEditProductModal(product)"><i class="bi-pencil-fill"></i>Edit</button>
-            <button class="btn btn-outline-danger btn-sm" (click)="openDeleteModal(product)" ><i class="bi-trash-fill"></i>Delete</button>
+            <button class="btn btn-outline-danger btn-sm" (click)="openDeleteModal(product)" style="background-color: var(--reddo)"><i class="bi-trash-fill"></i>Delete</button>
           </div>
         </div>
       </div>

@@ -49,6 +49,15 @@ export default class ViewSupplier implements OnInit {
      }
    })
   }
+  /*loadProductsBySupplier(supplierId:number){
+    this.productService.getProductBySupplier(supplierId).subscribe({
+      next: (result:any) => {
+        this.productsBySupplier = result;
+      },error:(err:any) => {
+        console.log(err);
+      }
+    })
+  }*/
 
   toggleProducts(supplierId:number):void{
     if (this.expandedSupplierId === supplierId) {
@@ -56,9 +65,9 @@ export default class ViewSupplier implements OnInit {
       this.productsBySupplier = [];
       return;
     }
-
+else{
     this.expandedSupplierId=supplierId;
-    this.loadProductsBySupplier(supplierId);
+    this.loadProductsBySupplier(supplierId);}
 
   }
 

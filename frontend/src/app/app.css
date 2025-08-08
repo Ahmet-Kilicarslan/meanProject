@@ -8,8 +8,8 @@
 }
 
 app-header {
-  height: 60px;
-background: var(--primera);
+  height: 56px;
+background: white;
   color: white;
   flex-shrink: 0;
 }
