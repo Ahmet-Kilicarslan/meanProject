@@ -24,6 +24,10 @@ export default class UserService {
     return this.isLoggedIn && this.currentUser !== null;
   }
 
+  getCurrentUserId(): number {
+    return this.currentUser.id;
+  }
+
   isAdmin(): boolean {
     return this.isAuthenticated() && this.currentUser?.role === 'admin';
   }
@@ -51,7 +55,7 @@ export default class UserService {
       catchError((error) => {
         console.error('❌ Login failed:', error);
         console.log('backend error details',error.error);
-        return throwError(error);
+        return throwError(() => error.message);
       })
     );
   }
@@ -63,7 +67,7 @@ export default class UserService {
       }),
       catchError((error) => {
         console.error('❌ Registration failed:', error);
-        return throwError(error);
+        return throwError(() => error.message);
       })
     );
   }
@@ -80,7 +84,7 @@ export default class UserService {
         // Clear local data even if server logout fails
         this.currentUser = null;
         this.isLoggedIn = false;
-        return throwError(error);
+        return throwError(() => error.message);
       })
     );
   }
@@ -108,7 +112,7 @@ export default class UserService {
         // If server can't verify, clear local data
         this.currentUser = null;
         this.isLoggedIn = false;
-        return throwError(error);
+        return throwError(() => error.message);
       })
     );
   }
@@ -124,9 +128,20 @@ export default class UserService {
       }),
       catchError((error) => {
         console.error('❌ Getting profile failed:', error);
-        return throwError(error);
+        return throwError(() => error.message);
       })
     );
+  }
+
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.apiUrl + "/users", {withCredentials: true}).pipe(
+      tap((response: any) => {
+        console.log("✅ successfully fetched users")
+      }),catchError((error:any)=>{
+        console.error('❌ fetching users failed in UserService:', error);
+        return throwError(() => error.message);
+      })
+    )
   }
 }
 

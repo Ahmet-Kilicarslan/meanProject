@@ -8,3 +8,21 @@
   transform: translateY(-5px); /*lift cards up*/
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
+
+.btn-cart{
+  background: linear-gradient(135deg, var(--reddo) 0%, var(--sarı) 100%);
+  color: white;
+  box-shadow: 5px 5px  black;
+  transition: transform 200ms,box-shadow 200ms;
+  border-radius: 12px;
+  width:auto;
+}
+.btn-cart:active{
+  transform: translateY(4px) translateX(4px);
+  background: linear-gradient(135deg, var(--reddo) 0%, var(--sarı) 100%);
+  color: white;
+  box-shadow: none;
+  border:none;
+
+}
+

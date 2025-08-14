@@ -9,6 +9,7 @@
   padding: 1rem;
   overflow: hidden;
   position: relative;
+  margin-top: 3px;
 }
 
 /* When collapsed class is applied from parent */

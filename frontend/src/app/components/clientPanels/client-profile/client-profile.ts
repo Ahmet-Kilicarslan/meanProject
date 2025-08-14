@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import userService from '../../../services/UserService';
-
+import purchaseService from '../../../services/PurchaseService';
+import {purchasedProduct,Purchase} from '../../../models/Purchase'
 
 @Component({
   selector: 'app-client-profile',
@@ -13,25 +14,43 @@ import userService from '../../../services/UserService';
 export default class ClientProfile implements OnInit {
 
 
-  constructor(private userService: userService) {
+  constructor(private userService: userService,private  purchaseService: purchaseService) {
   }
 
   currentUser: any = null;
   error = '';
   isLoading = false;
-
+  purchaseLog: Purchase[] = [];
 
   ngOnInit() {
     this.loadUserProfile();
+
   }
 
   loadUserProfile() {
-    // Show cached data immediately (fast UX)
+
     this.currentUser = this.userService.getCurrentUser();
     console.log('📋 Showing cached user data:', this.currentUser);
 
-    // Then fetch fresh data from server
+    if (this.currentUser?.id) {
+      this.loadPurchaseLog();
+    }
+
+
     this.fetchFreshProfile();
+
+  }
+  loadPurchaseLog() {
+    this.error = '';
+    this.purchaseService.getPurchasesByUserId(this.currentUser.id).subscribe({
+      next:(purchaseData) => {
+        this.purchaseLog = purchaseData;
+
+      },error: (error:any) => {
+        this.error = error;
+      }
+    })
+
   }
 
   fetchFreshProfile() {
@@ -46,7 +65,7 @@ export default class ClientProfile implements OnInit {
         if (response.user) {
           this.currentUser = response.user;
         } else {
-          this.currentUser = response; // In case server sends user data directly
+          this.currentUser = response;
         }
 
         this.isLoading = false;
@@ -56,7 +75,7 @@ export default class ClientProfile implements OnInit {
         this.error = 'Failed to load latest profile data';
         this.isLoading = false;
 
-        // Keep showing cached data if server fails
+
         if (!this.currentUser) {
           this.currentUser = this.userService.getCurrentUser();
         }

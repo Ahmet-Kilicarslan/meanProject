@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import userService from '../../services/UserService';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-client-header',
@@ -13,31 +13,33 @@ import { Router } from '@angular/router';
   styleUrls: ['./client-header.css']
 })
 export default class ClientHeader {
-  logoutLoading=false;
-  logoutError='';
+  logoutLoading = false;
+  logoutError = '';
 
-  constructor(private userService: userService, private router: Router) {}
+  constructor(private userService: userService, private router: Router) {
+  }
 
-  handleClientLogout(){
+  handleClientLogout() {
     this.logoutLoading = true;
     this.userService.logout().subscribe({
-      next: ()=>{
+      next: () => {
         this.router.navigate(['/login']).then(() => {
           console.log('logout successful');
         }).catch((error) => {
           console.error('logout failed:', error);
         });
 
-      },error:(err)=>{
+      }, error: (err) => {
         this.logoutError = 'logoutError';
         console.log(err);
 
-      },complete:()=>{
+      }, complete: () => {
         this.logoutLoading = false;
       }
     })
 
-
+  }
+  handleOpenCart(){
 
   }
 }

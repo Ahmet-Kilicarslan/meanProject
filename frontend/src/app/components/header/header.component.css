@@ -30,5 +30,10 @@
   padding: 6px 12px;
   transition: background-color 0.3s ease;
 }
-
+.navbar-logo {
+  max-height: 40px;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 15px
+}
 
