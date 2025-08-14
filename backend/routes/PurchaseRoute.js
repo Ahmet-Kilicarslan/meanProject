@@ -1,0 +1,89 @@
+import express from "express";
+import PurchaseDAO from "../DAOs/PurchaseDAO.js";
+
+const router = express.Router();
+
+
+
+router.post("/complete", async (req, res) => {
+    try {
+        const { userId, totalAmount, products } = req.body;
+
+        // Start transaction here (recommended)
+        // 1. Create purchase
+        const newPurchase = await PurchaseDAO.CreatePurchase({ userId, totalAmount });
+
+        // 2. Add all products to that purchase
+        const purchasedProducts = [];
+        for (const product of products) {
+            const purchasedProduct = await PurchaseDAO.addProductToPurchasedProduct({
+                purchaseId: newPurchase.id,
+                productId: product.productId,
+                quantity: product.quantity,
+                price: product.price
+            });
+            purchasedProducts.push(purchasedProduct);
+        }
+
+        res.status(201).json({
+            purchase: newPurchase,
+            products: purchasedProducts
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            error: 'Complete purchase failed',
+            message: err.message
+        });
+    }
+});
+
+//getting purchases by userId
+router.get("/:userId", async (req,res)=>{
+    try{
+        const purchases= await PurchaseDAO.getPurchasesByUserId(req.params.userId);
+        res.status(200).json({purchases:purchases});
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            error: 'Failed to fetch purchases made by user failed',
+            message: err.message
+        })
+    }
+
+
+
+})
+
+//adding product as purchased product
+router.post("/products", async (req,res)=>{
+    try{
+        const selectedProductForPurchase=await PurchaseDAO.addProductToPurchasedProduct(req.body);
+        res.status(200).json({selectedProductForPurchase:selectedProductForPurchase});
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            error: 'failed to add products to purchase',
+            message: err.message
+        })
+    }
+
+
+})
+
+//getting products with same purchaseId
+router.get("/:purchaseId", async (req,res)=>{
+    try{
+        const fetchedProducts=await PurchaseDAO.getPurchaseWithItems(req.params.purchaseId);
+        res.status(200).json({fetchedProducts:fetchedProducts});
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            error: 'failed to get products from purchase',
+            message: err.message
+        })
+    }
+
+})

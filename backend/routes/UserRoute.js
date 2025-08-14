@@ -59,15 +59,17 @@ try{
     if(!username || !password){
         return res.status(400).send({error:"Username and password are required"});
     }
-    const user=await userDao.getUserByUsernameOrEmail(username);
+    const user= await userDao.getUserByUsernameOrEmail(username);
     if(!user){
         return res.status(404).send({error:"invalid username "});
     }
 
-    const checkPassword=await hash.comparePassword(password, user.password);
+    const checkPassword = await hash.comparePassword(password , user.password);
+
     if(!checkPassword){
         return res.status(404).send({error:"invalid password"});
     }
+
     req.session.userId = user.id;
     req.session.username = user.username;
     req.session.email = user.email;
@@ -79,7 +81,7 @@ try{
         role: req.session.role
     });
 
-    // Save session explicitly
+
     req.session.save((err) => {
         if (err) {
             console.error('❌ Session save error:', err);
@@ -187,6 +189,19 @@ router.get('/profile', requireAuth, async (req, res) => {
         });
     }
 });
+
+router.get('/users', async (req, res) => {
+    try{
+        const allUsers = await userDao.getAllUsers();
+        res.status(201).json(allUsers)
+    }catch(error){
+        console.error("Faield to fetch all users",error);
+        res.status(500).json({
+            error: 'Faield to fetch all users',
+            message: error.message
+        })
+    }
+})
 
 
 export default router;

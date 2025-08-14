@@ -1,5 +1,5 @@
 import express from 'express';
-import SupplierDAO from '../DAOs/SupplierDAO.js'; // adjust path as needed
+import SupplierDAO from '../DAOs/SupplierDAO.js';
 
 const router = express.Router();
 

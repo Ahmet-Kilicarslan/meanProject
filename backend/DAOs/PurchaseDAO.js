@@ -5,7 +5,7 @@ import {Purchase,PurchasedProduct} from "../models/Purchase";
 export default class PurchaseDAO {
 
     //creating purchase
-    static async addPurchase(purchase) {
+    static async CreatePurchase(purchase) {
         try {
             const sql = 'insert into purchase (userId,totalAmount) values (?,?)';
             const [result] = await pool.query(sql, [purchase.userId, purchase.totalAmount]);
@@ -15,7 +15,7 @@ export default class PurchaseDAO {
             throw err;
         }
     }
-//getting puchases by user id
+//getting purchases by user id
     static async getPurchasesByUserId(userId) {
         try {
             const sql = 'select * from purchase where userId = ?';
@@ -27,7 +27,8 @@ export default class PurchaseDAO {
         }
     }
 
-    static async getPurchasesWithItems(purchaseId) {
+    //get purchase with items
+    static async getPurchaseWithItems(purchaseId) {
         try {
             const sql = `
                 SELECT p.id  as purchaseId,
@@ -77,7 +78,7 @@ export default class PurchaseDAO {
         }
     }
 
-    static async addProductToPurchase(purchasedProduct) {
+    static async addProductToPurchasedProduct(purchasedProduct) {
         try{
             const sql='insert into purchasedProduct ( purchaseId, productId, quantity, price) values (?,?,?,?) ';
             const [result] = await pool.query(sql, [
