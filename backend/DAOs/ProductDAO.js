@@ -66,6 +66,16 @@ export default class ProductDAO {
         }
     }
 
+    static async updateAmount(id, amount) {
+        try{
+            const sql='update products set amount=? where id=?';
+            const [result] = await pool.query(sql, [amount ,id]);
+            return result;
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     static async deleteProduct(id) {
         try{
         const sql = 'delete from products where id = ?';

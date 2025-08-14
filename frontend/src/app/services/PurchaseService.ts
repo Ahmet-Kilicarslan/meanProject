@@ -1,6 +1,6 @@
 import {Observable, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Injectable, signal, computed} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Purchase, purchasedProduct} from '../models/Purchase'
 
 import {catchError, tap} from 'rxjs/operators';
@@ -14,17 +14,8 @@ export default class PurchaseService {
   constructor(private http: HttpClient) {
   }
 
-  private cartItemSignal = signal<{ product: purchasedProduct, quantity: number }[]>([]);
-  successMessage = signal<string>('');
-  purchaseStatus = signal<'idle' | 'processing' | 'success' | 'error'>('idle');
-
-  cartCount = computed(() => this.cartItemSignal().reduce(
-    (total, item) => total + item.quantity, 0) );
-
-
-
   createPurchase(purchaseData: { userId: number, totalAmount: number, products: purchasedProduct[] }): Observable<any> {
-    return this.http.post<any>(this.apiUrl + "/complete", purchaseData).pipe(
+    return this.http.post<any>(this.apiUrl + "/create", purchaseData).pipe(
       tap((response: any) => {
         console.log('Purchase with products created:', response);
       }),

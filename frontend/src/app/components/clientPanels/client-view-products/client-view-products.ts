@@ -1,4 +1,4 @@
-import {Component, OnInit, SimpleChanges} from '@angular/core';
+import {Component, inject, OnInit, SimpleChanges} from '@angular/core';
 import Supplier from '../../../models/Supplier';
 import Product from '../../../models/Product';
 import supplierService from '../../../services/SupplierService';
@@ -11,6 +11,7 @@ import UtilsService from '../../../services/UtilsService';
 import cartModal from '../cart/cart';
 import {purchasedProduct, Purchase} from '../../../models/Purchase';
 import PurchaseService from '../../../services/PurchaseService';
+import PurchaseStateService from '../../../services/PurchaseStateService';
 
 @Component({
   selector: 'app-client-view-products',
@@ -26,21 +27,27 @@ export default class ClientViewProducts implements OnInit {
               private supplierService: SupplierService,
               private utilsService: UtilsService,
               private purchaseService: PurchaseService,
-              private userService: UserService) {
+              private userService: UserService,
+              private purchaseStateService: PurchaseStateService,
+  ) {
   }
+
+
+
 
   products: Product[] = [];
   suppliers: Supplier[] = [];
   cartItems: { product: Product, quantity: number }[] = [];
   itemQuantity: number = 0;
   totalPrice: number = 0;
-
   purchaseCompleted: boolean = true;
+
 
 
   ngOnInit() {
     this.loadSuppliers();
     this.calculateTotalPrice()
+    this.purchaseStateService.setStatusIdle();
   }
 
   loadSuppliers() {
@@ -76,13 +83,17 @@ export default class ClientViewProducts implements OnInit {
   handleOpenCart() {
     this.utilsService.openModal('cartModal');
   }
+  handleCloseCart(): void {
+    this.utilsService.closeModal('cartModal');
+  }
 
 
   createPurchase() {
-
-    if (!this.purchaseCompleted || this.cartItems.length === 0) {
+    try{
+    if (!this.purchaseCompleted || this.cartItems.length === 0 ||this.purchaseStateService.getPurchaseState() !== 'idle' ) {
       return;
     }
+    this.purchaseStateService.setStatusProcessing();
 
     this.purchaseCompleted = false;
 
@@ -95,18 +106,23 @@ export default class ClientViewProducts implements OnInit {
       price: item.product.price
     }));
 
+
     const purchaseData = {
       userId: this.userService.getCurrentUserId(),
       totalAmount: this.getTotalAmount(),
       products: purchasedProducts
     };
 
+
     this.purchaseService.createPurchase(purchaseData).subscribe({
       next: response => {
+
         console.log('purchase successful',response);
         this.purchaseCompleted = true;
         this.cartItems=[];
         this.calculateTotalPrice();
+        this.purchaseStateService.setStatusSuccess();
+        this.purchaseStateService.setStatusFailed()
 
       },error: error => {
         console.log('purchase failed',error);
@@ -114,8 +130,40 @@ export default class ClientViewProducts implements OnInit {
 
       }
     })
-    this.loadSuppliers()
 
+    this.loadSuppliers()
+    this.handleCloseCart()
+    this.updateProductAmountAfterPurchase();
+
+    }catch(error) {
+      console.error('Failed to create purchase in component ',error);
+      this.purchaseCompleted = true;
+      this.handleCloseCart()
+
+    }
+
+  }
+
+  updateProductAmountAfterPurchase(){
+    if(this.purchaseStateService.getPurchaseState() !== 'success'){
+      return;
+    }
+
+    for(const item of this.cartItems) {
+
+      const newAmount = item.product.amount - item.quantity;
+
+      this.productService.updateProductAmount(item.product.id,newAmount).subscribe({
+
+        next: response => {
+          console.log("successfully updated product amount in component",response);
+
+        },error: error => {
+          console.log('Failed to update product amount in database after successfull purchase',error);
+        }
+      })
+    }
+    this.purchaseStateService.setStatusIdle();
   }
 
 

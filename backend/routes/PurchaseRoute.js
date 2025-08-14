@@ -5,12 +5,11 @@ const router = express.Router();
 
 
 
-router.post("/complete", async (req, res) => {
+router.post("/create", async (req, res) => {
     try {
         const { userId, totalAmount, products } = req.body;
 
-        // Start transaction here (recommended)
-        // 1. Create purchase
+
         const newPurchase = await PurchaseDAO.CreatePurchase({ userId, totalAmount });
 
         // 2. Add all products to that purchase
@@ -87,3 +86,5 @@ router.get("/:purchaseId", async (req,res)=>{
     }
 
 })
+
+export default router;

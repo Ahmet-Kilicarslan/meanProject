@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-
 import ProductComponent from './components/panels/Product/view-products/view-products';
 import Dashboard from './components/panels/Dashboard/dashboard';
 import ViewEmployees from './components/panels/Employee/view-employees/view-employees';

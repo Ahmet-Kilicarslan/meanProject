@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable, throwError} from 'rxjs';
+import { catchError,tap } from 'rxjs/operators';
 import Product from '../models/Product';
 
 @Injectable({
@@ -27,6 +28,17 @@ export default class ProductService {
  }
  updateProduct(product: Product): Observable<Product> {
     return this.http.put<Product>(this.apiUrl, product);
+ }
+ updateProductAmount(id: number, amount: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}`,amount).pipe(
+      tap((response) => {
+        console.log("successfully updated product amount in service",response);
+      }),catchError((error)=> {
+        console.error(error);
+        return throwError(() => error.message);
+
+      })
+    );
  }
  deleteProduct(id: number): Observable<Object> {
     return this.http.delete(`${this.apiUrl}/${id}`);

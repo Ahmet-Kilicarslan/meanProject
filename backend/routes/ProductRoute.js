@@ -42,6 +42,19 @@ router.put("/",async (req,res)=>{
         console.log(err);
     }
 })
+router.put("/:id",async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const updatedProduct = await ProductDAO.updateProduct(id, req.body);
+        res.json(updatedProduct);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({
+            error: 'updating product amount failed',
+            message: err.message
+        });
+    }
+})
 /*delete*/
 router.delete("/:id",async (req,res)=>{
     const id = req.params.id;

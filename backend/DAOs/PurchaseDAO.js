@@ -1,6 +1,6 @@
 import {pool} from "../dbc.js";
 
-import {Purchase,PurchasedProduct} from "../models/Purchase";
+import {Purchase,PurchasedProduct} from "../models/Purchase.js";
 
 export default class PurchaseDAO {
 

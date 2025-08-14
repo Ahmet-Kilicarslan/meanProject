@@ -8,6 +8,7 @@ import EmployeeRoute from './routes/EmployeeRoute.js';
 import ProductRoute from './routes/ProductRoute.js';
 import SupplierRoute from "./routes/SupplierRoute.js";
 import UserRoute from "./routes/UserRoute.js";
+import PurchaseRoute from "./routes/PurchaseRoute.js";
 
 
 const MysqlStore = new MySQLStoreFactory(session);
@@ -18,7 +19,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://localhost:4200', // Your Angular app URL
+    origin: 'http://localhost:4200',
     credentials: true, // This allows cookies to be sent back and forth
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -64,6 +65,7 @@ app.use('/Employee', EmployeeRoute);
 app.use('/Product', ProductRoute);
 app.use('/User', UserRoute);
 app.use('/Supplier', SupplierRoute);
+app.use('/Purchase',PurchaseRoute);
 
 async function testDatabaseConnection() {
     console.log('🔍 Testing database connection...');
