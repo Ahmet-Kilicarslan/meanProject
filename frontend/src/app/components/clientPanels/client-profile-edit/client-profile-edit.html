@@ -1,0 +1,117 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <form class="col-12 needs-validation" novalidate (ngSubmit)="onSubmit()">
+
+        <!-- Username -->
+        <div class="m-3">
+          <label for="validationCustom01" class="form-label">
+            <i class="bi bi-person me-1"></i>
+            Username
+          </label>
+          <input type="text"
+                 [(ngModel)]="User.username"
+                 name="username"
+                 id="validationCustom01"
+                 required
+                 class="form-control">
+          <div class="invalid-feedback">
+            Username required
+          </div>
+        </div>
+
+        <!--email-->
+        <div class=" m-3">
+          <label for="validationCustom02" class="form-label">
+            <i class="bi bi-envelope me-1"></i>
+            email
+          </label>
+          <input type="text" [(ngModel)]="User.email" name="email" id="validationCustom02" required
+                 class="form-control">
+          <div class="invalid-feedback">
+            email required
+          </div>
+        </div>
+
+
+        <!-- New password -->
+        <div class="m-3">
+          <label for="newPassword" class="form-label">
+            <i class="bi bi-lock me-1"></i>
+            New Password
+          </label>
+          <div class="position-relative">
+            <input [type]="showNewPassword ? 'text' : 'password'"
+                   id="newPassword"
+                   name="newPassword"
+                   [(ngModel)]="User.newPassword"
+                   minlength="6"
+                   class="form-control pe-5"
+                   [disabled]="isLoading"
+                   placeholder="Minimum 6 characters *">
+
+            <button type="button"
+                    class="btn btn-sm btn-link position-absolute top-50 end-0 translate-middle-y me-2 p-1 eye-toggle-btn"
+                    (click)="toggleNewPasswordVisibility()"
+                    [disabled]="isLoading">
+              <i [class]="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+
+          <div class="invalid-feedback">
+            New password must be at least 6 characters
+          </div>
+        </div>
+
+        <!-- Current password -->
+        <div class="m-3">
+          <label for="oldPassword" class="form-label">
+            <i class="bi bi-shield-check me-1"></i>
+            Current Password <span class="text-danger">*</span>
+          </label>
+          <div class="position-relative">
+            <input [type]="showOldPassword ? 'text' : 'password'"
+                   id="oldPassword"
+                   name="oldPassword"
+                   [(ngModel)]="User.oldPassword"
+                   required
+                   class="form-control pe-5"
+                   [disabled]="isLoading">
+
+            <button type="button"
+                    class="btn btn-sm btn-link position-absolute top-50 end-0 translate-middle-y me-2 p-1 eye-toggle-btn"
+                    (click)="toggleOldPasswordVisibility()"
+                    [disabled]="isLoading">
+              <i [class]="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+
+          <div class="invalid-feedback">
+            Current password is required
+          </div>
+        </div>
+
+
+
+        <!-- Error Message -->
+        @if (error) {
+          <div class="alert alert-danger mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ error }}
+          </div>
+        }
+
+        <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+          <button type="button" class="btn cancel-button" (click)="onCancelClicked()">
+            Cancel
+          </button>
+          <button class="btn save-button" type="submit">
+            Save
+          </button>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+</div>

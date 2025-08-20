@@ -29,7 +29,7 @@ export default class EmployeeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // This will run every time employeeData or isEditMode changes
+
     if (changes['employeeData']) {
       this.resetForm();
     }

@@ -43,9 +43,9 @@
 }
 
 .nav-pills .nav-link.active {
-  background-color: #007bff;
+  background: linear-gradient(45deg, var(--primera) ,var(--bar));
   color: white;
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+
 }
 
 .nav-pills .nav-link:hover:not(.active) {
@@ -65,7 +65,7 @@
 }
 
 .form-floating > .form-control:focus {
-  border-color: #007bff;
+  border-color: var(--nav);
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
@@ -78,23 +78,23 @@
 }
 
 .btn-primary {
-  background: linear-gradient(45deg, #007bff, #0056b3);
+  background: linear-gradient(45deg, var(--primera) ,var(--nav));
   border: none;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(45deg, #0056b3, #004085);
+  background: linear-gradient(45deg, var(--primera) ,var(--nav));
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 8px 16px var(--bar);
 }
 
 .btn-success {
-  background: linear-gradient(45deg, #28a745, #1e7e34);
+  background: linear-gradient(45deg, #9EC8B9, #5C8374);
   border: none;
 }
 
 .btn-success:hover {
-  background: linear-gradient(45deg, #1e7e34, #155724);
+  background: linear-gradient(45deg, #9EC8B9, #5C8374);
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(40, 167, 69, 0.3);
 }

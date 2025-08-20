@@ -49,15 +49,6 @@ export default class ViewSupplier implements OnInit {
      }
    })
   }
-  /*loadProductsBySupplier(supplierId:number){
-    this.productService.getProductBySupplier(supplierId).subscribe({
-      next: (result:any) => {
-        this.productsBySupplier = result;
-      },error:(err:any) => {
-        console.log(err);
-      }
-    })
-  }*/
 
   toggleProducts(supplierId:number):void{
     if (this.expandedSupplierId === supplierId) {

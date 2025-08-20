@@ -190,14 +190,28 @@ router.get('/profile', requireAuth, async (req, res) => {
     }
 });
 
+//get all users
 router.get('/users', async (req, res) => {
     try{
         const allUsers = await userDao.getAllUsers();
         res.status(201).json(allUsers)
     }catch(error){
-        console.error("Faield to fetch all users",error);
+        console.error("Failed to fetch all users",error);
         res.status(500).json({
-            error: 'Faield to fetch all users',
+            error: 'Failed to fetch all users',
+            message: error.message
+        })
+    }
+})
+
+router.put('/',async (req, res) => {
+    try{
+        const updatedUser = await userDao.updateUser(req.body);
+        res.status(201).json(updatedUser);
+    }catch(error){
+        console.error("Failed update user backend router",error);
+        res.status(500).json({
+            error: 'FAiled to update user in backend router',
             message: error.message
         })
     }

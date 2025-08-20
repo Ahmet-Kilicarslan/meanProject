@@ -1,12 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import userService from '../../../services/UserService';
 import purchaseService from '../../../services/PurchaseService';
-import {purchasedProduct,Purchase} from '../../../models/Purchase'
-
+import {purchasedProduct, Purchase,PurchasedProductWithDetails} from '../../../models/Purchase'
+import {User} from '../../../models/User';
+import {CommonModule, DatePipe} from '@angular/common';
+import ProductComponent from '../../panels/Product/add-editProduct/Product.component';
+import profileEditModal from '../client-profile-edit/client-profile-edit';
+import utilService from '../../../services/UtilsService';
 @Component({
   selector: 'app-client-profile',
   imports: [
-
+    CommonModule,
+    profileEditModal
   ],
   templateUrl: './client-profile.html',
   styleUrl: './client-profile.css'
@@ -14,13 +19,19 @@ import {purchasedProduct,Purchase} from '../../../models/Purchase'
 export default class ClientProfile implements OnInit {
 
 
-  constructor(private userService: userService,private  purchaseService: purchaseService) {
-  }
+  constructor(private userService: userService,
+              private purchaseService: purchaseService,
+              private utilService : utilService,
+              ) {}
 
   currentUser: any = null;
+  updatedUser: any = null;
   error = '';
   isLoading = false;
   purchaseLog: Purchase[] = [];
+  purchasedProducts: PurchasedProductWithDetails[] = [];
+
+  expandedPurchaseId: number | null = null;
 
   ngOnInit() {
     this.loadUserProfile();
@@ -30,24 +41,42 @@ export default class ClientProfile implements OnInit {
   loadUserProfile() {
 
     this.currentUser = this.userService.getCurrentUser();
+
     console.log('📋 Showing cached user data:', this.currentUser);
 
-    if (this.currentUser?.id) {
-      this.loadPurchaseLog();
+    if (this.currentUser) {
+      this.loadPurchaseLog(); // Load with cached data first
+
+    } else {
+
+      this.fetchFreshProfile();
     }
-
-
-    this.fetchFreshProfile();
-
   }
+
   loadPurchaseLog() {
     this.error = '';
+
+    if (!this.currentUser || !this.currentUser.id) {
+      console.warn(' No user available for purchase log');
+      return;
+    }
+    this.isLoading = true;
+
     this.purchaseService.getPurchasesByUserId(this.currentUser.id).subscribe({
-      next:(purchaseData) => {
+      next: (purchaseData) => {
+
+        console.log('✅ Purchase data received:', purchaseData);
+        console.log('✅ Number of purchases:', purchaseData?.length);
+
         this.purchaseLog = purchaseData;
 
-      },error: (error:any) => {
-        this.error = error;
+        console.log('✅ purchaseLog updated:', this.purchaseLog);
+        console.log('✅ purchaseLog length:', this.purchaseLog.length);
+
+        this.isLoading = false;
+      }, error: (error: any) => {
+        console.error('❌ Failed to fetch purchase log :', error);
+        this.error = 'Failed load purchase log';
       }
     })
 
@@ -58,14 +87,12 @@ export default class ClientProfile implements OnInit {
     this.error = '';
 
     this.userService.getProfile().subscribe({
-      next: (response: any) => {
+      next: (response: User) => {
         console.log('🔄 Fresh profile data received:', response);
 
-
-        if (response.user) {
-          this.currentUser = response.user;
-        } else {
-          this.currentUser = response;
+        this.currentUser = response;
+        if (this.currentUser) {
+          this.loadPurchaseLog();
         }
 
         this.isLoading = false;
@@ -79,8 +106,86 @@ export default class ClientProfile implements OnInit {
         if (!this.currentUser) {
           this.currentUser = this.userService.getCurrentUser();
         }
+      }, complete: () => {
+        this.isLoading = false;
+
       }
     });
+  }
+
+  loadItemsByPurchaseId(purchaseId: number) {
+    this.error = '';
+
+
+    this.purchaseService.getItemsByPurchaseId(purchaseId).subscribe({
+      next: (purchaseData: PurchasedProductWithDetails[]) => {
+
+        console.log('✅ Purchased products  received:', purchaseData);
+        this.purchasedProducts = purchaseData;
+        console.log('✅ purchase data length:', this.purchasedProducts.length);
+
+      },
+      error: (error: any) => {
+        console.error('❌ Failed to fetch purchased products :', error);
+        this.error = 'Failed load purchase log';
+      }
+    })
+
+  }
+
+  togglePurchasedProducts(purchaseId: number) {
+    if (this.expandedPurchaseId === purchaseId) {
+
+      this.expandedPurchaseId = null;
+
+      this.purchasedProducts = [];
+    } else {
+
+      this.expandedPurchaseId = purchaseId;
+      this.loadItemsByPurchaseId(purchaseId);
+
+    }
+
+  }
+
+  getIcon(purchaseId: number): string {
+    return this.isExpanded(purchaseId) ? 'bi-chevron-up' : 'bi-chevron-down';
+
+  }
+
+  isExpanded(purchaseId: number): boolean {
+    return this.expandedPurchaseId == purchaseId ;
+
+  }
+
+  handleOpenEditModal(): void {
+    this.utilService.openModal('editProfileModal');
+
+  }
+
+  handleSave(): void {
+    this.error = '';
+
+    this.userService.updateUser(this.updatedUser).subscribe({
+      next: (response: User) => {
+
+        console.log('Successfully updated user : ',response);
+        this.utilService.closeModal('editProfileModal');
+
+        },error : (error: any) => {
+
+        console.error('❌ Failed to update user:', error);
+        this.error = 'Failed to update user';
+
+      }
+    });
+
+  }
+
+  handleCancel(): void {
+    this.utilService.closeModal('editProfileModal');
+
+
   }
 
 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { App } from './app';
+import  App  from './app';
 //this file is used for writing tests .We can ignore it right now
 describe('App', () => {
   beforeEach(async () => {

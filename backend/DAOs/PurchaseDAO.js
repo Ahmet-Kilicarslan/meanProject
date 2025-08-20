@@ -1,6 +1,6 @@
 import {pool} from "../dbc.js";
 
-import {Purchase,PurchasedProduct} from "../models/Purchase.js";
+import {Purchase, PurchasedProduct} from "../models/Purchase.js";
 
 export default class PurchaseDAO {
 
@@ -9,20 +9,78 @@ export default class PurchaseDAO {
         try {
             const sql = 'insert into purchase (userId,totalAmount) values (?,?)';
             const [result] = await pool.query(sql, [purchase.userId, purchase.totalAmount]);
-            return new Purchase(result.insertId, purchase.userId,[], purchase.totalAmount, purchase.date,);
+            return new Purchase(result.insertId, purchase.userId, [], purchase.totalAmount, purchase.date,);
         } catch (err) {
             console.log(err);
             throw err;
         }
     }
+
 //getting purchases by user id
     static async getPurchasesByUserId(userId) {
         try {
             const sql = 'select * from purchase where userId = ?';
             const [result] = await pool.query(sql, [userId]);
-            return result.map((purchase) => new Purchase(purchase.id, purchase.userId, [],purchase.totalAmount, purchase.date));
+            return result.map((purchase) => new Purchase(
+                purchase.id,
+                purchase.userId,
+                [],
+                purchase.totalAmount,
+                purchase.date
+            ));
         } catch (err) {
             console.log(err);
+            throw err;
+        }
+    }
+//getting purchases by user id in descending order
+static async getPurchasesByUserIdInDescendingOrder(userId) {
+        try{
+            const sql ='select * from purchase where userId = ? order by date DESC ';
+            const [result] = await pool.query(sql, [userId]);
+            return result.map((purchase) => new Purchase(
+                purchase.id,
+                purchase.userId,
+                [],
+                purchase.totalAmount,
+                purchase.date ))
+                ;
+        }catch(err){
+            console.log(err);
+            throw err;
+        }
+}
+
+    //get purchasedProducts by purchase id
+    static async getPurchasedProductsByPurchaseId(purchaseId) {
+        try {
+            const sql = `
+                SELECT
+                    bought.id,
+                    bought.purchaseId,
+                    bought.productId,
+                    bought.quantity,
+                    bought.price as purchasePrice,
+                    item.id as originalProductId,
+                    item.name as productName,
+                    item.amount as stockAmount,
+                    item.price as currentPrice
+                FROM purchasedProduct bought
+                         INNER JOIN products item ON bought.productId = item.id
+                WHERE bought.purchaseId = ?
+            `;
+            const purchasedProducts = await pool.query(sql, [purchaseId]);
+
+            console.log('🔍 DAO: Raw SQL result:', purchasedProducts);
+            console.log('🔍 DAO: Result type:', typeof purchasedProducts);
+            console.log('🔍 DAO: Is array?', Array.isArray(purchasedProducts));
+            console.log('🔍 DAO: Length:', purchasedProducts?.length);
+
+            return purchasedProducts[0];
+
+
+        } catch (err) {
+            console.error(err);
             throw err;
         }
     }
@@ -44,7 +102,7 @@ export default class PurchaseDAO {
                 WHERE p.id = ?
             `;
 
-            const [rows]=await pool.query(sql,[purchaseId]);
+            const [rows] = await pool.query(sql, [purchaseId]);
             if (rows.length === 0) {
                 return null; // Purchase not found
             }
@@ -79,8 +137,8 @@ export default class PurchaseDAO {
     }
 
     static async addProductToPurchasedProduct(purchasedProduct) {
-        try{
-            const sql='insert into purchasedProduct ( purchaseId, productId, quantity, price) values (?,?,?,?) ';
+        try {
+            const sql = 'insert into purchasedProduct ( purchaseId, productId, quantity, price) values (?,?,?,?) ';
             const [result] = await pool.query(sql, [
                 purchasedProduct.purchaseId,
                 purchasedProduct.productId,
@@ -95,7 +153,7 @@ export default class PurchaseDAO {
                 purchasedProduct.price
             );
 
-        }catch(err){
+        } catch (err) {
             console.log(err);
             throw err;
 

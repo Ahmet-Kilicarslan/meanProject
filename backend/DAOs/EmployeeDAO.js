@@ -73,6 +73,6 @@ export default class EmployeeDAO {
     static async updateEmployee(employee) {
         const sql = 'update  employee set name=?,position=?,salary=? where id = ?';
         const [result] = await pool.query(sql, [employee.name, employee.position, employee.salary, employee.id]);
-        return employee;
+        return result;
     }
 }

@@ -33,15 +33,12 @@ export default class ClientViewProducts implements OnInit {
   }
 
 
-
-
   products: Product[] = [];
   suppliers: Supplier[] = [];
   cartItems: { product: Product, quantity: number }[] = [];
   itemQuantity: number = 0;
   totalPrice: number = 0;
   purchaseCompleted: boolean = true;
-
 
 
   ngOnInit() {
@@ -83,60 +80,62 @@ export default class ClientViewProducts implements OnInit {
   handleOpenCart() {
     this.utilsService.openModal('cartModal');
   }
+
   handleCloseCart(): void {
     this.utilsService.closeModal('cartModal');
   }
 
 
   createPurchase() {
-    try{
-    if (!this.purchaseCompleted || this.cartItems.length === 0 ||this.purchaseStateService.getPurchaseState() !== 'idle' ) {
-      return;
-    }
-    this.purchaseStateService.setStatusProcessing();
-
-    this.purchaseCompleted = false;
-
-    // Convert your frontend cart format to backend purchase format
-    const purchasedProducts: purchasedProduct[] = this.cartItems.map(item => ({
-      id: 0,
-      purchaseId: 0,
-      productId: item.product.id!,
-      quantity: item.quantity,
-      price: item.product.price
-    }));
-
-
-    const purchaseData = {
-      userId: this.userService.getCurrentUserId(),
-      totalAmount: this.getTotalAmount(),
-      products: purchasedProducts
-    };
-
-
-    this.purchaseService.createPurchase(purchaseData).subscribe({
-      next: response => {
-
-        console.log('purchase successful',response);
-        this.purchaseCompleted = true;
-        this.cartItems=[];
-        this.calculateTotalPrice();
-        this.purchaseStateService.setStatusSuccess();
-        this.purchaseStateService.setStatusFailed()
-
-      },error: error => {
-        console.log('purchase failed',error);
-        this.purchaseCompleted = true;
-
+    try {
+      if (!this.purchaseCompleted || this.cartItems.length === 0 || this.purchaseStateService.getPurchaseState() !== 'idle') {
+        return;
       }
-    })
+      this.purchaseStateService.setStatusProcessing();
 
-    this.loadSuppliers()
-    this.handleCloseCart()
-    this.updateProductAmountAfterPurchase();
+      this.purchaseCompleted = false;
 
-    }catch(error) {
-      console.error('Failed to create purchase in component ',error);
+
+      const purchasedProducts: purchasedProduct[] = this.cartItems.map(item => ({
+        id: 0,
+        purchaseId: 0,
+        productId: item.product.id!,
+        quantity: item.quantity,
+        price: item.product.price
+      }));
+
+
+      const purchaseData = {
+        userId: this.userService.getCurrentUserId(),
+        totalAmount: this.getTotalAmount(),
+        products: purchasedProducts
+      };
+
+
+      this.purchaseService.createPurchase(purchaseData).subscribe({
+        next: response => {
+
+          console.log('purchase successful', response);
+          this.purchaseCompleted = true;
+          this.cartItems = [];
+          this.calculateTotalPrice();
+          this.purchaseStateService.setStatusSuccess();
+
+
+        }, error: error => {
+          console.log('purchase failed', error);
+          this.purchaseCompleted = true;
+          this.purchaseStateService.setStatusFailed()
+        }
+      })
+
+      this.updateProductAmountAfterPurchase();
+      this.loadSuppliers()
+      this.handleCloseCart()
+
+
+    } catch (error) {
+      console.error('Failed to create purchase in component ', error);
       this.purchaseCompleted = true;
       this.handleCloseCart()
 
@@ -144,22 +143,22 @@ export default class ClientViewProducts implements OnInit {
 
   }
 
-  updateProductAmountAfterPurchase(){
-    if(this.purchaseStateService.getPurchaseState() !== 'success'){
+  updateProductAmountAfterPurchase() {
+    if (this.purchaseStateService.getPurchaseState() !== 'success') {
       return;
     }
 
-    for(const item of this.cartItems) {
+    for (const item of this.cartItems) {
 
       const newAmount = item.product.amount - item.quantity;
 
-      this.productService.updateProductAmount(item.product.id,newAmount).subscribe({
+      this.productService.updateProductAmount(item.product.id, newAmount).subscribe({
 
         next: response => {
-          console.log("successfully updated product amount in component",response);
+          console.log("successfully updated product amount in component", response);
 
-        },error: error => {
-          console.log('Failed to update product amount in database after successfull purchase',error);
+        }, error: error => {
+          console.log('Failed to update product amount in database after successfull purchase', error);
         }
       })
     }
@@ -185,9 +184,9 @@ export default class ClientViewProducts implements OnInit {
   }
 
   private calculateTotalPrice(): number {
-    this.totalPrice=0;
+    this.totalPrice = 0;
     for (const item of this.cartItems) {
-      this.totalPrice += item.product.price*item.quantity;
+      this.totalPrice += item.product.price * item.quantity;
     }
     return this.totalPrice;
   }
@@ -196,20 +195,21 @@ export default class ClientViewProducts implements OnInit {
     return this.totalPrice;
 
   }
+
   getItemQuantity(): number {
-    this.itemQuantity =0;
-    for( const item of this.cartItems) {
+    this.itemQuantity = 0;
+    for (const item of this.cartItems) {
       this.itemQuantity += item.quantity;
     }
     return this.itemQuantity;
   }
 
-  removeFromCart(productId:number): void {
+  removeFromCart(productId: number): void {
     this.cartItems = this.cartItems.filter(item => item.product.id !== productId);
     this.calculateTotalPrice()
   }
 
-  updateQuantity(data: {productId: number, newQuantity: number}) {
+  updateQuantity(data: { productId: number, newQuantity: number }) {
     const item = this.cartItems.find(
       cartItem => cartItem.product.id === data.productId);
 
@@ -222,8 +222,6 @@ export default class ClientViewProducts implements OnInit {
       this.calculateTotalPrice();
     }
   }
-
-
 
 
 }

@@ -1,11 +1,10 @@
 import {Injectable, signal} from '@angular/core';
 
+@Injectable({
+  providedIn: 'root'
+})
 
 export  default class PurchaseStateService {
-
-  @Injectable({
-    providedIn: 'root'
-  })
 
   purchaseStatus = signal<'idle' | 'processing' | 'success' | 'error'>('idle');
 

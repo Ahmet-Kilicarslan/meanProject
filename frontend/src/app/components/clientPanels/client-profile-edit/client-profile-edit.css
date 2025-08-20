@@ -1,0 +1,64 @@
+.save-button{
+  background-color: var(--primera);
+  color: white;
+  box-shadow: 5px 5px  var(--light);
+  transition: transform 200ms,box-shadow 200ms;
+  border-radius: 10px;
+  width:100px;
+
+}
+.save-button:active{
+  transform: translateY(4px) translateX(4px);
+  background-color: var(--primera);
+  color: white;
+  box-shadow: none;
+
+}
+
+.cancel-button{
+
+    background-color: var(--reddo);
+    color: white;
+    box-shadow: 5px 5px  var(--light);
+    transition: transform 200ms,box-shadow 200ms;
+    border-radius: 10px;
+    width:100px;
+
+
+}
+
+.cancel-button:active{
+  transform: translateY(4px) translateX(4px);
+  background-color: var(--reddo);
+  color: white;
+  box-shadow: none;
+
+}
+
+.eye-toggle-btn {
+  border: none !important;
+  background: transparent !important;
+  color: #6c757d;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.eye-toggle-btn:hover {
+  color: #495057 !important;
+  background: rgba(108, 117, 125, 0.1) !important;
+  border-radius: 4px;
+}
+
+.eye-toggle-btn:focus {
+  box-shadow: none !important;
+  outline-offset: 2px;
+}
+
+.eye-toggle-btn:disabled {
+  color: #adb5bd !important;
+  cursor: not-allowed;
+}

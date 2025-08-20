@@ -1,7 +1,7 @@
 
 
 .sidebar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--bluy) 0%, var(--porpıl) 100%);
   color: white;
   width: 250px;
   height: 100vh;
@@ -31,7 +31,7 @@
 }
 
 .toggle-btn:hover {
-  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  background: linear-gradient(135deg, var(--bluy) 0%, var(--porpıl) 100%);
 }
 
 .nav-links {
@@ -54,7 +54,7 @@
 }
 
 .nav-links li:hover {
-  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);}
+  background: linear-gradient(135deg, var(--bluy) 0%, var(--porpıl)  100%);}
 
 .nav-links li i {
   color: white;

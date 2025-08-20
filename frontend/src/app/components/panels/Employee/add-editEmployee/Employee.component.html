@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-12">
       <form class="row g-3 needs-validation" novalidate (ngSubmit)="onSubmit()">
+
         <div class="col-md-12">
           <label for="validationCustom01" class="form-label">Name Surname</label>
           <input type="text" [(ngModel)]="employee.name" name="name" id="validationCustom01" required class="form-control">
@@ -22,6 +23,7 @@
             Please select a valid position.
           </div>
         </div>
+
         <div class="col-md-6">
           <label for="validationCustom03" class="form-label">Salary</label>
           <input type="number" [(ngModel)]="employee.salary" name="salary" id="validationCustom03" required class="form-control">
@@ -38,6 +40,7 @@
             {{isEditMode ? 'Update' : 'Hire'}}
           </button>
         </div>
+
       </form>
     </div>
   </div>

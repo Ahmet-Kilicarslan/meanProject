@@ -39,10 +39,10 @@ router.post("/create", async (req, res) => {
 });
 
 //getting purchases by userId
-router.get("/:userId", async (req,res)=>{
+router.get("/byUser/:userId", async (req,res)=>{
     try{
         const purchases= await PurchaseDAO.getPurchasesByUserId(req.params.userId);
-        res.status(200).json({purchases:purchases});
+        res.status(200).json(purchases);
 
     }catch(err){
         console.error(err);
@@ -54,6 +54,18 @@ router.get("/:userId", async (req,res)=>{
 
 
 
+})
+//getting purchases by userId in descending order
+router.get("/byUserInDesc/:UserId", async (req,res)=>{
+    try{
+        const purchases = await PurchaseDAO.getPurchasesByUserIdInDescendingOrder(req.params.userId);
+        res.status(200).json(purchases);
+
+    }catch(err){console.error(err);
+        res.status(500).json({
+            error: 'Failed to fetch purchases made by user failed',
+            message: err.message
+        })}
 })
 
 //adding product as purchased product
@@ -73,10 +85,15 @@ router.post("/products", async (req,res)=>{
 })
 
 //getting products with same purchaseId
-router.get("/:purchaseId", async (req,res)=>{
+router.get("/byPurchase/:purchaseId", async (req,res)=>{
     try{
-        const fetchedProducts=await PurchaseDAO.getPurchaseWithItems(req.params.purchaseId);
-        res.status(200).json({fetchedProducts:fetchedProducts});
+        const fetchedProducts=await PurchaseDAO.getPurchasedProductsByPurchaseId(req.params.purchaseId);
+
+        console.log('🔍 Backend: DAO returned:', fetchedProducts);
+        console.log('🔍 Backend: Number of products:', fetchedProducts?.length);
+        console.log('🔍 Backend: First product:', fetchedProducts[0]);
+
+        res.status(200).json(fetchedProducts);
     }catch(err){
         console.error(err);
         res.status(500).json({
