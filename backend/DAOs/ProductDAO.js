@@ -68,8 +68,19 @@ export default class ProductDAO {
 
     static async updateAmount(id, amount) {
         try{
+            console.log(`🔄 DAO: updateAmount called with id=${id}, amount=${amount}`);
+            console.log(`📊 DAO: Amount type:`, typeof amount);
+
             const sql='update products set amount=? where id=?';
+
+            console.log(`📝 DAO: Executing SQL:`, sql);
+            console.log(`📝 DAO: With parameters:`, [amount, id]);
+
             const [result] = await pool.query(sql, [amount ,id]);
+
+            console.log(`✅ DAO: Query result:`, result);
+            console.log(`✅ DAO: Affected rows:`, result.affectedRows);
+
             return result;
         }catch(err){
             console.log(err);

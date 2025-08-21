@@ -25,7 +25,7 @@ export default class ClientProfile implements OnInit {
               ) {}
 
   currentUser: any = null;
-  updatedUser: any = null;
+
   error = '';
   isLoading = false;
   purchaseLog: Purchase[] = [];
@@ -163,11 +163,16 @@ export default class ClientProfile implements OnInit {
 
   }
 
-  handleSave(): void {
+  handleSave(updatedUser:Partial<User>): void {
     this.error = '';
+    const userToUpdate = {...this.currentUser, ...updatedUser};
 
-    this.userService.updateUser(this.updatedUser).subscribe({
+
+    this.userService.updateUser(userToUpdate).subscribe({
       next: (response: User) => {
+
+        this.currentUser = response;
+        this.loadUserProfile()
 
         console.log('Successfully updated user : ',response);
         this.utilService.closeModal('editProfileModal');

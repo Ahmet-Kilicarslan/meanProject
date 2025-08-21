@@ -101,7 +101,7 @@ export default class LoginComponent {
       this.isLoginLoading = false; // Add this
       return false;
     }
-    if (!this.loginData.password.trim()) {
+    /*if (!this.loginData.password.trim()) {
       this.loginError = 'Password is required';
       this.isLoginLoading = false; // Add this
       return false;
@@ -110,7 +110,7 @@ export default class LoginComponent {
       this.loginError = 'Password must be at least 6 characters';
       this.isLoginLoading = false;
       return false;
-    }
+    }*/
     return true;
   }
 

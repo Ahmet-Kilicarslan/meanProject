@@ -14,4 +14,36 @@
   --porpıl:#764ba2;
   --reddo:#ff6b6b;
   --sarı:#ffcc80;
+
+  --lightGreen:#9EC8B9;
+  --darkGreen:#5C8374;
+}
+
+.btn-primary-custom {
+  background-color: #667eea;
+  border: 1px solid #667eea;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary-custom:hover {
+  background-color: #5a6fd8;
+  border-color: #5a6fd8;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary-custom:active {
+  background-color: #4d5ec4;
+  border-color: #4d5ec4;
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
 }

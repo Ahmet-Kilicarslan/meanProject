@@ -43,11 +43,20 @@ router.put("/",async (req,res)=>{
     }
 })
 
-//update
+//update amount
 router.put("/:id",async (req,res)=>{
     try {
         const id = req.params.id;
-        const updatedProduct = await ProductDAO.updateAmount(id, req.body);
+        const { amount } = req.body;
+
+        console.log(`🔄 Backend router: Received update request for product ID: ${id}`);
+        console.log(`📊 Backend router: Request body:`, req.body);
+        console.log(`📊 Backend router: Request body type:`, typeof req.body);
+
+        const updatedProduct = await ProductDAO.updateAmount(id, amount);
+
+        console.log('✅ Backend router: Update completed:',updatedProduct);
+
         res.json(updatedProduct);
     }catch(err){
         console.log(err);

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnChanges, OnInit, Output, Input,SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, OnChanges, OnInit, Output, Input, SimpleChanges} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import userService from '../../../services/UserService';
@@ -17,7 +17,7 @@ import {User} from '../../../models/User';
   templateUrl: './client-profile-edit.html',
   styleUrl: './client-profile-edit.css'
 })
-export default class ClientProfileEdit implements OnInit ,OnChanges {
+export default class ClientProfileEdit implements OnInit, OnChanges {
 
   constructor(private userService: userService) {
   }
@@ -29,12 +29,12 @@ export default class ClientProfileEdit implements OnInit ,OnChanges {
   @Output() onCancel = new EventEmitter<void>();
 
 
-  User ={
-    id:null,
-    username:'',
-    email:'',
-    newPassword:'',
-    oldPassword:'',
+  User = {
+    id: null,
+    username: '',
+    email: '',
+    newPassword: '',
+    oldPassword: '',
   };
 
   isLoading = false;
@@ -56,10 +56,10 @@ export default class ClientProfileEdit implements OnInit ,OnChanges {
   }
 
 
-  resetForm(){
-    if(this.userData){
-      this.User ={
-        id:this.userData.id,
+  resetForm() {
+    if (this.userData) {
+      this.User = {
+        id: this.userData.id,
         username: this.userData.username,
         email: this.userData.email,
         newPassword: '',
@@ -75,9 +75,9 @@ export default class ClientProfileEdit implements OnInit ,OnChanges {
   }
 
 
-  onSubmit(){
+  onSubmit() {
 
-    if(!this.validateForm()){
+    if (!this.validateForm()) {
       return;
     }
     const form = document.querySelector('.needs-validation') as HTMLFormElement;
@@ -85,25 +85,29 @@ export default class ClientProfileEdit implements OnInit ,OnChanges {
       form.classList.add('was-validated');
       return;
     }
-    const updateData = {
+    const updateData: any = {
       id: this.User.id,
       username: this.User.username,
-      email: this.User.email,
-      oldPassword: this.User.oldPassword
-
+      email: this.User.email
     };
 
 
+    if(this.showPasswordFields) {
+      updateData.oldPassword = this.User.oldPassword;
+      updateData.newPassword = this.User.newPassword;
+    }
+
+    console.log('Emitting update data:', updateData);
 
     this.onSave.emit(updateData);
   }
 
-  onCancelClicked(){
+  onCancelClicked() {
     this.resetForm();
     this.onCancel.emit()
   }
 
-   async validateForm():Promise<boolean> {
+  async validateForm(): Promise<boolean> {
     this.error = '';
     const isDuplicate = await firstValueFrom(//converts observable to promise
       this.checkForDuplicateUsername(this.userData.username)
@@ -112,7 +116,7 @@ export default class ClientProfileEdit implements OnInit ,OnChanges {
       this.error = 'This username already exists';
       return false;
     }
-    if(this.User.username){
+    if (!this.User.username) {
       this.error = 'Username is required';
       return false;
     }
@@ -122,25 +126,27 @@ export default class ClientProfileEdit implements OnInit ,OnChanges {
       this.error = 'Valid email is required';
       return false;
     }
+    /*if (this.showPasswordFields) {
+      if (!this.User.oldPassword.trim()) {
+        this.error = 'Old password is required';
+        return false;
 
-    if(!this.User.oldPassword.trim()){
-      this.error = 'Old password is required';
-      return false;
+      }
+      if (!this.User.newPassword.trim()) {
+        this.error = 'New password is required';
+        return false;
+      }
 
-    }
-    if(!this.User.newPassword.trim()){
-      this.error = 'New password is required';
-      return false;
-    }
+      if (this.User.newPassword.length < 6) {
+        this.error = 'New password must be at least 6 characters long';
+        return false;
 
-    if(this.User.newPassword.length < 6){
-      this.error = 'New password must be at least 6 characters long';
-      return false;
-
-    }
-    if(this.User.newPassword === this.User.oldPassword){
-      this.error = 'new password cant be same with old password';
-    }
+      }
+      if (this.User.newPassword === this.User.oldPassword) {
+        this.error = 'new password cant be same with old password';
+        return false;
+      }
+    }*/
     return true;
 
   }
@@ -160,11 +166,13 @@ export default class ClientProfileEdit implements OnInit ,OnChanges {
       this.showNewPassword = false;
     }
   }
+
   checkForDuplicateUsername(username: string): Observable<boolean> {
     return this.userService.getAllUsers().pipe(
       map((users: User[]) =>
         users.some(user =>//some() return true if an array element matches input
-          user.username.toLowerCase() === username.toLowerCase())
+          user.username.toLowerCase() === username.toLowerCase() &&
+          this.User.id !== user.id)
       )
     );
   }

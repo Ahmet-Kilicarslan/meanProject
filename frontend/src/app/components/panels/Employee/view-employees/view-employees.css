@@ -35,8 +35,9 @@
 
 }
 .container-fluid{
-  background-color:var(--backg);
+
   padding: 30px;
+  background: linear-gradient(135deg, var(--sarı) 0%, var(--bar) 100%);
 
 
 }

@@ -12,6 +12,7 @@ import cartModal from '../cart/cart';
 import {purchasedProduct, Purchase} from '../../../models/Purchase';
 import PurchaseService from '../../../services/PurchaseService';
 import PurchaseStateService from '../../../services/PurchaseStateService';
+import {Toast} from 'bootstrap';
 
 @Component({
   selector: 'app-client-view-products',
@@ -117,10 +118,14 @@ export default class ClientViewProducts implements OnInit {
 
           console.log('purchase successful', response);
           this.purchaseCompleted = true;
-          this.cartItems = [];
+
           this.calculateTotalPrice();
           this.purchaseStateService.setStatusSuccess();
-
+          this.updateProductAmountAfterPurchase();
+          this.loadSuppliers()
+          this.handleCloseCart()
+          this.showSuccessToaster()
+          this.cartItems = [];
 
         }, error: error => {
           console.log('purchase failed', error);
@@ -129,9 +134,7 @@ export default class ClientViewProducts implements OnInit {
         }
       })
 
-      this.updateProductAmountAfterPurchase();
-      this.loadSuppliers()
-      this.handleCloseCart()
+
 
 
     } catch (error) {
@@ -144,25 +147,36 @@ export default class ClientViewProducts implements OnInit {
   }
 
   updateProductAmountAfterPurchase() {
+    console.log('updateProductAmountAfterPurchase() function called ');
+    console.log('Current Purchase status', this.purchaseStateService.getPurchaseState());
+
     if (this.purchaseStateService.getPurchaseState() !== 'success') {
       return;
     }
 
+    console.log('📦 Cart items to update:', [...this.cartItems]);
+
     for (const item of this.cartItems) {
 
+      console.log(`🔄 Processing item:`, item);
+      console.log(`📊 Current amount: ${item.product.amount}, Quantity: ${item.quantity}`);
+
       const newAmount = item.product.amount - item.quantity;
+      console.log(` newAmount : ${newAmount}`);
 
       this.productService.updateProductAmount(item.product.id, newAmount).subscribe({
 
         next: response => {
-          console.log("successfully updated product amount in component", response);
+
+          console.log(`✅ SUCCESS: Product ${item.product.id} updated:`, response);
+          this.purchaseStateService.setStatusIdle();
 
         }, error: error => {
           console.log('Failed to update product amount in database after successfull purchase', error);
         }
       })
     }
-    this.purchaseStateService.setStatusIdle();
+
   }
 
 
@@ -221,6 +235,19 @@ export default class ClientViewProducts implements OnInit {
       item.quantity = data.newQuantity;
       this.calculateTotalPrice();
     }
+  }
+
+  showSuccessToaster() {
+    const tost = document.getElementById('success-toaster');
+    if (tost) {
+      const toast = new Toast(tost, {
+        autohide: true,
+        delay: 10000
+      });
+      toast.show();
+    }
+
+
   }
 
 

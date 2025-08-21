@@ -33,7 +33,16 @@
           </div>
         </div>
 
+        <div class="m-3 text-center">
+          <button type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="togglePasswordChange()">
+            <i class="bi" [class]="showPasswordFields ? 'bi-x-circle' : 'bi-key'"></i>
+            {{ showPasswordFields ? 'Cancel Password Change' : 'Change Password' }}
+          </button>
+        </div>
 
+        @if(showPasswordFields){
         <!-- New password -->
         <div class="m-3">
           <label for="newPassword" class="form-label">
@@ -91,7 +100,7 @@
           </div>
         </div>
 
-
+        }
 
         <!-- Error Message -->
         @if (error) {

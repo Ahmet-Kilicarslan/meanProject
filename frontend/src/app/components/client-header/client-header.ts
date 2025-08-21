@@ -39,7 +39,8 @@ export default class ClientHeader {
     })
 
   }
-  handleOpenCart(){
 
+  testClick() {
+    console.log('🔄 Navbar toggler clicked!');
   }
 }

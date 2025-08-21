@@ -1,6 +1,18 @@
 <nav class="navbar navbar-expand-lg custom-navbar sticky-top">
   <div class="container-fluid">
 
+    <!--toggler button-->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            (click)="testClick()"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto  mb-lg-0">
         <li class="bi-cake me-3"></li>
@@ -18,7 +30,9 @@
       </ul>
 
     </div>
-    <button class="btn ms-auto" (click)="handleClientLogout()" >
+
+
+    <button class="btn logout-button ms-auto" (click)="handleClientLogout()" >
       <i class="bi-power">Logout</i>
     </button>
   </div>

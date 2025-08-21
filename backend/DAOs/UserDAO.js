@@ -48,6 +48,7 @@ export default class UserDAO {
     //update user
     static async updateUser(user){
         try{
+
             const sql="update user set user.username=? ,user.password=?,user.email=? where id=?"
             const [result]=await pool.query(sql,[user.username,user.password,user.email,user.id]);
             return result;

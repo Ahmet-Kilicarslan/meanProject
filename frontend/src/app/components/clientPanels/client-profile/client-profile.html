@@ -157,7 +157,7 @@
       <div class="modal-body">
         <app-client-profile-edit
           [userData]="currentUser"
-          (onSave)="handleSave()"
+          (onSave)="handleSave($event)"
           (onCancel)="handleCancel()"
         >
         </app-client-profile-edit>

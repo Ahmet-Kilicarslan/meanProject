@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import { catchError,tap } from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 import Product from '../models/Product';
 
 @Injectable({
@@ -9,39 +9,46 @@ import Product from '../models/Product';
 })
 export default class ProductService {
   private apiUrl = 'http://localhost:3000/Product';
-  constructor(private http: HttpClient) { }
 
- getAllProducts():Observable<Product[]> {
+  constructor(private http: HttpClient) {
+  }
+
+  getAllProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl);
 
- }
- getProductBySupplier(supplier:number):Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/${supplier}`);
- }
- getProductById(id: number):Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
- }
+  }
 
- addProduct(product: Product): Observable<Product> {
+  getProductBySupplier(supplier: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/${supplier}`);
+  }
+
+  getProductById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+  }
+
+  addProduct(product: Product): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, product);
 
- }
- updateProduct(product: Product): Observable<Product> {
+  }
+
+  updateProduct(product: Product): Observable<Product> {
     return this.http.put<Product>(this.apiUrl, product);
- }
- updateProductAmount(id: number, amount: number): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}`,amount).pipe(
+  }
+
+  updateProductAmount(id: number, newAmount: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, {amount:newAmount}).pipe(
       tap((response) => {
-        console.log("successfully updated product amount in service",response);
-      }),catchError((error)=> {
+        console.log("successfully updated product amount in service", response);
+      }), catchError((error) => {
         console.error(error);
         return throwError(() => error.message);
 
       })
     );
- }
- deleteProduct(id: number): Observable<Object> {
+  }
+
+  deleteProduct(id: number): Observable<Object> {
     return this.http.delete(`${this.apiUrl}/${id}`);
- }
+  }
 
 }
