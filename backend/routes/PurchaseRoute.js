@@ -37,17 +37,42 @@ router.post("/create", async (req, res) => {
         });
     }
 });
-
-//getting purchases by userId
-router.get("/byUser/:userId", async (req,res)=>{
+router.get("/byUserId/:userId", async (req, res) => {
     try{
-        const purchases= await PurchaseDAO.getPurchasesByUserId(req.params.userId);
+
+        const { userId } = req.params;
+        const order = req.query.order || 'desc';
+
+        if (order !== 'asc' && order !== 'desc') {
+            return res.status(400).json({
+                error: 'Invalid order parameter. Must be "asc" or "desc"'
+            });
+        }
+        const purchases = await PurchaseDAO.getPurchaseByUserId(userId, order);
+        res.status(200).json(purchases);
+
+
+
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            error: 'Failed to fetch purchases made by user ',
+            message: err.message
+        })
+    }
+})
+
+//getting purchases by userId in ascending order
+router.get("/byUserInAsc/:userId", async (req,res)=>{
+    try{
+        const purchases= await PurchaseDAO.getPurchasesByUserIdInAscendingOrder(req.params.userId);
         res.status(200).json(purchases);
 
     }catch(err){
         console.error(err);
         res.status(500).json({
-            error: 'Failed to fetch purchases made by user failed',
+            error: 'Failed to fetch purchases made by user ',
             message: err.message
         })
     }
@@ -56,14 +81,14 @@ router.get("/byUser/:userId", async (req,res)=>{
 
 })
 //getting purchases by userId in descending order
-router.get("/byUserInDesc/:UserId", async (req,res)=>{
+router.get("/byUserInDesc/:userId", async (req,res)=>{
     try{
         const purchases = await PurchaseDAO.getPurchasesByUserIdInDescendingOrder(req.params.userId);
         res.status(200).json(purchases);
 
     }catch(err){console.error(err);
         res.status(500).json({
-            error: 'Failed to fetch purchases made by user failed',
+            error: 'Failed to fetch purchases made by user ',
             message: err.message
         })}
 })

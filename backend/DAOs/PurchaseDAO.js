@@ -16,55 +16,80 @@ export default class PurchaseDAO {
         }
     }
 
-//getting purchases by user id
-    static async getPurchasesByUserId(userId) {
+//get purchases by user id ascending or descending order
+    static async getPurchaseByUserId(userId, order = 'desc') {
         try {
-            const sql = 'select * from purchase where userId = ?';
+            const orderClause = order === 'asc' ? 'ORDER BY date ASC' : 'ORDER BY date DESC';
+            const sql = 'select * from purchase where userId = ? ${orderClause}';
+
             const [result] = await pool.query(sql, [userId]);
+
             return result.map((purchase) => new Purchase(
                 purchase.id,
                 purchase.userId,
                 [],
                 purchase.totalAmount,
                 purchase.date
-            ));
+            ))
         } catch (err) {
             console.log(err);
             throw err;
         }
+
+
     }
-//getting purchases by user id in descending order
-static async getPurchasesByUserIdInDescendingOrder(userId) {
-        try{
-            const sql ='select * from purchase where userId = ? order by date DESC ';
-            const [result] = await pool.query(sql, [userId]);
-            return result.map((purchase) => new Purchase(
-                purchase.id,
-                purchase.userId,
-                [],
-                purchase.totalAmount,
-                purchase.date ))
-                ;
-        }catch(err){
-            console.log(err);
-            throw err;
+
+
+    //getting purchases by user id in ascending order
+        static async getPurchasesByUserIdInAscendingOrder(userId) {
+            try {
+                const sql = 'select * from purchase where userId = ? order by date asc ';
+                const [result] = await pool.query(sql, [userId]);
+                return result.map((purchase) => new Purchase(
+                    purchase.id,
+                    purchase.userId,
+                    [],
+                    purchase.totalAmount,
+                    purchase.date
+                ));
+            } catch (err) {
+                console.log(err);
+                throw err;
+            }
         }
-}
+
+    //getting purchases by user id in descending order
+        static async getPurchasesByUserIdInDescendingOrder(userId) {
+            try {
+                const sql = 'select * from purchase where userId = ? order by date desc ';
+                const [result] = await pool.query(sql, [userId]);
+                return result.map((purchase) => new Purchase(
+                    purchase.id,
+                    purchase.userId,
+                    [],
+                    purchase.totalAmount,
+                    purchase.date
+                ))
+                    ;
+            } catch (err) {
+                console.log(err);
+                throw err;
+            }
+        }
 
     //get purchasedProducts by purchase id
     static async getPurchasedProductsByPurchaseId(purchaseId) {
         try {
             const sql = `
-                SELECT
-                    bought.id,
-                    bought.purchaseId,
-                    bought.productId,
-                    bought.quantity,
-                    bought.price as purchasePrice,
-                    item.id as originalProductId,
-                    item.name as productName,
-                    item.amount as stockAmount,
-                    item.price as currentPrice
+                SELECT bought.id,
+                       bought.purchaseId,
+                       bought.productId,
+                       bought.quantity,
+                       bought.price as purchasePrice,
+                       item.id      as originalProductId,
+                       item.name    as productName,
+                       item.amount  as stockAmount,
+                       item.price   as currentPrice
                 FROM purchasedProduct bought
                          INNER JOIN products item ON bought.productId = item.id
                 WHERE bought.purchaseId = ?

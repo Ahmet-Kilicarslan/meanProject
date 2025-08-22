@@ -19,7 +19,7 @@
   --darkGreen:#5C8374;
 }
 
-.btn-primary-custom {
+.btn-primary {
   background-color: #667eea;
   border: 1px solid #667eea;
   color: white;
@@ -33,7 +33,7 @@
   text-align: center;
 }
 
-.btn-primary-custom:hover {
+.btn-primary:hover {
   background-color: #5a6fd8;
   border-color: #5a6fd8;
   color: white;

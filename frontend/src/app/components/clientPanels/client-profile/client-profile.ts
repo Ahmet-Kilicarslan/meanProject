@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import userService from '../../../services/UserService';
 import purchaseService from '../../../services/PurchaseService';
-import {purchasedProduct, Purchase,PurchasedProductWithDetails} from '../../../models/Purchase'
+import {purchasedProduct, Purchase, PurchasedProductWithDetails} from '../../../models/Purchase'
 import {User} from '../../../models/User';
 import {CommonModule, DatePipe} from '@angular/common';
 import ProductComponent from '../../panels/Product/add-editProduct/Product.component';
 import profileEditModal from '../client-profile-edit/client-profile-edit';
 import utilService from '../../../services/UtilsService';
+
 @Component({
   selector: 'app-client-profile',
   imports: [
@@ -21,8 +22,9 @@ export default class ClientProfile implements OnInit {
 
   constructor(private userService: userService,
               private purchaseService: purchaseService,
-              private utilService : utilService,
-              ) {}
+              private utilService: utilService,
+  ) {
+  }
 
   currentUser: any = null;
 
@@ -32,6 +34,8 @@ export default class ClientProfile implements OnInit {
   purchasedProducts: PurchasedProductWithDetails[] = [];
 
   expandedPurchaseId: number | null = null;
+
+  newestFirst: boolean = false;
 
   ngOnInit() {
     this.loadUserProfile();
@@ -45,7 +49,7 @@ export default class ClientProfile implements OnInit {
     console.log('📋 Showing cached user data:', this.currentUser);
 
     if (this.currentUser) {
-      this.loadPurchaseLog(); // Load with cached data first
+      this.loadPurchaseLogInAscendingOrder(); // Load with cached data first in ascending order
 
     } else {
 
@@ -53,7 +57,20 @@ export default class ClientProfile implements OnInit {
     }
   }
 
-  loadPurchaseLog() {
+  toggleSort() {
+
+    this.newestFirst ?
+      this.loadPurchaseLogInDescendingOrder()
+      : this.loadPurchaseLogInAscendingOrder();
+
+  }
+
+  getSortType(): String {
+    return this.newestFirst ? "newest First" : "Oldest First";
+    //return this.newestFirst? "chevron-double-down " : "chevron-double-up";
+  }
+
+  loadPurchaseLogInDescendingOrder() {
     this.error = '';
 
     if (!this.currentUser || !this.currentUser.id) {
@@ -62,8 +79,39 @@ export default class ClientProfile implements OnInit {
     }
     this.isLoading = true;
 
-    this.purchaseService.getPurchasesByUserId(this.currentUser.id).subscribe({
-      next: (purchaseData) => {
+    this.purchaseService.getPurchasesByUserIdInDescendingOrder(this.currentUser.id).subscribe({
+      next: (purchaseData: Purchase[]) => {
+
+        console.log('✅ Purchase data received in descending order:', purchaseData);
+        console.log('✅ Number of purchases:', purchaseData?.length);
+
+        this.purchaseLog = purchaseData;
+
+        console.log('✅ purchaseLog updated in descending order:', this.purchaseLog);
+        console.log('✅ purchaseLog length:', this.purchaseLog.length);
+
+        this.isLoading = false;
+        this.newestFirst = false;
+
+      }, error: (error: any) => {
+        console.error('❌ Failed to fetch purchase log in Descending order:', error);
+        this.error = 'Failed load purchase log in Descending order';
+      }
+    })
+
+  }
+
+  loadPurchaseLogInAscendingOrder() {
+    this.error = '';
+
+    if (!this.currentUser || !this.currentUser.id) {
+      console.warn(' No user available for purchase log');
+      return;
+    }
+    this.isLoading = true;
+
+    this.purchaseService.getPurchasesByUserIdInAscendingOrder(this.currentUser.id).subscribe({
+      next: (purchaseData: Purchase[]) => {
 
         console.log('✅ Purchase data received:', purchaseData);
         console.log('✅ Number of purchases:', purchaseData?.length);
@@ -74,6 +122,7 @@ export default class ClientProfile implements OnInit {
         console.log('✅ purchaseLog length:', this.purchaseLog.length);
 
         this.isLoading = false;
+        this.newestFirst = true;//prepare boolean value 'newestFirst' for toggling
       }, error: (error: any) => {
         console.error('❌ Failed to fetch purchase log :', error);
         this.error = 'Failed load purchase log';
@@ -81,6 +130,7 @@ export default class ClientProfile implements OnInit {
     })
 
   }
+
 
   fetchFreshProfile() {
     this.isLoading = true;
@@ -92,7 +142,7 @@ export default class ClientProfile implements OnInit {
 
         this.currentUser = response;
         if (this.currentUser) {
-          this.loadPurchaseLog();
+          this.loadPurchaseLogInAscendingOrder();
         }
 
         this.isLoading = false;
@@ -111,6 +161,22 @@ export default class ClientProfile implements OnInit {
 
       }
     });
+  }
+
+
+  togglePurchasedProducts(purchaseId: number) {
+    if (this.expandedPurchaseId === purchaseId) {
+
+      this.expandedPurchaseId = null;
+
+      this.purchasedProducts = [];
+    } else {
+
+      this.expandedPurchaseId = purchaseId;
+      this.loadItemsByPurchaseId(purchaseId);
+
+    }
+
   }
 
   loadItemsByPurchaseId(purchaseId: number) {
@@ -133,28 +199,13 @@ export default class ClientProfile implements OnInit {
 
   }
 
-  togglePurchasedProducts(purchaseId: number) {
-    if (this.expandedPurchaseId === purchaseId) {
-
-      this.expandedPurchaseId = null;
-
-      this.purchasedProducts = [];
-    } else {
-
-      this.expandedPurchaseId = purchaseId;
-      this.loadItemsByPurchaseId(purchaseId);
-
-    }
-
-  }
-
   getIcon(purchaseId: number): string {
     return this.isExpanded(purchaseId) ? 'bi-chevron-up' : 'bi-chevron-down';
 
   }
 
   isExpanded(purchaseId: number): boolean {
-    return this.expandedPurchaseId == purchaseId ;
+    return this.expandedPurchaseId == purchaseId;
 
   }
 
@@ -163,7 +214,7 @@ export default class ClientProfile implements OnInit {
 
   }
 
-  handleSave(updatedUser:Partial<User>): void {
+  handleSave(updatedUser: Partial<User>): void {
     this.error = '';
     const userToUpdate = {...this.currentUser, ...updatedUser};
 
@@ -174,10 +225,10 @@ export default class ClientProfile implements OnInit {
         this.currentUser = response;
         this.loadUserProfile()
 
-        console.log('Successfully updated user : ',response);
+        console.log('Successfully updated user : ', response);
         this.utilService.closeModal('editProfileModal');
 
-        },error : (error: any) => {
+      }, error: (error: any) => {
 
         console.error('❌ Failed to update user:', error);
         this.error = 'Failed to update user';

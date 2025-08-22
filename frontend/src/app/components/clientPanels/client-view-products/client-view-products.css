@@ -1,6 +1,6 @@
 .card{
   border-radius: 10px;
-  border-top: var(--primera) solid 5px;
+  border-top: var(--lightGreen) solid 5px;
   transition:transform 0.2s ease-in-out;
   background-color: var(--backg);
 }

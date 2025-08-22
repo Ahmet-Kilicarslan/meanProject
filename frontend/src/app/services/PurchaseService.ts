@@ -33,11 +33,31 @@ export default class PurchaseService {
     );
   }
 
-  getPurchasesByUserId(userId: number): Observable<Purchase[]> {
-    return this.http.get<Purchase[]>(`${this.apiUrl}/byUser/${userId}`, {withCredentials: true}).pipe(
+  getPurchasesByUserId(userId: number ,order : 'asc' | 'desc' = 'desc') {
+    return this.http.get<Purchase[]>(`${this.apiUrl}/ByUserId/${userId}/?order=${order}`, {withCredentials: true}).pipe(
+      tap((response:Purchase[])=>{
+
+        console.log('🛒 Purchase service response:', response);
+        console.log('🛒 Number of purchases ',response.length);
+        return response;
+
+      }),catchError((error:any)=>{
+
+        console.error('❌ Purchase service error:', error);
+        return throwError(() => error.message);
+      })
+    )
+
+
+
+  }
+
+  getPurchasesByUserIdInAscendingOrder(userId: number): Observable<Purchase[]> {
+    return this.http.get<Purchase[]>(`${this.apiUrl}/byUserInAsc/${userId}`, {withCredentials: true}).pipe(
       tap((response: any) => {
 
         console.log('🛒 Purchase service response:', response);
+        console.log('🛒 Number of purchases ',response.length);
       }),
       catchError((error: any) => {
         console.error('❌ Purchase service error:', error);
@@ -50,6 +70,7 @@ export default class PurchaseService {
       tap((response: any) => {
 
         console.log('🛒 Purchase service response:', response);
+        console.log('🛒 Number of purchases ',response.length);
       }),
       catchError((error: any) => {
         console.error('❌ Purchase service error:', error);
