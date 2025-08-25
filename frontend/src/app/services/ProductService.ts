@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import Product from '../models/Product';
+import ProductWithDetails from '../models/ProductWithDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,18 @@ export default class ProductService {
   private apiUrl = 'http://localhost:3000/Product';
 
   constructor(private http: HttpClient) {
+  }
+
+  getAllProductsWithDetails(): Observable<ProductWithDetails[]> {
+    return this.http.get<ProductWithDetails[]>(`${this.apiUrl}/getALLWithDetails`).pipe(
+      tap((response) => {
+        console.log("successfully updated product amount in service", response);
+        return response;
+      }),catchError((error)=>{
+        console.error(error);
+        return throwError(() => error.message);
+      })
+    );
   }
 
   getAllProducts(): Observable<Product[]> {

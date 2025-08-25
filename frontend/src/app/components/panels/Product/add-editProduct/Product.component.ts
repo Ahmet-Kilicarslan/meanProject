@@ -18,20 +18,24 @@ export default class ProductComponent implements OnInit, OnChanges {
 
   @Output() onSave = new EventEmitter<any>();
   @Output() onCancel = new EventEmitter<void>();
+
   suppliers: Supplier[] = [];
   typedSupplier:string='';
+
   product = {
     id: null,
     name: '',
     amount: 0,
     price: 0,
-    supplier: 0,
+    supplier: 0,        // Keep this for the form
+    supplier_name: '',  // Add this for display
+    image_url: ''       // Add this for image handling
   }
   constructor(private supplierService: SupplierService) {}
 
   ngOnInit(): void {
     this.resetForm();
-    this.loadSuppliers()
+
   }
 
   ngOnChanges(changes: SimpleChanges):void {
@@ -67,6 +71,8 @@ export default class ProductComponent implements OnInit, OnChanges {
         amount: 0,
         price: 0,
         supplier: 0,
+        supplier_name: '',
+        image_url: ''
       };
     }
 
