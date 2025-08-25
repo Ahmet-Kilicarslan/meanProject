@@ -31,5 +31,20 @@
   transition: background-color 0.3s ease;
 }
 
+.navbar-toggler{
+  outline: none;
+  border: none;
+}
+.navbar-toggler:active{
+  outline: none;
+  border: none;
+}
+.navbar-toggler:focus{
+  outline: none !important;
+  border: 2px solid transparent; /* Reserve space for focus border */
+  box-shadow: none !important;
+
+}
+
 
 

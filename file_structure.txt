@@ -1,0 +1,13 @@
+total 96
+drwxrwxr-x   8 ahmet ahmet  4096 Aug 25 11:58 .
+drwxrwxr-x   6 ahmet ahmet  4096 Aug 11 13:21 ..
+drwxrwxr-x   7 ahmet ahmet  4096 Aug 25 11:10 backend
+-rw-rw-r--   1 ahmet ahmet     0 Aug 25 12:00 file_structure.txt
+drwxrwxr-x   7 ahmet ahmet  4096 Aug 25 11:17 frontend
+drwxrwxr-x   8 ahmet ahmet  4096 Aug 22 14:41 .git
+drwxrwxr-x   4 ahmet ahmet  4096 Aug 25 11:57 .idea
+-rw-rw-r--   1 ahmet ahmet   730 Aug  4 10:50 knexfile.mjs
+drwxrwxr-x   2 ahmet ahmet  4096 Aug  4 11:54 migrations
+drwxrwxr-x 118 ahmet ahmet  4096 Aug 11 10:49 node_modules
+-rw-rw-r--   1 ahmet ahmet   527 Aug 22 15:03 package.json
+-rw-rw-r--   1 ahmet ahmet 54342 Aug 22 15:03 package-lock.json

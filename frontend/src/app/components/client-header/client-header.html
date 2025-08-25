@@ -4,35 +4,46 @@
     <!--toggler button-->
     <button class="navbar-toggler"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            (click)="testClick()"
+
+            (click)="toggleNavbar()"
+            [attr.aria-expanded]="isNavbarOpen"
             aria-controls="navbarSupportedContent"
-            aria-expanded="false"
             aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse"
+         [class.show]="isNavbarOpen"
+         id="navbarSupportedContent">
+
       <ul class="navbar-nav me-auto  mb-lg-0">
         <li class="bi-cake me-3"></li>
 
         <li class="nav-item">
-          <a class="nav-link custom-rounded " routerLink="/clientDashboard" routerLinkActive="active"
+          <a class="nav-link custom-rounded "
+             routerLink="/clientDashboard"
+             routerLinkActive="active"
+             (click)="isNavbarOpen = false"
              aria-current="page">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link custom-rounded" routerLink="/clientViewProducts" routerLinkActive="active">Products</a>
+          <a class="nav-link custom-rounded"
+             routerLink="/clientViewProducts"
+             (click)="isNavbarOpen = false"
+             routerLinkActive="active">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link custom-rounded" routerLink="/clientProfile" routerLinkActive="active">Profile</a>
+          <a class="nav-link custom-rounded"
+             routerLink="/clientProfile"
+             (click)="isNavbarOpen = false"
+             routerLinkActive="active">Profile</a>
         </li>
       </ul>
 
     </div>
 
 
-    <button class="btn logout-button ms-auto" (click)="handleClientLogout()" >
+    <button class="btn logout-button ms-auto" (click)="handleClientLogout()">
       <i class="bi-power">Logout</i>
     </button>
   </div>

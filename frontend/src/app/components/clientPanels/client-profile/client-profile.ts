@@ -15,7 +15,8 @@ import utilService from '../../../services/UtilsService';
     profileEditModal
   ],
   templateUrl: './client-profile.html',
-  styleUrl: './client-profile.css'
+  styleUrl: './client-profile.css',
+
 })
 export default class ClientProfile implements OnInit {
 
@@ -56,14 +57,35 @@ export default class ClientProfile implements OnInit {
       this.fetchFreshProfile();
     }
   }
+  isSorting = false;  // Add this property
 
-  toggleSort() {
+  async toggleSort() {
+    this.isSorting = true;
+
+    // Optional: small delay for UX
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    if (this.newestFirst) {
+      await this.loadPurchaseLogInDescendingOrder();
+    } else {
+      await this.loadPurchaseLogInAscendingOrder();
+    }
+
+    this.isSorting = false;
+  }
+
+  // Add this for better performance
+  trackByPurchaseId(index: number, purchase: any): any {
+    return purchase.id;
+  }
+
+  /*toggleSort() {
 
     this.newestFirst ?
       this.loadPurchaseLogInDescendingOrder()
       : this.loadPurchaseLogInAscendingOrder();
 
-  }
+  }*/
 
   getSortType(): String {
     return this.newestFirst ? "newest First" : "Oldest First";

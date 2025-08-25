@@ -15,6 +15,7 @@ import {Router} from '@angular/router';
 export default class ClientHeader {
   logoutLoading = false;
   logoutError = '';
+  isNavbarOpen = false;
 
   constructor(private userService: userService, private router: Router) {
   }
@@ -40,7 +41,9 @@ export default class ClientHeader {
 
   }
 
-  testClick() {
-    console.log('🔄 Navbar toggler clicked!');
+  toggleNavbar() {
+    this.isNavbarOpen = !this.isNavbarOpen;
   }
+
+
 }

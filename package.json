@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@angular/animations": "^20.2.1",
     "@angular/common": "^20.1.4",
     "@popperjs/core": "^2.11.8",
     "bcrypt": "^6.0.0",

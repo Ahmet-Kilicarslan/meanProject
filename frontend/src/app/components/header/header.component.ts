@@ -11,4 +11,10 @@ import {RouterModule} from '@angular/router';
   styleUrls: ['./header.component.css']
 
 })
-export default class HeaderComponent {}
+export default class HeaderComponent {
+  isNavbarOpen = false;
+
+  toggleNavbar() {
+    this.isNavbarOpen = !this.isNavbarOpen;
+  }
+}
