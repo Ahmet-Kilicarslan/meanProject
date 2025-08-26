@@ -1,70 +1,65 @@
 import User from './User.js';
-import { pool } from "../../infrastructure/dbc.js";
+import {pool} from "../../infrastructure/dbc.js";
 
 
 export default class UserRepository {
 
     //add new
-    static async addUser(user){
+    static async createUser(user) {
 
-        try{
-            const users= await this.getAllUsers();
-            for(const existingUser of users){
-                if(existingUser.username===user.username){
-                    console.log("User already exists");
-                    return null;
-                }
-            }
-            const sql='INSERT INTO user (username,password,role,email) VALUES (?,?,?,?)';
-            const [result] = await pool.query(sql,[user.username,user.password,user.role,user.email]);
-            user.id=result.insertId;
-            return user;
-        }catch(error){
+        try {
+
+            const sql = 'INSERT INTO user (username,password,role,email) VALUES (?,?,?,?)';
+            const [result] = await pool.query(sql, [user.username, user.password, user.role, user.email]);
+
+            return {...user, id: result.insertId};
+
+        } catch (error) {
             console.error(error);
             throw error;
         }
 
     }
-    static async getAllUsers(){
-        try{
-            const sql="SELECT * FROM user";
-            const [result]= await pool.query(sql);
-            return result.map(user=> new User(
+
+    static async getAllUsers() {
+        try {
+            const sql = "SELECT * FROM user";
+            const [result] = await pool.query(sql);
+            return result.map(user => new User(
                 user.id,
                 user.username,
                 user.password,
                 user.role,
                 user.email,
-
             ));
 
 
-        }catch(error){
+        } catch (error) {
             console.error(error);
             throw error;
         }
     }
 
     //update user
-    static async updateUser(user){
-        try{
+    static async updateUser(user) {
+        try {
 
-            const sql="UPDATE user SET user.username=? ,user.password=?,user.email=? WHERE id=?"
-            const [result]=await pool.query(sql,[user.username,user.password,user.email,user.id]);
+            const sql = "UPDATE user SET user.username=? ,user.password=?,user.email=? WHERE id=?"
+            const [result] = await pool.query(sql, [user.username, user.password, user.email, user.id]);
             return result;
 
-        }catch(error){
+        } catch (error) {
             console.error(error);
             throw error;
         }
     }
 
-    static async deleteUser(id){
-        try{
-            const sql="DELETE FROM user WHERE id=?";
-            const [result]=await pool.query(sql,[id]);
+    static async deleteUser(id) {
+        try {
+            const sql = "DELETE FROM user WHERE id=?";
+            const [result] = await pool.query(sql, [id]);
             return result;
-        }catch(error){
+        } catch (error) {
             console.error(error);
             throw error;
         }
@@ -86,10 +81,23 @@ export default class UserRepository {
             throw error;
         }
     }
-    static async getUserById(id){
-        try{
-            const sql='SELECT * FROM user WHERE id=?';
-            const [result]=await pool.query(sql,[id]);
+
+    static async findByUsername(username) {
+        try {
+            const sql = 'SELECT * FROM user WHERE username = ?';
+            const [result] = await pool.query(sql, [username]);
+            return result.length > 0 ? new User(result[0]) : null;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+
+    }
+
+    static async getUserById(id) {
+        try {
+            const sql = 'SELECT * FROM user WHERE id=?';
+            const [result] = await pool.query(sql, [id]);
             if (result.length === 0) {
                 return null;
             }
@@ -97,7 +105,7 @@ export default class UserRepository {
             const user = result[0];
             return new User(user.id, user.username, user.password, user.role, user.email);
 
-        }catch (error) {
+        } catch (error) {
             console.error(error);
             throw error;
 

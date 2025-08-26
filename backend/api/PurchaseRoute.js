@@ -12,7 +12,7 @@ router.post("/create", async (req, res) => {
 
         const newPurchase = await PurchaseRepository.CreatePurchase({ userId, totalAmount });
 
-        // 2. Add all products to that purchase
+
         const purchasedProducts = [];
         for (const product of products) {
             const purchasedProduct = await PurchaseRepository.addProductToPurchasedProduct({

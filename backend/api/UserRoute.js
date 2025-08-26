@@ -1,5 +1,6 @@
 import express from 'express';
 import userRepository from '../domain/user/UserRepository.js';
+import userService from "../domain/user/UserService.js";
 import {requireAuth, requireClient, requireAdmin} from '../infrastructure/middlewares/authenticate.js';
 import hash from "../Utilities/hash.js";
 import User from "../domain/user/User.js";
@@ -9,45 +10,25 @@ const router = express.Router();
 //register endpoint
 router.post("/register", async (req, res) => {
     try {
-        const {username, password, role, email} = req.body;
 
-        if (!username || !password) {
-            return res.status(400).send({error: "Username and password are required"});
-        }
+        const user = req.body;
+        const result = await userService.createUser(user);
 
-        if (password.length < 6) {
-            return res.status(400).send({error: "Password must be at least 6 characters"});
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).send({error: "invalid email address"});
-        }
-        const hashedPassword = await hash.hashPassword(password);
-
-        const user = new User(null, username, hashedPassword, 'user', email);
-
-        const newUser = await userRepository.addUser(user);
-        if (!newUser) {
-            return res.status(409).json({
-                error: 'User already exists',
-                message: 'Username or email is already taken'
-            });
-        }
-        console.log('✅ User registered successfully:', newUser.id);
-
-        // Return safe user data (no password)
         res.status(201).json({
             message: 'User registered successfully',
-            user: newUser.toSafeObject()
+            user: result.toSafeObject()
         });
 
 
     } catch (error) {
         console.error('❌ Registration error:', error);
-        res.status(500).json({
+        const statusCode = error.statusCode || 500;
+
+        res.status(statusCode).json({
             error: 'Registration failed',
             message: error.message
         });
+
     }
 });
 
@@ -58,7 +39,6 @@ router.post("/login", async (req, res) => {
 
         const {username, password} = req.body;
         const user = await userRepository.getUserByUsernameOrEmail(username);
-
 
 
         if (!username || !password) {
@@ -74,7 +54,6 @@ router.post("/login", async (req, res) => {
         if (!checkPassword) {
             return res.status(404).send({error: "invalid password"});
         }
-
 
 
         req.session.userId = user.id;
@@ -228,7 +207,7 @@ router.put('/', async (req, res) => {
 
 
         if (newPassword) {
-            updateData.password =  await  hash.hashPassword(newPassword);
+            updateData.password = await hash.hashPassword(newPassword);
         }
 
         const updatedUser = await userRepository.updateUser(updateData);
