@@ -5,5 +5,5 @@ export default interface ProductWithDetails {
   price: number;
   supplier: number;
   supplier_name: string;
-  image_url?: string;
+  imageUrl?: string;
 }

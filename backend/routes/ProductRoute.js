@@ -27,9 +27,11 @@ router.get("/", async (req, res) => {
 
 })
 
+//get all with details
 router.get("/getALLWithDetails", async (req, res) => {
     try {
         const allProducts = await ProductDAO.getAllProductsWithDetails();
+
         res.status(200).json(allProducts);
     } catch (error) {
         console.log(error);

@@ -15,13 +15,19 @@ export default class ProductService {
   }
 
   getAllProductsWithDetails(): Observable<ProductWithDetails[]> {
+
     return this.http.get<ProductWithDetails[]>(`${this.apiUrl}/getALLWithDetails`).pipe(
+
       tap((response) => {
-        console.log("successfully updated product amount in service", response);
+
+        console.log("here is products in inventory", response);
         return response;
+
       }),catchError((error)=>{
+
         console.error(error);
         return throwError(() => error.message);
+
       })
     );
   }

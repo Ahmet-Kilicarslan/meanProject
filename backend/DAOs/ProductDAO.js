@@ -25,18 +25,21 @@ export default class ProductDAO {
 
     static async getAllProductsWithDetails() {
         try {
-            const sql = `select product.id,
+            const sql = `SELECT product.id,
                                 product.name,
                                 product.amount,
                                 product.price,
+                                product.supplier,
                                 supplier.name,
                                 asset.url
-                         from products product
-                                  left join supplier on product.supplier = supplier.id
-                                  left join assets asset on product.id = asset.productId
+                         FROM products product
+                                  LEFT JOIN supplier ON product.supplier = supplier.id
+                                  LEFT JOIN assets asset ON product.id = asset.productId
             `;
 
             const [result] = await pool.query(sql);
+
+            console.log(result);
             return result;
 
         } catch (err) {

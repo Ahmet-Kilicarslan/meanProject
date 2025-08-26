@@ -1,53 +1,57 @@
-<div class="container-fluid vh-100" >
+<div class="container-fluid vh-100">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Inventory</h2>
     <button class="btn " (click)="openAddProductModal()"><i class="bi-plus-circle"></i>Add Product</button>
   </div>
   <div class="row g-4">
-    @for (product of products;track product.id  ){
+    @for (product of productsWithDetails; track product.id) {
 
-    <div class="col-lg-3 col-md-4 col-sm-6">
-      <div class="card h-100">
-        <!-- Product Image Section -->
-        <div class="card-img-top-container">
-          <img
-            src="https://github.githubassets.com/images/mona-loading-default.gif"
-            width="150"
-            height="150"
-            alt="Product placeholder"
-            class="card-img-top"
-          />
-        </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card h-100">
+          <!-- Product Image Section -->
 
-        <!-- Card Body -->
-        <div class="card-body">
-          <h5 class="card-title">{{product.name}}</h5>
+            <div class="card-img-top-container">
+              <img
+                [src]="product.imageUrl || `https://github.githubassets.com/images/mona-loading-default.gif`"
+                width="150"
+                height="150"
+                alt="Product imamge"
+                class="card-img-top"
+              />
+            </div>
+          <!-- Card Body -->
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
 
-          <!-- Product Details -->
-          <div class="mb-2">
-            <small class="text-muted">Price</small>
-            <div class="text-success fw-bold">{{product.price}}₺</div>
-          </div>
+            <!-- Product Details -->
+            <div class="mb-2">
+              <small class="text-muted">Price</small>
+              <div class="text-success fw-bold">{{ product.price }}₺</div>
+            </div>
 
-          <div class="mb-3">
-            <small class="text-muted">Stock</small>
-            <div class="text-primary fw-bold">{{product.amount}} Units</div>
-          </div>
+            <div class="mb-3">
+              <small class="text-muted">Stock</small>
+              <div class="text-primary fw-bold">{{ product.amount }} Units</div>
+            </div>
 
-          <div class="mb-2">
-            <small class="text-muted">Supplier</small>
-            <div>{{this.getSupplierName(product.supplier)}}</div>
-          </div>
+            <div class="mb-2">
+              <small class="text-muted">Supplier</small>
+              <div class="text-black fw-bold">{{ product.supplier_name }}</div>
+            </div>
 
-          <!-- Action Buttons -->
-          <div class="d-grid gap-2 d-md-flex">
-            <button class="btn btn-outline-primary btn-sm"  (click)="openEditProductModal(product)"><i class="bi-pencil-fill"></i>Edit</button>
-            <button class="btn btn-outline-danger btn-sm" (click)="openDeleteModal(product)" style="background-color: var(--reddo)"><i class="bi-trash-fill"></i>Delete</button>
+            <!-- Action Buttons -->
+            <div class="d-grid gap-2 d-md-flex">
+              <button class="btn btn-outline-primary btn-sm" (click)="openEditProductModal(product)"><i
+                class="bi-pencil-fill"></i>Edit
+              </button>
+              <button class="btn btn-outline-danger btn-sm" (click)="openDeleteModal(product)"
+                      style="background-color: var(--reddo)"><i class="bi-trash-fill"></i>Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-      }
+    }
   </div>
 </div>
 
@@ -55,7 +59,7 @@
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-      <h5 class="modal-title"> {{isEditMode ? 'Edit' :'Add new Product' }}</h5>
+        <h5 class="modal-title"> {{ isEditMode ? 'Edit' : 'Add new Product' }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -63,14 +67,14 @@
           [productData]="selectedProduct"
           [isEditMode]="isEditMode"
           (onSave)="handleSave($event)"
-          (onCancel)="handleCancel('add/editProductModal') " >
+          (onCancel)="handleCancel('add/editProductModal') ">
         </app-Product>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="removeAllModal" tabindex="-1" >
+<div class="modal fade" id="removeAllModal" tabindex="-1">
   <app-remove-all
     [productData]="selectedProduct"
     (OnSave)="deleteProduct($event)"
