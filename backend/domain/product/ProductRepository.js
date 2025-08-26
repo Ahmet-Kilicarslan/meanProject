@@ -1,8 +1,8 @@
-import Product from "../models/Product.js";
+import Product from "./Product.js";
 
-import {pool} from "../dbc.js";
+import {pool} from "../../infrastructure/dbc.js";
 
-export default class ProductDAO {
+export default class ProductRepository {
 
     static async addProduct(product) {
         try {
@@ -50,8 +50,7 @@ export default class ProductDAO {
             const sql = 'select * from products where id = ?';
             const [result] = await pool.query(sql, [id]);
             const fetchedProduct = result[0];
-            return new Product(fetchedProduct.id, fetchedProduct.name,
-                fetchedProduct.amount, fetchedProduct.price, fetchedProduct.supplier);
+            return new Product(fetchedProduct.id, fetchedProduct.name, fetchedProduct.amount, fetchedProduct.price, fetchedProduct.supplier);
         } catch (err) {
             console.log(err);
         }

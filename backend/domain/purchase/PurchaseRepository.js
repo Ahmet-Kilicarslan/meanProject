@@ -1,8 +1,8 @@
-import {pool} from "../dbc.js";
+import {pool} from "../../infrastructure/dbc.js";
 
-import {Purchase, PurchasedProduct} from "../models/Purchase.js";
+import {Purchase, PurchasedProduct} from "./Purchase.js";
 
-export default class PurchaseDAO {
+export default class PurchaseRepository {
 
     //creating purchase
     static async CreatePurchase(purchase) {

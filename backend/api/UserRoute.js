@@ -1,8 +1,8 @@
 import express from 'express';
-import userDao from '../DAOs/UserDAO.js';
-import {requireAuth, requireClient, requireAdmin} from '../middleware/authenticate.js';
+import userDao from '../domain/user/UserRepository.js';
+import {requireAuth, requireClient, requireAdmin} from '../infrastructure/middlewares/authenticate.js';
 import hash from "../Utilities/hash.js";
-import User from "../models/User.js";
+import User from "../domain/user/User.js";
 
 const router = express.Router();
 
@@ -172,7 +172,7 @@ router.get('/status', (req, res) => {
     }
 });
 
-// Get profile (PROTECTED route - uses your middleware!)
+// Get profile (PROTECTED route - uses your middlewares!)
 router.get('/profile', requireAuth, async (req, res) => {
     try {
         console.log('👤 Profile request for user:', req.session.userId);

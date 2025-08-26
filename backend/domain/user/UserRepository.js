@@ -1,8 +1,8 @@
-import User from '../models/User.js';
-import { pool } from "../dbc.js";
+import User from './User.js';
+import { pool } from "../../infrastructure/dbc.js";
 
 
-export default class UserDAO {
+export default class UserRepository {
 
     //add new
     static async addUser(user){

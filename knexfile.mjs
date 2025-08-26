@@ -1,5 +1,5 @@
 // knexfile.mjs
-import { pool } from "./backend/dbc.js";
+import { pool } from "./backend/infrastructure/dbc.js";
 
 export default {
     development: {

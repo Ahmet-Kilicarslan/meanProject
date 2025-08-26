@@ -1,7 +1,7 @@
-import Supplier from "../models/Supplier.js";
-import { pool } from "../dbc.js";
+import Supplier from "./Supplier.js";
+import { pool } from "../../infrastructure/dbc.js";
 
-export default class SupplierDAO {
+export default class SupplierRepository {
     // Add a new supplier
     static async addSupplier(supplier) {
         try {

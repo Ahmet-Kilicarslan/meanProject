@@ -4,11 +4,11 @@ import session from 'express-session';
 import MySQLStoreFactory from 'express-mysql-session';
 import mysql from 'mysql2/promise';
 import 'dotenv/config';
-import EmployeeRoute from './routes/EmployeeRoute.js';
-import ProductRoute from './routes/ProductRoute.js';
-import SupplierRoute from "./routes/SupplierRoute.js";
-import UserRoute from "./routes/UserRoute.js";
-import PurchaseRoute from "./routes/PurchaseRoute.js";
+import EmployeeRoute from './api/EmployeeRoute.js';
+import ProductRoute from './api/ProductRoute.js';
+import SupplierRoute from "./api/SupplierRoute.js";
+import UserRoute from "./api/UserRoute.js";
+import PurchaseRoute from "./api/PurchaseRoute.js";
 
 
 const MysqlStore = new MySQLStoreFactory(session);
@@ -46,7 +46,7 @@ const sessionStoreOptions = {
     }
 }
 const sessionStore=new MysqlStore(sessionStoreOptions);
-// Session middleware configuration
+// Session middlewares configuration
 app.use(session({
     key: 'sessionId', // This will be the cookie name in browser
     secret: process.env.SESSION_SECRET,
