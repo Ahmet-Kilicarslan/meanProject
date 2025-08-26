@@ -1,5 +1,5 @@
 import express from "express";
-import PurchaseDAO from "../DAOs/PurchaseDAO.js";
+import PurchaseRepository from "../domain/purchase/PurchaseRepository.js";
 
 const router = express.Router();
 
@@ -10,12 +10,12 @@ router.post("/create", async (req, res) => {
         const { userId, totalAmount, products } = req.body;
 
 
-        const newPurchase = await PurchaseDAO.CreatePurchase({ userId, totalAmount });
+        const newPurchase = await PurchaseRepository.CreatePurchase({ userId, totalAmount });
 
-        // 2. Add all products to that purchase
+
         const purchasedProducts = [];
         for (const product of products) {
-            const purchasedProduct = await PurchaseDAO.addProductToPurchasedProduct({
+            const purchasedProduct = await PurchaseRepository.addProductToPurchasedProduct({
                 purchaseId: newPurchase.id,
                 productId: product.productId,
                 quantity: product.quantity,
@@ -48,7 +48,7 @@ router.get("/byUserId/:userId", async (req, res) => {
                 error: 'Invalid order parameter. Must be "asc" or "desc"'
             });
         }
-        const purchases = await PurchaseDAO.getPurchaseByUserId(userId, order);
+        const purchases = await PurchaseRepository.getPurchaseByUserId(userId, order);
         res.status(200).json(purchases);
 
 
@@ -66,7 +66,7 @@ router.get("/byUserId/:userId", async (req, res) => {
 //getting purchases by userId in ascending order
 router.get("/byUserInAsc/:userId", async (req,res)=>{
     try{
-        const purchases= await PurchaseDAO.getPurchasesByUserIdInAscendingOrder(req.params.userId);
+        const purchases= await PurchaseRepository.getPurchasesByUserIdInAscendingOrder(req.params.userId);
         res.status(200).json(purchases);
 
     }catch(err){
@@ -83,7 +83,7 @@ router.get("/byUserInAsc/:userId", async (req,res)=>{
 //getting purchases by userId in descending order
 router.get("/byUserInDesc/:userId", async (req,res)=>{
     try{
-        const purchases = await PurchaseDAO.getPurchasesByUserIdInDescendingOrder(req.params.userId);
+        const purchases = await PurchaseRepository.getPurchasesByUserIdInDescendingOrder(req.params.userId);
         res.status(200).json(purchases);
 
     }catch(err){console.error(err);
@@ -96,7 +96,7 @@ router.get("/byUserInDesc/:userId", async (req,res)=>{
 //adding product as purchased product
 router.post("/products", async (req,res)=>{
     try{
-        const selectedProductForPurchase=await PurchaseDAO.addProductToPurchasedProduct(req.body);
+        const selectedProductForPurchase=await PurchaseRepository.addProductToPurchasedProduct(req.body);
         res.status(200).json({selectedProductForPurchase:selectedProductForPurchase});
     }catch(err){
         console.error(err);
@@ -112,7 +112,7 @@ router.post("/products", async (req,res)=>{
 //getting products with same purchaseId
 router.get("/byPurchase/:purchaseId", async (req,res)=>{
     try{
-        const fetchedProducts=await PurchaseDAO.getPurchasedProductsByPurchaseId(req.params.purchaseId);
+        const fetchedProducts=await PurchaseRepository.getPurchasedProductsByPurchaseId(req.params.purchaseId);
 
         console.log('🔍 Backend: DAO returned:', fetchedProducts);
         console.log('🔍 Backend: Number of products:', fetchedProducts?.length);

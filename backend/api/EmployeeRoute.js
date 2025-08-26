@@ -1,5 +1,5 @@
 import express from "express";
-import EmployeeDAO from "../DAOs/EmployeeDAO.js";
+import EmployeeRepository from "../domain/employee/EmployeeRepository.js";
 
 const router= express.Router();
 
@@ -7,7 +7,7 @@ const router= express.Router();
 
 //getting all employees
 router.get("/",async (req,res)=>{
-  const allEmployees= await EmployeeDAO.getAllEmployees();
+  const allEmployees= await EmployeeRepository.getAllEmployees();
   res.json(allEmployees);
 
 })
@@ -16,14 +16,14 @@ router.get("/",async (req,res)=>{
 //get one by id
 router.get("/:id",async (req,res)=>{
     const id = req.params.id;
-    const employee = await EmployeeDAO.getEmployee(id);
+    const employee = await EmployeeRepository.getEmployee(id);
     res.json(employee);
 })
 
 //delete employee
 router.delete("/:id",async (req,res)=>{
     const id = req.params.id;
-    const fired = await EmployeeDAO.deleteEmployee(Number(id));
+    const fired = await EmployeeRepository.deleteEmployee(Number(id));
     res.json(fired);
 })***************************************************/
 /*Error handling notes
@@ -42,7 +42,7 @@ static async deleteEmployee(id) {
 // Route - Convert to HTTP responses
 router.delete("/:id", async (req, res) => {
     try {
-        const result = await EmployeeDAO.deleteEmployee(Number(req.params.id));
+        const result = await EmployeeRepository.deleteEmployee(Number(req.params.id));
         res.json(result);
     } catch (error) {
         res.status(error.message.includes('not found') ? 404 : 500)
@@ -80,7 +80,7 @@ router.get("/:id", async (req, res) => {
             return res.status(400).json({ error: 'Valid employee ID is required' });
         }
 
-        const employee = await EmployeeDAO.getEmployee(Number(id));
+        const employee = await EmployeeRepository.getEmployee(Number(id));
         res.json(employee);
     } catch (error) {
         console.error('Error getting employee:', error);
@@ -104,7 +104,7 @@ router.delete("/:id", async (req, res) => {
             return res.status(400).json({ error: 'Valid employee ID is required' });
         }
 
-        const fired = await EmployeeDAO.deleteEmployee(Number(id));
+        const fired = await EmployeeRepository.deleteEmployee(Number(id));
         res.json(fired);
     } catch (error) {
         console.error('Error deleting employee:', error);
@@ -120,13 +120,13 @@ router.delete("/:id", async (req, res) => {
 //new employee
 router.post("/",async (req,res)=>{
     console.log("Received employee:", req.body);
-    const addedEmployee = await EmployeeDAO.addEmployee(req.body);
+    const addedEmployee = await EmployeeRepository.addEmployee(req.body);
     res.json(addedEmployee);
 })
 //update
 router.put("/", async (req, res) => {
     try {
-        const updatedEmployee = await EmployeeDAO.updateEmployee(req.body);
+        const updatedEmployee = await EmployeeRepository.updateEmployee(req.body);
         res.json(updatedEmployee);
     } catch (error) {
         console.error("Error updating employee:", error);

@@ -1,13 +1,13 @@
-import {pool} from "../dbc.js";
+import {pool} from "../../infrastructure/dbc.js";
 
-import {Purchase, PurchasedProduct} from "../models/Purchase.js";
+import {Purchase, PurchasedProduct} from "./Purchase.js";
 
-export default class PurchaseDAO {
+export default class PurchaseRepository {
 
     //creating purchase
     static async CreatePurchase(purchase) {
         try {
-            const sql = 'insert into purchase (userId,totalAmount) values (?,?)';
+            const sql = 'INSERT INTO purchase (userId,totalAmount) VALUES (?,?)';
             const [result] = await pool.query(sql, [purchase.userId, purchase.totalAmount]);
             return new Purchase(result.insertId, purchase.userId, [], purchase.totalAmount, purchase.date,);
         } catch (err) {
@@ -20,7 +20,8 @@ export default class PurchaseDAO {
     static async getPurchaseByUserId(userId, order = 'desc') {
         try {
             const orderClause = order === 'asc' ? 'ORDER BY date ASC' : 'ORDER BY date DESC';
-            const sql = 'select * from purchase where userId = ? ${orderClause}';
+
+            const sql = 'SELECT * FROM purchase WHERE userId = ? ${orderClause}';
 
             const [result] = await pool.query(sql, [userId]);
 
@@ -43,7 +44,7 @@ export default class PurchaseDAO {
     //getting purchases by user id in ascending order
         static async getPurchasesByUserIdInAscendingOrder(userId) {
             try {
-                const sql = 'select * from purchase where userId = ? order by date asc ';
+                const sql = 'SELECT * FROM purchase WHERE userId = ? ORDER BY DATE ASC ';
                 const [result] = await pool.query(sql, [userId]);
                 return result.map((purchase) => new Purchase(
                     purchase.id,
@@ -61,7 +62,7 @@ export default class PurchaseDAO {
     //getting purchases by user id in descending order
         static async getPurchasesByUserIdInDescendingOrder(userId) {
             try {
-                const sql = 'select * from purchase where userId = ? order by date desc ';
+                const sql = 'SELECT * FROM purchase WHERE userId = ? ORDER BY DATE DESC ';
                 const [result] = await pool.query(sql, [userId]);
                 return result.map((purchase) => new Purchase(
                     purchase.id,

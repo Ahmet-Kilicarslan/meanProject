@@ -1,7 +1,7 @@
-import Employee from "../models/Employee.js";
-import {pool} from "../dbc.js";
+import Employee from "./Employee.js";
+import {pool} from "../../infrastructure/dbc.js";
 
-export default class EmployeeDAO {
+export default class EmployeeRepository {
 
 
     static async getEmployee(id) {
