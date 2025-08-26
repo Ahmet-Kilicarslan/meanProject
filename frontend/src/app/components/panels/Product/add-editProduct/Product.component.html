@@ -40,6 +40,14 @@
                   placeholder="Supplier" aria-label="Supplier">
         </div>
 
+        <div class="col-12 mb3">
+          <input  [(ngModel)]="product.image_url"
+                  [ngModelOptions]="{standalone: true}"
+                  required class="form-control"
+                  placeholder="imageUrl" aria-label="imageUrl"
+          >
+        </div>
+
         <div class="col-12 d-flex justify-content-end gap-2">
           <button type="button" class="btn " (click)="onCancelClick()">
             Cancel

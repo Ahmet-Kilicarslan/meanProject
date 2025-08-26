@@ -31,7 +31,9 @@ export default class ViewProducts implements OnInit {
   selectedProduct: any = null;
 
 
-  constructor(private productService: ProductService, private supplierService: SupplierService, private utilsService: UtilsService) {
+  constructor(private productService: ProductService,
+              private supplierService: SupplierService,
+              private utilsService: UtilsService) {
   }
 
 

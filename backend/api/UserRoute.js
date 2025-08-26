@@ -37,23 +37,7 @@ router.post("/login", async (req, res) => {
 
     try {
 
-        const {username, password} = req.body;
-        const user = await userRepository.getUserByUsernameOrEmail(username);
-
-
-        if (!username || !password) {
-            return res.status(400).send({error: "Username and password are required"});
-        }
-
-        if (!user) {
-            return res.status(404).send({error: "invalid username "});
-        }
-
-        const checkPassword = await hash.comparePassword(password, user.password);
-
-        if (!checkPassword) {
-            return res.status(404).send({error: "invalid password"});
-        }
+        const user = await userService.loginUser(req.body);
 
 
         req.session.userId = user.id;
@@ -61,11 +45,11 @@ router.post("/login", async (req, res) => {
         req.session.email = user.email;
         req.session.role = user.role;
 
-        console.log('✅ Session created:', {
+        /*console.log('✅ Session created:', {
             userId: req.session.userId,
             username: req.session.username,
             role: req.session.role
-        });
+        });*/
 
 
         req.session.save((err) => {
@@ -74,7 +58,7 @@ router.post("/login", async (req, res) => {
                 return res.status(500).json({error: 'Session creation failed'});
             }
 
-            console.log('✅ Login successful for:', username);
+            console.log('✅ Login successful for:', user.username);
 
             res.json({
                 message: 'Login successful',
@@ -95,6 +79,8 @@ router.post("/login", async (req, res) => {
 //logout endpoint
 router.post("/logout", async (req, res) => {
     try {
+        await userService.logoutUser();
+
         if (req.session) {
             req.session.destroy((err) => {
                 if (err) {
@@ -127,7 +113,7 @@ router.post("/logout", async (req, res) => {
 // Check authentication status
 router.get('/status', (req, res) => {
     try {
-        console.log('🔍 Status check - Session data:', req.session);
+        //console.log('🔍 Status check - Session data:', req.session);
 
         if (req.session && req.session.userId) {
             res.json({
@@ -154,7 +140,7 @@ router.get('/status', (req, res) => {
 // Get profile (PROTECTED route - uses your middlewares!)
 router.get('/profile', requireAuth, async (req, res) => {
     try {
-        console.log('👤 Profile request for user:', req.session.userId);
+        //console.log('👤 Profile request for user:', req.session.userId);
 
         // Use your DAO to get fresh user data
         const user = await userRepository.getUserById(req.session.userId);

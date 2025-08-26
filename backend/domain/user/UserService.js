@@ -57,5 +57,30 @@ static async createUser(user){
 
 }
 
+static async loginUser(credentials){
+    const { username, password } = credentials;
 
+    // Input validation
+    if (!username || !password) {
+        throw new ValidationError("Username and password are required");
+    }
+
+    // Find user
+    const user = await userRepository.getUserByUsernameOrEmail(username);
+    if (!user) {
+        throw new UnauthorizedError("Invalid credentials");
+    }
+
+    // Verify password
+    const checkPassword = await hash.comparePassword(password, user.password);
+    if (!checkPassword) {
+        throw new UnauthorizedError("Invalid credentials");
+    }
+
+    return user;
+}
+
+static async logoutUser(){
+    return { success: true };
+}
 }

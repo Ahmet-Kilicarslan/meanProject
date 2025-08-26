@@ -29,9 +29,9 @@ export default class ProductRepository {
                                 product.name,
                                 product.amount,
                                 product.price,
-                                product.supplier,
+                                product.supplier as supplierName,
                                 supplier.name,
-                                asset.url
+                                asset.url as imageUrl
                          FROM products product
                                   LEFT JOIN supplier ON product.supplier = supplier.id
                                   LEFT JOIN assets asset ON product.id = asset.productId

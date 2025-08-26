@@ -1,10 +1,10 @@
 import express from "express";
-import ProductDAO from "../DAOs/ProductDAO.js";
+import ProductRepository from "../domain/product/ProductRepository.js";
 
 const router = express.Router();
 /*add product*/
 router.post("/", async (req, res) => {
-    const newProduct = await ProductDAO.addProduct(req.body);
+    const newProduct = await ProductRepository.addProduct(req.body);
     res.json(newProduct);
 
 })
@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
 /*get by supplier*/
 router.get('/:supplier', async (req, res) => {
     try {
-        const fetchedProducts = await ProductDAO.getProductBySupplier(req.params.supplier);
+        const fetchedProducts = await ProductRepository.getProductBySupplier(req.params.supplier);
         res.status(200).json(fetchedProducts);
     } catch (error) {
 
@@ -22,7 +22,7 @@ router.get('/:supplier', async (req, res) => {
 })
 /*get all*/
 router.get("/", async (req, res) => {
-    const allProducts = await ProductDAO.getAllProducts();
+    const allProducts = await ProductRepository.getAllProducts();
     res.json(allProducts);
 
 })
@@ -30,7 +30,14 @@ router.get("/", async (req, res) => {
 //get all with details
 router.get("/getALLWithDetails", async (req, res) => {
     try {
-        const allProducts = await ProductDAO.getAllProductsWithDetails();
+
+
+        console.log("calling getALLWithDetails endpoint");
+
+        const allProducts = await ProductRepository.getAllProductsWithDetails();
+
+        console.log("fethced products with details",allProducts);
+        console.log("Product catalog length",allProducts.length);
 
         res.status(200).json(allProducts);
     } catch (error) {
@@ -43,14 +50,14 @@ router.get("/getALLWithDetails", async (req, res) => {
 /*get one*/
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
-    const product = await ProductDAO.getProduct(id);
+    const product = await ProductRepository.getProduct(id);
     res.json(product);
 })
 /*update*/
 router.put("/", async (req, res) => {
 
     try {
-        const product = await ProductDAO.updateProduct(req.body);
+        const product = await ProductRepository.updateProduct(req.body);
         res.json(product);
     } catch (err) {
         console.log(err);
@@ -67,7 +74,7 @@ router.put("/:id", async (req, res) => {
         console.log(`📊 Backend router: Request body:`, req.body);
         console.log(`📊 Backend router: Request body type:`, typeof req.body);
 
-        const updatedProduct = await ProductDAO.updateAmount(id, amount);
+        const updatedProduct = await ProductRepository.updateAmount(id, amount);
 
         console.log('✅ Backend router: Update completed:', updatedProduct);
 
@@ -83,7 +90,7 @@ router.put("/:id", async (req, res) => {
 /*delete*/
 router.delete("/:id", async (req, res) => {
     const id = req.params.id;
-    const product = await ProductDAO.deleteProduct(id);
+    const product = await ProductRepository.deleteProduct(id);
     res.json(product);
 
 })
