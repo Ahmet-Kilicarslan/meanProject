@@ -1,5 +1,5 @@
 import express from 'express';
-import userDao from '../domain/user/UserRepository.js';
+import userRepository from '../domain/user/UserRepository.js';
 import {requireAuth, requireClient, requireAdmin} from '../infrastructure/middlewares/authenticate.js';
 import hash from "../Utilities/hash.js";
 import User from "../domain/user/User.js";
@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
 
         const user = new User(null, username, hashedPassword, 'user', email);
 
-        const newUser = await userDao.addUser(user);
+        const newUser = await userRepository.addUser(user);
         if (!newUser) {
             return res.status(409).json({
                 error: 'User already exists',
@@ -57,7 +57,7 @@ router.post("/login", async (req, res) => {
     try {
 
         const {username, password} = req.body;
-        const user = await userDao.getUserByUsernameOrEmail(username);
+        const user = await userRepository.getUserByUsernameOrEmail(username);
 
 
 
@@ -178,7 +178,7 @@ router.get('/profile', requireAuth, async (req, res) => {
         console.log('👤 Profile request for user:', req.session.userId);
 
         // Use your DAO to get fresh user data
-        const user = await userDao.getUserById(req.session.userId);
+        const user = await userRepository.getUserById(req.session.userId);
         if (!user) {
             return res.status(404).json({error: 'User not found'});
         }
@@ -199,7 +199,7 @@ router.get('/profile', requireAuth, async (req, res) => {
 //get all users
 router.get('/users', async (req, res) => {
     try {
-        const allUsers = await userDao.getAllUsers();
+        const allUsers = await userRepository.getAllUsers();
         res.status(201).json(allUsers)
     } catch (error) {
         console.error("Failed to fetch all users", error);
@@ -216,7 +216,7 @@ router.put('/', async (req, res) => {
 
         let {id, username, email, newPassword} = req.body;
 
-        const oldUser = await userDao.getUserById(id);
+        const oldUser = await userRepository.getUserById(id);
 
         // Prepare data
         const updateData = {
@@ -231,7 +231,7 @@ router.put('/', async (req, res) => {
             updateData.password =  await  hash.hashPassword(newPassword);
         }
 
-        const updatedUser = await userDao.updateUser(updateData);
+        const updatedUser = await userRepository.updateUser(updateData);
         res.status(200).json(updatedUser);
 
     } catch (error) {

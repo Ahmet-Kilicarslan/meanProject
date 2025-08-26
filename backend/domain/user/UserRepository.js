@@ -15,7 +15,7 @@ export default class UserRepository {
                     return null;
                 }
             }
-            const sql='insert into user (username,password,role,email) values(?,?,?,?)';
+            const sql='INSERT INTO user (username,password,role,email) VALUES (?,?,?,?)';
             const [result] = await pool.query(sql,[user.username,user.password,user.role,user.email]);
             user.id=result.insertId;
             return user;
@@ -27,7 +27,7 @@ export default class UserRepository {
     }
     static async getAllUsers(){
         try{
-            const sql="select * from user";
+            const sql="SELECT * FROM user";
             const [result]= await pool.query(sql);
             return result.map(user=> new User(
                 user.id,
@@ -49,7 +49,7 @@ export default class UserRepository {
     static async updateUser(user){
         try{
 
-            const sql="update user set user.username=? ,user.password=?,user.email=? where id=?"
+            const sql="UPDATE user SET user.username=? ,user.password=?,user.email=? WHERE id=?"
             const [result]=await pool.query(sql,[user.username,user.password,user.email,user.id]);
             return result;
 
@@ -61,7 +61,7 @@ export default class UserRepository {
 
     static async deleteUser(id){
         try{
-            const sql="delete from user where id=?";
+            const sql="DELETE FROM user WHERE id=?";
             const [result]=await pool.query(sql,[id]);
             return result;
         }catch(error){
@@ -88,7 +88,7 @@ export default class UserRepository {
     }
     static async getUserById(id){
         try{
-            const sql='select * from user WHERE id=?';
+            const sql='SELECT * FROM user WHERE id=?';
             const [result]=await pool.query(sql,[id]);
             if (result.length === 0) {
                 return null;
