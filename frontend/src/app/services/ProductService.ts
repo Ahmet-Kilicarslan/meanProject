@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient,HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import Product from '../models/Product';
@@ -16,7 +16,13 @@ export default class ProductService {
 
   getAllProductsWithDetails(): Observable<ProductWithDetails[]> {
 
-    return this.http.get<ProductWithDetails[]>(`${this.apiUrl}/getALLWithDetails`).pipe(
+    const headers = new HttpHeaders({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+
+    return this.http.get<ProductWithDetails[]>(`${this.apiUrl}/getALL`, { headers }).pipe(
 
       tap((response) => {
 
@@ -38,11 +44,11 @@ export default class ProductService {
   }
 
   getProductBySupplier(supplier: number): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/${supplier}`);
+    return this.http.get<Product[]>(`${this.apiUrl}/getBySupplierId/${supplier}`);
   }
 
   getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+    return this.http.get<Product>(`${this.apiUrl}/getByProductId/${id}`);
   }
 
   addProduct(product: Product): Observable<Product> {

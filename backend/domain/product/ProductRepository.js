@@ -25,12 +25,13 @@ export default class ProductRepository {
 
     static async getAllProductsWithDetails() {
         try {
+            console.log("Executing SQL query...");
             const sql = `SELECT product.id,
                                 product.name,
                                 product.amount,
                                 product.price,
-                                product.supplier as supplierName,
-                                supplier.name,
+                                product.supplier ,
+                                supplier.name as supplierName,
                                 asset.url as imageUrl
                          FROM products product
                                   LEFT JOIN supplier ON product.supplier = supplier.id
@@ -39,7 +40,9 @@ export default class ProductRepository {
 
             const [result] = await pool.query(sql);
 
-            console.log(result);
+            console.log("SQL executed, result:", result);
+            console.log("Result length:", result?.length);
+
             return result;
 
         } catch (err) {

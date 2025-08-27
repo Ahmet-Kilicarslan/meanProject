@@ -5,7 +5,7 @@ import MySQLStoreFactory from 'express-mysql-session';
 import mysql from 'mysql2/promise';
 import 'dotenv/config';
 import EmployeeRoute from './api/EmployeeRoute.js';
-import ProductRoute from './api/ProductRoute.js';
+import ProductRoute from '../backend/api/ProductRoute.js';
 import SupplierRoute from "./api/SupplierRoute.js";
 import UserRoute from "./api/UserRoute.js";
 import PurchaseRoute from "./api/PurchaseRoute.js";
@@ -22,7 +22,8 @@ app.use(cors({
     origin: 'http://localhost:4200',
     credentials: true, // This allows cookies to be sent back and forth
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires'],
+
 }));
 
 //enable express to parse incoming requests
@@ -45,6 +46,7 @@ const sessionStoreOptions = {
         }
     }
 }
+
 const sessionStore=new MysqlStore(sessionStoreOptions);
 // Session middlewares configuration
 app.use(session({

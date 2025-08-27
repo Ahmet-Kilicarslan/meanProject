@@ -27,11 +27,11 @@ export default class ProductComponent implements OnInit, OnChanges {
     name: '',
     amount: 0,
     price: 0,
-    supplier: 0,        // Keep this for the form
-    supplier_name: '',  // Add this for display
-    image_url: ''       // Add this for image handling
+    supplier: 0,
+    supplier_name: '',
+    imageUrl: ''
   }
-  constructor(private supplierService: SupplierService) {}
+
 
   ngOnInit(): void {
     this.resetForm();
@@ -44,15 +44,7 @@ export default class ProductComponent implements OnInit, OnChanges {
     }
 
   }
-  loadSuppliers(): void {
 
-    this.supplierService.getAllSupplier().subscribe({
-      next: suppliers => {
-        this.suppliers = suppliers;
-
-      }
-    });
-  }
 
   getSupplierId() {
     const match = this.suppliers.find((supplier) => supplier.name === this.typedSupplier);
@@ -72,7 +64,7 @@ export default class ProductComponent implements OnInit, OnChanges {
         price: 0,
         supplier: 0,
         supplier_name: '',
-        image_url: ''
+        imageUrl: ''
       };
     }
 

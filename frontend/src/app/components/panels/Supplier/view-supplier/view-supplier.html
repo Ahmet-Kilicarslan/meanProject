@@ -27,43 +27,55 @@
           </div>
         </div>
       </div>
-      @if(isExpanded(supplier.id)){
+      <!-- supplied products table-->
+      @if (isExpanded(supplier.id)) {
 
-        <div class="mt-1">
-          <div class="card border-0 bg-light">
-            <div class="card-body ">
-              @if(productsBySupplier.length>0){
-                <div class="table-responsive">
-                  <table class="table table-hover table-sm table-borderless mb-0 w-100">
-                    <thead>
-                    <tr class="border-bottom border-2">
-                      <th class="text-center">name</th>
-                      <th class="text-center">price</th>
-                      <th class="text-center">amount</th>
+        <div class="mt-0">
+
+          @if (productsBySupplier.length > 0) {
+            <div class="table-responsive">
+              <table class="table table-hover mt-0 w-100">
+                <thead>
+                <tr class="border-bottom border-2">
+                  <th class="text-center">name</th>
+                  <th class="text-center">price</th>
+                  <th class="text-center">amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                  @for (product of productsBySupplier; track product.id) {
+
+                    <tr>
+                      <td class="text-center">{{ product.name }}</td>
+                      <td class="text-center">{{ product.price }}₺</td>
+
+                      <td class="text-center ">
+                       <span class="quantity-badge">
+                              <i class="bi bi-box"></i>
+                         {{ product.amount }}
+                        </span>
+                      </td>
+
                     </tr>
-                    </thead>
-                    <tbody>
-                     @for(product of productsBySupplier;track product.id){
+                  }
+                </tbody>
+              </table>
+            </div>
 
-                       <tr>
-                         <td class="text-center">{{ product.name }}</td>
-                         <td class="text-center">${{ product.price }}</td>
-                         <td class="text-center">{{ product.amount }}</td>
-                       </tr>
-                     }
-                    </tbody>
-                  </table>
-                </div>
+          } @else {
 
-              }   @else {
+            <div class="card border-0 bg-light">
+              <div class="card-body ">
                 <p class="text-muted text-center mb-0 py-2">
                   <i class="bi bi-inbox me-1"></i>
                   No products found for this supplier
                 </p>
-              }
 
+              </div>
             </div>
-          </div>
+          }
+
+
         </div>
       }
     }

@@ -2,16 +2,45 @@ import express from "express";
 import ProductRepository from "../domain/product/ProductRepository.js";
 
 const router = express.Router();
+
+
+
+router.get("/test", async (req, res) => {
+    console.log("allah belanı versin adi köpek")
+})
+
 /*add product*/
 router.post("/", async (req, res) => {
     const newProduct = await ProductRepository.addProduct(req.body);
     res.json(newProduct);
 
 })
+router.get("/getALL", async (req, res) => {
+    console.log("getALLWithDetails ROUTE HIT!");
 
+    try {
+
+
+
+        console.log("calling getALLWithDetails endpoint");
+
+        const allProducts = await ProductRepository.getAllProductsWithDetails();
+
+        console.log("fetched products with details",allProducts);
+        console.log("Product catalog length",allProducts.length);
+
+        res.status(200).json(allProducts);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: error.message});
+    }
+
+
+})
 
 /*get by supplier*/
-router.get('/:supplier', async (req, res) => {
+router.get('/getBySupplierId/:supplier', async (req, res) => {
     try {
         const fetchedProducts = await ProductRepository.getProductBySupplier(req.params.supplier);
         res.status(200).json(fetchedProducts);
@@ -28,27 +57,9 @@ router.get("/", async (req, res) => {
 })
 
 //get all with details
-router.get("/getALLWithDetails", async (req, res) => {
-    try {
 
-
-        console.log("calling getALLWithDetails endpoint");
-
-        const allProducts = await ProductRepository.getAllProductsWithDetails();
-
-        console.log("fethced products with details",allProducts);
-        console.log("Product catalog length",allProducts.length);
-
-        res.status(200).json(allProducts);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({error: error.message});
-    }
-
-
-})
 /*get one*/
-router.get("/:id", async (req, res) => {
+router.get("/getByProductId/:id", async (req, res) => {
     const id = req.params.id;
     const product = await ProductRepository.getProduct(id);
     res.json(product);

@@ -30,13 +30,18 @@
   </ul>
 
   <div class="mt-auto p-3 border-top mb-5">
-    <button class="btn w-100" (click)="handleLogout()" [disabled]="logoutLoading">
-      @if (logoutLoading) {
-        <i class="bi bi-arrow-clockwise"></i>
-        Logging out...
+    <button
+      class="btn w-100 d-flex align-items-center"
+      (click)="handleLogout()"
+      [disabled]="logoutLoading"
+      [ngClass]="{ 'justify-content-center': isCollapsed, 'justify-content-start': !isCollapsed }"
+      [class.px-0]="isCollapsed">
+
+      @if (isCollapsed) {
+        <i class="bi-box-arrow-in-right fs-4"></i>
       } @else {
-        <i class="bi-box-arrow-in-right fs-4 mx-1"></i>
-         Logout
+        <i class="bi-box-arrow-in-right fs-4 me-2"></i>
+        Logout
       }
     </button>
   </div>

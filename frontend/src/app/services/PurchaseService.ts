@@ -1,5 +1,5 @@
 import {Observable, throwError} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders } from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Purchase, purchasedProduct,PurchasedProductWithDetails} from '../models/Purchase'
 
