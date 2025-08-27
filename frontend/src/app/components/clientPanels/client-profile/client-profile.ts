@@ -4,7 +4,7 @@ import purchaseService from '../../../services/PurchaseService';
 import {purchasedProduct, Purchase, PurchasedProductWithDetails} from '../../../models/Purchase'
 import {User} from '../../../models/User';
 import {CommonModule, DatePipe} from '@angular/common';
-import ProductComponent from '../../panels/Product/add-editProduct/Product.component';
+import ProductComponent from '../../adminPanels/Product/add-editProduct/Product.component';
 import profileEditModal from '../client-profile-edit/client-profile-edit';
 import utilService from '../../../services/UtilsService';
 

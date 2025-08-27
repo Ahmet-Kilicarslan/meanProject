@@ -2,7 +2,7 @@ import {User, loginRequest, registerRequest, loginResponse} from '../models/User
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {Observable, throwError} from 'rxjs';
+import {firstValueFrom, Observable, throwError} from 'rxjs';
 import {tap, catchError} from 'rxjs/operators';
 
 @Injectable({
@@ -99,6 +99,11 @@ export default class UserService {
         return throwError(() => error.message);
       })
     );
+  }
+
+
+  async initializeAuth(): Promise<void> {
+    await firstValueFrom(this.checkAuthStatus());
   }
 
   checkAuthStatus(): Observable<any> {

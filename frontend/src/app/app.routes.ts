@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import ProductComponent from './components/panels/Product/view-products/view-products';
-import Dashboard from './components/panels/Dashboard/dashboard';
-import ViewEmployees from './components/panels/Employee/view-employees/view-employees';
-import viewSupplier from  './components/panels/Supplier/view-supplier/view-supplier';
+import ProductComponent from './components/adminPanels/Product/view-products/view-products';
+import Dashboard from './components/adminPanels/Dashboard/dashboard';
+import ViewEmployees from './components/adminPanels/Employee/view-employees/view-employees';
+import viewSupplier from './components/adminPanels/Supplier/view-supplier/view-supplier';
 import LoginComponent from './components/Login/login-component/login-component';
 import clientViewProducts from './components/clientPanels/client-view-products/client-view-products';
 import clientDashboard from './components/clientPanels/client-dashboard/client-dashboard';
@@ -23,7 +23,7 @@ export const routes: Routes = [//insert components here
   { path: 'Supplier', component: viewSupplier, canActivate: [authGuard,adminGuard] },
 
 
-  /*client panels*/
+  /*client adminPanels*/
   {path:'clientViewProducts', component: clientViewProducts, canActivate: [authGuard,clientGuard] ,data: { expectedRole: 'user' }},
   {path:'clientDashboard',component:clientDashboard, canActivate: [authGuard,clientGuard] },
   {path:'clientProfile',component:clientProfile, canActivate: [authGuard,clientGuard] },

@@ -1,11 +1,39 @@
 import express from 'express';
 import userRepository from '../domain/user/UserRepository.js';
 import userService from "../domain/user/UserService.js";
-import {requireAuth, requireClient, requireAdmin} from '../infrastructure/middlewares/authenticate.js';
+import {requireAuth} from '../infrastructure/middlewares/authenticate.js';
 import hash from "../Utilities/hash.js";
-import User from "../domain/user/User.js";
+
 
 const router = express.Router();
+
+
+
+// Check authentication status
+router.get('/status', (req, res) => {
+    try {
+
+        if (req.session && req.session.userId) {
+            res.json({
+                isAuthenticated: true,
+                user: {
+                    id: req.session.userId,
+                    username: req.session.username,
+                    role: req.session.role
+                }
+            });
+        } else {
+            res.json({isAuthenticated: false});
+        }
+    } catch (error) {
+        console.error('❌ Status check error:', error);
+        res.status(500).json({
+            error: 'Failed to get status',
+            message: error.message
+        });
+    }
+});
+
 
 //register endpoint
 router.post("/register", async (req, res) => {
@@ -110,32 +138,6 @@ router.post("/logout", async (req, res) => {
 });
 
 
-// Check authentication status
-router.get('/status', (req, res) => {
-    try {
-        //console.log('🔍 Status check - Session data:', req.session);
-
-        if (req.session && req.session.userId) {
-            res.json({
-                isAuthenticated: true,
-                user: {
-                    id: req.session.userId,
-                    username: req.session.username,
-                    email: req.session.email,
-                    role: req.session.role
-                }
-            });
-        } else {
-            res.json({isAuthenticated: false});
-        }
-    } catch (error) {
-        console.error('❌ Status check error:', error);
-        res.status(500).json({
-            error: 'Failed to get status',
-            message: error.message
-        });
-    }
-});
 
 // Get profile (PROTECTED route - uses your middlewares!)
 router.get('/profile', requireAuth, async (req, res) => {
