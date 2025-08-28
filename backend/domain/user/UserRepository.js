@@ -1,51 +1,50 @@
 import User from './User.js';
+import userFactory from './UserFactory.js';
 import {pool} from "../../infrastructure/dbc.js";
 
 
 export default class UserRepository {
 
-    //add new
-    static async createUser(user) {
+    async save(user) {
+        if (user.id) {
+            return this.updateUser(user);
+        } else {
+            return this.createUser(user);
+        }
+    }
+    async createUser(user) {
 
         try {
 
             const sql = 'INSERT INTO user (username,password,role,email) VALUES (?,?,?,?)';
-            const [result] = await pool.query(sql, [user.username, user.password, user.role, user.email]);
-
-            return {...user, id: result.insertId};
-
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-
-    }
-
-    static async getAllUsers() {
-        try {
-            const sql = "SELECT * FROM user";
-            const [result] = await pool.query(sql);
-            return result.map(user => new User(
-                user.id,
+            const [result] = await pool.query(sql, [
                 user.username,
                 user.password,
                 user.role,
-                user.email,
-            ));
+                user.email
+            ]);
 
+
+            user.id = result.insertId;
+            return user;
 
         } catch (error) {
             console.error(error);
             throw error;
         }
+
     }
 
-    //update user
-    static async updateUser(user) {
+    async updateUser(user) {
         try {
 
             const sql = "UPDATE user SET user.username=? ,user.password=?,user.email=? WHERE id=?"
-            const [result] = await pool.query(sql, [user.username, user.password, user.email, user.id]);
+            const [result] = await pool.query(sql, [
+                user.username,
+                user.password,
+                user.email,
+                user.id
+            ]);
             return result;
 
         } catch (error) {
@@ -54,39 +53,55 @@ export default class UserRepository {
         }
     }
 
-    static async deleteUser(id) {
+    async deleteUser(id) {
         try {
+
             const sql = "DELETE FROM user WHERE id=?";
             const [result] = await pool.query(sql, [id]);
-            return result;
+            return result.affectedRows > 0;
+
         } catch (error) {
             console.error(error);
             throw error;
         }
     }
 
-    static async getUserByUsernameOrEmail(usernameOrEmail) {
+    async getAllUsers() {
+        try {
+            const sql = "SELECT * FROM user";
+            const [result] = await pool.query(sql);
+            return result.map(row => userFactory.CreateUserFromDB(row));
+
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async getUserByUsernameOrEmail(usernameOrEmail) {
         try {
             const sql = "SELECT * FROM user WHERE username = ? OR email = ?";
             const [result] = await pool.query(sql, [usernameOrEmail, usernameOrEmail]);
 
-            if (result.length === 0) {
-                return null; // User not found
-            }
+            if (result.length === 0)return null;
 
-            const user = result[0];
-            return new User(user.id, user.username, user.password, user.role, user.email);
+            return userFactory.CreateUserFromDB(result[0]);
+
+
         } catch (error) {
             console.error(error);
             throw error;
         }
     }
 
-    static async findByUsername(username) {
+    async GetByUsername(username) {
         try {
+
             const sql = 'SELECT * FROM user WHERE username = ?';
             const [result] = await pool.query(sql, [username]);
-            return result.length > 0 ? new User(result[0]) : null;
+
+            return userFactory.CreateUserFromDB(result[0]);
+
         } catch (error) {
             console.error(error);
             throw error;
@@ -94,16 +109,15 @@ export default class UserRepository {
 
     }
 
-    static async getUserById(id) {
+    async getUserById(id) {
         try {
             const sql = 'SELECT * FROM user WHERE id=?';
             const [result] = await pool.query(sql, [id]);
-            if (result.length === 0) {
-                return null;
-            }
 
-            const user = result[0];
-            return new User(user.id, user.username, user.password, user.role, user.email);
+            if (result.length === 0) return null;
+
+
+            return userFactory.CreateUserFromDB(result[0]);
 
         } catch (error) {
             console.error(error);

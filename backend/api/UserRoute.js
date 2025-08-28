@@ -1,11 +1,22 @@
 import express from 'express';
 import userRepository from '../domain/user/UserRepository.js';
 import userService from "../domain/user/UserService.js";
+import UserApplication from '../application/UserApplication.js';
 import {requireAuth} from '../infrastructure/middlewares/authenticate.js';
 import hash from "../Utilities/hash.js";
+import UserRepository from "../domain/user/UserRepository.js";
+import UserService from "../domain/user/UserService.js";
+
 
 
 const router = express.Router();
+
+
+const userRepository = new UserRepository();
+const userService = new UserService(userRepository);
+const userApplication = new UserApplication(userRepository, userService);
+
+
 
 
 
@@ -26,7 +37,7 @@ router.get('/status', (req, res) => {
             res.json({isAuthenticated: false});
         }
     } catch (error) {
-        console.error('❌ Status check error:', error);
+        console.error('❌ Status check error:', error.error.status);
         res.status(500).json({
             error: 'Failed to get status',
             message: error.message
@@ -40,7 +51,7 @@ router.post("/register", async (req, res) => {
     try {
 
         const user = req.body;
-        const result = await userService.createUser(user);
+        const result = await userApplication.createUser(user);
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -65,20 +76,13 @@ router.post("/login", async (req, res) => {
 
     try {
 
-        const user = await userService.loginUser(req.body);
+        const user = await userApplication.login(req.body);
 
 
         req.session.userId = user.id;
         req.session.username = user.username;
         req.session.email = user.email;
         req.session.role = user.role;
-
-        /*console.log('✅ Session created:', {
-            userId: req.session.userId,
-            username: req.session.username,
-            role: req.session.role
-        });*/
-
 
         req.session.save((err) => {
             if (err) {
@@ -107,7 +111,7 @@ router.post("/login", async (req, res) => {
 //logout endpoint
 router.post("/logout", async (req, res) => {
     try {
-        await userService.logoutUser();
+
 
         if (req.session) {
             req.session.destroy((err) => {
@@ -145,7 +149,7 @@ router.get('/profile', requireAuth, async (req, res) => {
         //console.log('👤 Profile request for user:', req.session.userId);
 
         // Use your DAO to get fresh user data
-        const user = await userRepository.getUserById(req.session.userId);
+        const user = await userApplication.getUserById(req.session.userId);
         if (!user) {
             return res.status(404).json({error: 'User not found'});
         }
@@ -166,7 +170,7 @@ router.get('/profile', requireAuth, async (req, res) => {
 //get all users
 router.get('/users', async (req, res) => {
     try {
-        const allUsers = await userRepository.getAllUsers();
+        const allUsers = await userApplication.getAllUsers();
         res.status(201).json(allUsers)
     } catch (error) {
         console.error("Failed to fetch all users", error);
@@ -181,24 +185,19 @@ router.get('/users', async (req, res) => {
 router.put('/', async (req, res) => {
     try {
 
-        let {id, username, email, newPassword} = req.body;
-
-        const oldUser = await userRepository.getUserById(id);
+        let {id, username, email, password} = req.body;
 
         // Prepare data
         const updateData = {
             id,
             username,
             email,
-            password: oldUser.password
+            password
         };
 
 
-        if (newPassword) {
-            updateData.password = await hash.hashPassword(newPassword);
-        }
 
-        const updatedUser = await userRepository.updateUser(updateData);
+        const updatedUser = await userApplication.updateUser(id,updateData);
         res.status(200).json(updatedUser);
 
     } catch (error) {

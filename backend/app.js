@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:4200',
     credentials: true, // This allows cookies to be sent back and forth
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires'],
 
 }));
@@ -89,7 +89,7 @@ async function testDatabaseConnection() {
 
         // Test a simple query
         const [rows] = await connection.execute('SELECT DATABASE() as current_db');
-        console.log('Current database:', rows[0].current_db);
+        console.log('Current database:', rows[0]);
 
         await connection.end();
         console.log('✅ Connection closed successfully');
@@ -102,7 +102,7 @@ async function testDatabaseConnection() {
 }
 
 
-testDatabaseConnection();
+await testDatabaseConnection();
 
 
 export default app;

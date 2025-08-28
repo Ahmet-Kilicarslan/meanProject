@@ -14,7 +14,7 @@ export default class UserService {
   private currentUser: any = null;
   private isLoggedIn: boolean = false;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   getCurrentUser(): any {
@@ -132,6 +132,16 @@ export default class UserService {
         return throwError(() => error.message);
       })
     );
+  }
+
+  async initiateAuth(): Promise<void> {
+    const user = await firstValueFrom(this.getProfile());
+    if (user.role === 'admin') {
+      await this.router.navigate(['/Dashboard']);
+
+    }else if (user.role === 'user') {
+      await this.router.navigate(['/clientDashboard']);
+    }
   }
 
   getProfile(): Observable<User> {

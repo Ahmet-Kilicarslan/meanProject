@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component,OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {loginRequest, registerRequest,User} from '../../../models/User';
 import userService from '../../../services/UserService';
@@ -15,7 +15,7 @@ import {Observable,firstValueFrom} from 'rxjs';
   templateUrl: './login-component.html',
   styleUrl: './login-component.css'
 })
-export default class LoginComponent {
+export default class LoginComponent implements OnInit {
 
   loginData: loginRequest = {
     username: "",
@@ -36,6 +36,16 @@ export default class LoginComponent {
   isRegisterLoading = false;
 
   constructor(private userService: userService, private router: Router) {
+  }
+
+  ngOnInit() {
+    this.userService.checkAuthStatus().subscribe({
+      next: (user) => {
+        if (user.role === 'admin') this.router.navigate(['/Dashboard']);
+        else if (user.role === 'client') this.router.navigate(['/clientDashboard']);
+      },
+      error: () => {}
+    });
   }
 
   private navigateBasedOnRole(role: string): void {

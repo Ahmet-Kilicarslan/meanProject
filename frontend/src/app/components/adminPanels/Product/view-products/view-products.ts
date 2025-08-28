@@ -20,9 +20,7 @@ import removeAll from '../remove-all/remove-all';
   styleUrls: ['./view-products.css']
 })
 export default class ViewProducts implements OnInit {
-  products: Product[] = [];
   suppliers: Supplier[] = [];
-
   productsWithDetails: ProductWithDetails[] = [];
 
   isLoading = false;
@@ -48,6 +46,7 @@ export default class ViewProducts implements OnInit {
 
   }
 
+
   loadProductsWithDetails() {
     this.isLoading = true;
     this.error = '';
@@ -56,10 +55,6 @@ export default class ViewProducts implements OnInit {
     this.productService.getAllProductsWithDetails().subscribe({
       next: products => {
 
-        console.log('Component received:', products);
-        console.log('Raw API response:', products);
-        console.log('Array length:', products?.length);
-        console.log('First item:', products?.[0]);
         this.productsWithDetails = products ;
 
         this.isLoading = false;
@@ -72,33 +67,6 @@ export default class ViewProducts implements OnInit {
     })
   }
 
-  /*loadSuppliers(): void {
-    this.isLoading = true;
-    this.supplierService.getAllSupplier().subscribe({
-      next: suppliers => {
-        this.suppliers = suppliers;
-        this.loadProductsWithDetails();
-      }
-    });
-  }
-
-
-  loadProductsWithDetails() {
-    this.isLoading = true;
-    this.error = '';
-    this.productService.getAllProducts().subscribe({
-      next: products => {
-        this.products = products.map(product => ({
-          ...product, supplierName: this.getSupplierName(product.supplier)
-        }));
-
-      }, error: error => {
-        this.error = 'failed to load products';
-        this.isLoading = false;
-      }
-    })
-
-  }*/
 
   openAddProductModal() {
     this.isEditMode = false;
@@ -142,7 +110,7 @@ export default class ViewProducts implements OnInit {
 
     this.productService.updateProduct(productData).subscribe({
       next: (data: Product) => {
-
+        console.log('Updated product:', data);
         this.isEditMode = false;
         this.loadProductsWithDetails();
         this.utilsService.closeModal('add/editProductModal')
@@ -161,6 +129,7 @@ export default class ViewProducts implements OnInit {
     this.productService.addProduct(productData).subscribe({
 
       next: (data: Product) => {
+        console.log("successfully added:", data);
 
         this.isEditMode = false;
         this.loadProductsWithDetails();

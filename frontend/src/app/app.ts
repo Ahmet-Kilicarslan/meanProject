@@ -5,6 +5,7 @@ import HeaderComponent from './components/header/header.component';
 import userService from './services/UserService';
 import {filter} from 'rxjs/operators';
 import ClientHeader from './components/client-header/client-header';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,8 @@ export default class App implements OnInit {
   }
 
   constructor(private router: Router, private userService: userService) {
+    this.userService.initiateAuth()
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -38,13 +41,23 @@ export default class App implements OnInit {
     });
   }
 
-  ngOnInit() {
+   ngOnInit() {
 
     this.updateUserRoles();
     this.isLoginPage = this.router.url === '/login';
 
-    this.userService.checkAuthStatus().subscribe({
-      next: () => {
+  this.userService.checkAuthStatus().subscribe({
+      next: (user) => {
+
+
+        if (user?.role === 'admin') {
+
+          this.router.navigate(['/Dashboard']);
+
+        } else if (user?.role === 'client') {
+
+          this.router.navigate(['/clientDashboard']);
+        }
 
         this.updateUserRoles();
         console.log('✅ Auth status checked on app init');

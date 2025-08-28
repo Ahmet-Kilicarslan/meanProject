@@ -16,18 +16,9 @@ router.post("/", async (req, res) => {
 
 })
 router.get("/getALL", async (req, res) => {
-    console.log("getALLWithDetails ROUTE HIT!");
 
     try {
-
-
-
-        console.log("calling getALLWithDetails endpoint");
-
         const allProducts = await ProductRepository.getAllProductsWithDetails();
-
-        console.log("fetched products with details",allProducts);
-        console.log("Product catalog length",allProducts.length);
 
         res.status(200).json(allProducts);
 

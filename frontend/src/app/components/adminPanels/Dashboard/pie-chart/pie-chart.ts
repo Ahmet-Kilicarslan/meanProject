@@ -1,4 +1,4 @@
-import {Component, OnChanges,Input} from '@angular/core';
+/*import {Component, OnChanges,Input} from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 
@@ -36,4 +36,4 @@ export default class PieChart implements OnChanges {
 
 
 
-}
+}*/
