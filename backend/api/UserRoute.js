@@ -1,6 +1,5 @@
 import express from 'express';
-import userRepository from '../domain/user/UserRepository.js';
-import userService from "../domain/user/UserService.js";
+
 import UserApplication from '../application/UserApplication.js';
 import {requireAuth} from '../infrastructure/middlewares/authenticate.js';
 import hash from "../Utilities/hash.js";
@@ -14,7 +13,7 @@ const router = express.Router();
 
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
-const userApplication = new UserApplication(userRepository, userService);
+const userApplication = new UserApplication(userService,userRepository);
 
 
 
@@ -78,11 +77,24 @@ router.post("/login", async (req, res) => {
 
         const user = await userApplication.login(req.body);
 
+        // Add these debug logs:
+        console.log('User found:', user);
+        console.log('Session before save:', req.session);
+
+
 
         req.session.userId = user.id;
-        req.session.username = user.username;
-        req.session.email = user.email;
+        req.session.username = user.username || user.username?.value;
+        req.session.email = user.email || user.email?.value;
         req.session.role = user.role;
+
+
+        console.log(req.session.userId);
+        console.log(req.session.username);
+        console.log(req.session.role);
+
+
+
 
         req.session.save((err) => {
             if (err) {

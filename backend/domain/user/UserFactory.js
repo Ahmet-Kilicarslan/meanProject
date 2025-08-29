@@ -1,4 +1,4 @@
-import User from './User';
+import User from './User.js'
 import Email from './valueObjects/Email.js'
 import Password from './valueObjects/Password.js'
 import Username from "./valueObjects/Username.js";
@@ -15,7 +15,7 @@ export default class UserFactory {
         return new User(
             null,
             username,
-            userData.password,
+            password,
             userData.role || 'user',
             email,
         );
@@ -29,6 +29,7 @@ export default class UserFactory {
             row.username,
             row.password,
             row.role,
+            row.email
         )
 
     }

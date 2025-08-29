@@ -1,24 +1,22 @@
 import Product from "./Product.js";
+import productFactory from "./ProductFactory.js";
 
 import {pool} from "../../infrastructure/dbc.js";
 
 export default class ProductRepository {
 
-    static async addProduct(product) {
+    async createProduct(product) {
         try {
-            const products = await this.getAllProducts();
-            for (const p of products) {
-                if (product.name === p.name) {
-                    console.log("product name already exists");
-                    return;
-                }
-            }
+
             const sql = 'insert into products (name, amount, price,supplier) VALUES (?,?,?,?)';
             const [result] = await pool.query(sql, [product.name, product.amount, product.price, product.supplier]);
 
-            return new Product(result.insertId, product.name, product.amount, product.price, product.supplier);
+            product.id = result.insertId;
+            return product;
+
         } catch (err) {
             console.log(err);
+            throw err;
         }
 
     }
@@ -30,9 +28,9 @@ export default class ProductRepository {
                                 product.name,
                                 product.amount,
                                 product.price,
-                                product.supplier ,
+                                product.supplier,
                                 supplier.name as supplierName,
-                                asset.url as imageUrl
+                                asset.url     as imageUrl
                          FROM products product
                                   LEFT JOIN supplier ON product.supplier = supplier.id
                                   LEFT JOIN assets asset ON product.id = asset.productId
@@ -51,12 +49,14 @@ export default class ProductRepository {
         }
     }
 
-    static async getProduct(id) {
+    static async getProductById(id) {
         try {
             const sql = 'select * from products where id = ?';
+
             const [result] = await pool.query(sql, [id]);
             const fetchedProduct = result[0];
-            return new Product(fetchedProduct.id, fetchedProduct.name, fetchedProduct.amount, fetchedProduct.price, fetchedProduct.supplier);
+
+            return productFactory.createProductFromDB(fetchedProduct);
         } catch (err) {
             console.log(err);
         }
@@ -68,7 +68,7 @@ export default class ProductRepository {
         try {
             const sql = 'select * from products where supplier=?';
             const [result] = await pool.query(sql, [supplier]);
-            return result.map(product => new Product(product.id, product.name, product.amount, product.price, product.supplier));
+            return result.map(row => productFactory.createProductFromDB(row));
         } catch (err) {
             console.log(err);
         }
@@ -78,7 +78,7 @@ export default class ProductRepository {
         try {
             const sql = 'select * from products';
             const [result] = await pool.query(sql);
-            return result.map(product => new Product(product.id, product.name, product.amount, product.price, product.supplier));
+            return result.map(row => productFactory.createProductFromDB(row));
         } catch (err) {
             console.log(err);
         }
@@ -86,9 +86,11 @@ export default class ProductRepository {
 
     static async updateProduct(product) {
         try {
+
             const sql = 'update products set name=?,amount=?,price=? where id = ?';
             const [result] = await pool.query(sql, [product.name, product.amount, product.price, product.id]);
             return result;
+
         } catch (err) {
             console.log(err);
         }
@@ -119,7 +121,7 @@ export default class ProductRepository {
         try {
             const sql = 'delete from products where id = ?';
             const [result] = await pool.query(sql, [id]);
-            return result;
+            return result.affectedRows > 0;
         } catch (err) {
             console.log(err);
         }

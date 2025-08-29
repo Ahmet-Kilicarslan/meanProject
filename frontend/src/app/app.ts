@@ -41,26 +41,23 @@ export default class App implements OnInit {
     });
   }
 
-   ngOnInit() {
+  ngOnInit() {
 
     this.updateUserRoles();
     this.isLoginPage = this.router.url === '/login';
 
-  this.userService.checkAuthStatus().subscribe({
-      next: (user) => {
+    this.userService.checkAuthStatus().subscribe({
+      next: (response) => {
 
+        if (response.isAuthenticated && response.user) {
+          if (response.user.role === 'admin') this.router.navigate(['/Dashboard']);
 
-        if (user?.role === 'admin') {
-
-          this.router.navigate(['/Dashboard']);
-
-        } else if (user?.role === 'client') {
-
-          this.router.navigate(['/clientDashboard']);
+          else if (response.user.role === 'client') this.router.navigate(['/clientDashboard']);
         }
 
         this.updateUserRoles();
         console.log('✅ Auth status checked on app init');
+
       },
       error: (error) => {
 

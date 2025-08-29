@@ -117,6 +117,7 @@ export default class UserRepository {
             if (result.length === 0) return null;
 
 
+
             return userFactory.CreateUserFromDB(result[0]);
 
         } catch (error) {

@@ -6,7 +6,7 @@ export  const pool = mysql.createPool({
     user:process.env.DB_USER,
     password:process.env.DB_PASSWORD,//A#*s*irP"8@q1n*2
     database:process.env.DB_NAME,//A#*s*irP"8@q1n*2
-    waitForConnections: true,
+    waitForConnections: true, //tree -I 'node_modules|dist|build'
     connectionLimit: 10,
     queueLimit: 0
 

@@ -11,10 +11,10 @@ import Password from "../domain/user/valueObjects/Password.js";
 export default class UserApplication {
 
     //dependency injection
-    constructor() {
+    constructor(userService,userRepository) {
 
-        this.userRepository = new UserRepository();
-        this.userService = new UserService();
+        this.userRepository = userRepository;
+        this.userService =  userService;
 
     }
 
@@ -22,7 +22,7 @@ export default class UserApplication {
     async createUser(userData) {
         try {
 
-            await this.userService.createUser(userData);
+           return  await this.userService.createUser(userData);
 
         } catch (err) {
             throw err;
@@ -33,7 +33,7 @@ export default class UserApplication {
     async login(credentials) {
 
        try{
-           await this.userService.login(credentials);
+           return await this.userService.login(credentials);
        }catch(err){
            throw err;
        }
@@ -44,7 +44,7 @@ export default class UserApplication {
     async getUserById(id) {
 
      try{
-         await this.userService.getOneById(id);
+         return await this.userService.getUserById(id);
      }catch(err){
          throw err;
      }
@@ -54,7 +54,7 @@ export default class UserApplication {
     async getAllUsers() {
 
         try{
-            await this.userService.getAllUsers();
+            return await this.userService.getAllUsers();
         }catch(err){
             throw err;
         }
@@ -63,7 +63,7 @@ export default class UserApplication {
 
     async updateUser(id, updateData) {
         try{
-            await this.userService.updateUser(id, updateData);
+            return await this.userService.updateUser(id, updateData);
         }catch(err){
             throw err;
         }
@@ -72,7 +72,7 @@ export default class UserApplication {
     async deleteUser(userId) {
 
           try{
-              await this.userService.deleteUser(userId);
+              return  await this.userService.deleteUser(userId);
           }catch(err){
               throw err;
           }

@@ -11,7 +11,7 @@ router.get("/test", async (req, res) => {
 
 /*add product*/
 router.post("/", async (req, res) => {
-    const newProduct = await ProductRepository.addProduct(req.body);
+    const newProduct = await ProductRepository.createProduct(req.body);
     res.json(newProduct);
 
 })
@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
 /*get one*/
 router.get("/getByProductId/:id", async (req, res) => {
     const id = req.params.id;
-    const product = await ProductRepository.getProduct(id);
+    const product = await ProductRepository.getProductById(id);
     res.json(product);
 })
 /*update*/

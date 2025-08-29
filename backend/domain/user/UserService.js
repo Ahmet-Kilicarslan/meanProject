@@ -1,6 +1,4 @@
-import userRepository from '../user/UserRepository.js';
 import hash from "../../Utilities/hash.js";
-import User from "./User.js";
 import {ConflictError,ValidationError,NotFoundError,UnauthorizedError} from '../../Utilities/errors.js';
 import UserFactory from "./UserFactory.js";
 import Username from "./valueObjects/Username.js";
@@ -9,8 +7,12 @@ import Username from "./valueObjects/Username.js";
 export default class UserService {
 
 
+
     constructor(userRepository) {
-        this.userRepository = userRepository;
+
+        this.userRepository =  userRepository;
+
+
     }
     async createUser(userData) {
 
@@ -23,9 +25,8 @@ export default class UserService {
 
             newUser.password = await hash.hashPassword(newUser.password);
 
-            const savedUser = await this.userRepository.save(newUser);
+            return  await this.userRepository.save(newUser);
 
-            return savedUser.toSafeObject();
         } catch (err) {
             throw err;
 
@@ -42,22 +43,22 @@ export default class UserService {
             throw new ValidationError('username and password are required');
         }
 
-        const user = await this.userRepository.getUserByUsernameOrEmail(username);
+        const user = await this.userRepository.GetByUsername(username);
         if (!user) {
             throw new UnauthorizedError("invalid username");
 
         }
-        const isValidPassword = await hash.compare(password, user.password);
+        const isValidPassword = await hash.comparePassword(password, user.password);
 
         if (!isValidPassword) {
             throw new UnauthorizedError("invalid password");
         }
 
-        return user.toSafeObject();
+        return user;
 
 
     }
-    async getOneById(id) {
+    async getUserById(id) {
 
         const fetchedUser = await this.userRepository.getUserById(id);
 
@@ -65,7 +66,7 @@ export default class UserService {
             throw new NotFoundError("User not found");
         }
 
-        return fetchedUser.toSafeObject();
+        return fetchedUser;
 
     }
 
@@ -98,8 +99,7 @@ export default class UserService {
             user.password = await hash.hashPassword(updateData.password);
         }
 
-        const updatedUser = await this.userRepository.save(user);
-        return updatedUser.toSafeObject();
+        return await this.userRepository.save(user);
 
 
     }
