@@ -1,4 +1,4 @@
-import {name} from "express";
+
 
 export default class Product {
     constructor (id,name,amount,price,supplier) {

@@ -1,8 +1,12 @@
 import express from "express";
 import ProductRepository from "../domain/product/ProductRepository.js";
-
+import ProductService from "../domain/product/ProductService.js";
+import ProductApplication from "../application/ProductApplication.js";
 const router = express.Router();
 
+const productRepository = new ProductRepository();
+const productService = new ProductService(productRepository);
+const productApplication = new ProductApplication(productRepository,productService);
 
 
 router.get("/test", async (req, res) => {
@@ -11,14 +15,18 @@ router.get("/test", async (req, res) => {
 
 /*add product*/
 router.post("/", async (req, res) => {
-    const newProduct = await ProductRepository.createProduct(req.body);
+    const newProduct = await productApplication.createProduct(req.body);
     res.json(newProduct);
 
 })
+
+//get all with details
 router.get("/getALL", async (req, res) => {
 
     try {
-        const allProducts = await ProductRepository.getAllProductsWithDetails();
+
+
+        const allProducts = await productApplication.getAllProductsWithDetails();
 
         res.status(200).json(allProducts);
 
@@ -33,33 +41,35 @@ router.get("/getALL", async (req, res) => {
 /*get by supplier*/
 router.get('/getBySupplierId/:supplier', async (req, res) => {
     try {
-        const fetchedProducts = await ProductRepository.getProductBySupplier(req.params.supplier);
+        const fetchedProducts = await productApplication.getProductBySupplier(req.params.supplier);
         res.status(200).json(fetchedProducts);
     } catch (error) {
 
         res.status(404).json({error: error.message});
     }
 })
-/*get all*/
+
+//get all
 router.get("/", async (req, res) => {
-    const allProducts = await ProductRepository.getAllProducts();
+    const allProducts = await productApplication.getAllProducts();
     res.json(allProducts);
 
 })
 
-//get all with details
+
 
 /*get one*/
 router.get("/getByProductId/:id", async (req, res) => {
     const id = req.params.id;
-    const product = await ProductRepository.getProductById(id);
+    const product = await productApplication.getProductById(id);
     res.json(product);
 })
+
 /*update*/
 router.put("/", async (req, res) => {
 
     try {
-        const product = await ProductRepository.updateProduct(req.body);
+        const product = await productApplication.updateProduct(req.body);
         res.json(product);
     } catch (err) {
         console.log(err);
@@ -76,7 +86,7 @@ router.put("/:id", async (req, res) => {
         console.log(`📊 Backend router: Request body:`, req.body);
         console.log(`📊 Backend router: Request body type:`, typeof req.body);
 
-        const updatedProduct = await ProductRepository.updateAmount(id, amount);
+        const updatedProduct = await productApplication.updateAmount(id, amount);
 
         console.log('✅ Backend router: Update completed:', updatedProduct);
 
@@ -89,10 +99,11 @@ router.put("/:id", async (req, res) => {
         });
     }
 })
+
 /*delete*/
 router.delete("/:id", async (req, res) => {
     const id = req.params.id;
-    const product = await ProductRepository.deleteProduct(id);
+    const product = await productApplication.deleteProduct(id);
     res.json(product);
 
 })

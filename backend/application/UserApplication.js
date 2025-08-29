@@ -1,12 +1,4 @@
-import UserRepository from '../domain/user/UserRepository.js'
-import UserService from '../domain/user/UserService.js'
-import UserFactory from '../domain/user/UserFactory.js'
-import hash from '../Utilities/hash.js'
-import User from '../domain/user/User.js'
-import {ValidationError, UnauthorizedError, NotFoundError} from '../Utilities/errors.js';
-import Username from "../domain/user/valueObjects/Username.js";
-import Email from "../domain/user/valueObjects/Email.js";
-import Password from "../domain/user/valueObjects/Password.js";
+
 
 export default class UserApplication {
 
@@ -61,9 +53,9 @@ export default class UserApplication {
     }
 
 
-    async updateUser(id, updateData) {
+    async updateUser(updateData) {
         try{
-            return await this.userService.updateUser(id, updateData);
+            return await this.userService.updateUser( updateData);
         }catch(err){
             throw err;
         }

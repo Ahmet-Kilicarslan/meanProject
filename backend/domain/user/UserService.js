@@ -14,11 +14,11 @@ export default class UserService {
 
 
     }
-    async createUser(userData) {
+    async createUser(user) {
 
         try {
 
-            const newUser = UserFactory.createUser(userData);
+            const newUser = UserFactory.createUser(user);
 
             await this.ensureUniqueUsername(newUser.username);
             await this.ensureUniqueEmail(newUser.email);
@@ -78,8 +78,8 @@ export default class UserService {
     }
 
 
-    async updateUser(id, updateData) {
-        const user = await this.userRepository.getUserById(id);
+    async updateUser( updateData) {
+        const user = await this.userRepository.getUserById(updateData.id);
 
         if (!user) {
             throw new NotFoundError("User not found");

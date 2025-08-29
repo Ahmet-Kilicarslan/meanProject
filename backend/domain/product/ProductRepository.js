@@ -5,11 +5,24 @@ import {pool} from "../../infrastructure/dbc.js";
 
 export default class ProductRepository {
 
+
+    async save(product) {
+        if (product.id) {
+            return this.updateProduct(product);
+
+        } else return this.createProduct(product);
+    }
+
     async createProduct(product) {
         try {
 
             const sql = 'insert into products (name, amount, price,supplier) VALUES (?,?,?,?)';
-            const [result] = await pool.query(sql, [product.name, product.amount, product.price, product.supplier]);
+            const [result] = await pool.query(sql, [
+                product.name,
+                product.amount,
+                product.price,
+                product.supplier
+            ]);
 
             product.id = result.insertId;
             return product;
@@ -21,9 +34,22 @@ export default class ProductRepository {
 
     }
 
-    static async getAllProductsWithDetails() {
+    async getProductByName(name) {
         try {
-            console.log("Executing SQL query...");
+
+            const sql = 'SELECT * FROM products WHERE name=?';
+            const [result] = await pool.query(sql, [name]);
+            return result;
+
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+
+    async getAllProductsWithDetails() {
+        try {
+
             const sql = `SELECT product.id,
                                 product.name,
                                 product.amount,
@@ -38,8 +64,7 @@ export default class ProductRepository {
 
             const [result] = await pool.query(sql);
 
-            console.log("SQL executed, result:", result);
-            console.log("Result length:", result?.length);
+
 
             return result;
 
@@ -49,14 +74,18 @@ export default class ProductRepository {
         }
     }
 
-    static async getProductById(id) {
+    async getProductById(id) {
         try {
             const sql = 'select * from products where id = ?';
 
             const [result] = await pool.query(sql, [id]);
             const fetchedProduct = result[0];
 
+            if (result.length === 0) return null;
+
+
             return productFactory.createProductFromDB(fetchedProduct);
+
         } catch (err) {
             console.log(err);
         }
@@ -64,7 +93,7 @@ export default class ProductRepository {
 
     }
 
-    static async getProductBySupplier(supplier) {
+    async getProductBySupplier(supplier) {
         try {
             const sql = 'select * from products where supplier=?';
             const [result] = await pool.query(sql, [supplier]);
@@ -74,7 +103,7 @@ export default class ProductRepository {
         }
     }
 
-    static async getAllProducts() {
+    async getAllProducts() {
         try {
             const sql = 'select * from products';
             const [result] = await pool.query(sql);
@@ -84,7 +113,7 @@ export default class ProductRepository {
         }
     }
 
-    static async updateProduct(product) {
+    async updateProduct(product) {
         try {
 
             const sql = 'update products set name=?,amount=?,price=? where id = ?';
@@ -96,7 +125,7 @@ export default class ProductRepository {
         }
     }
 
-    static async updateAmount(id, amount) {
+    async updateAmount(id, amount) {
         try {
             console.log(`🔄 DAO: updateAmount called with id=${id}, amount=${amount}`);
             console.log(`📊 DAO: Amount type:`, typeof amount);
@@ -117,7 +146,7 @@ export default class ProductRepository {
         }
     }
 
-    static async deleteProduct(id) {
+    async deleteProduct(id) {
         try {
             const sql = 'delete from products where id = ?';
             const [result] = await pool.query(sql, [id]);
