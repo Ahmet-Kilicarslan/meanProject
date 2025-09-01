@@ -158,9 +158,7 @@ router.post("/logout", async (req, res) => {
 // Get profile (PROTECTED route - uses your middlewares!)
 router.get('/profile', requireAuth, async (req, res) => {
     try {
-        //console.log('👤 Profile request for user:', req.session.userId);
 
-        // Use your DAO to get fresh user data
         const user = await userApplication.getUserById(req.session.userId);
         if (!user) {
             return res.status(404).json({error: 'User not found'});

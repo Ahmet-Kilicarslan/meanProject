@@ -40,4 +40,22 @@ app.listen(port, () => {
 504 Gateway Timeout: Upstream server timeout
 
 
+#!/bin/bash
+DB_NAME="frost"
+DB_USER="workbench"
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_FILE="backup_${DB_NAME}_${DATE}.sql"
+
+mysqldump -u $DB_USER -p $DB_NAME > $BACKUP_FILE
+echo "Backup created: $BACKUP_FILE"
+
+
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=workbench
+DB_PASSWORD=Asirpa12
+DB_NAME=frost
+SESSION_SECRET=gizli
+NODE_ENV=development
+
 */

@@ -40,7 +40,7 @@ export default class ProductService {
             }
 
 
-            if (!fetchedProduct.amount < 0) {
+            if (fetchedProduct.amount >0) {
                 fetchedProduct.changeAmount(fetchedProduct.amount);
             }
 
