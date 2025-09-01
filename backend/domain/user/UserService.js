@@ -23,7 +23,7 @@ export default class UserService {
             await this.ensureUniqueUsername(newUser.username);
             await this.ensureUniqueEmail(newUser.email);
 
-            newUser.password = await hash.hashPassword(newUser.password);
+            newUser.password = await hash.hashPassword(newUser.password.value);
 
             return  await this.userRepository.save(newUser);
 

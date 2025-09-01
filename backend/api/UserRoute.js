@@ -207,7 +207,7 @@ router.put('/', async (req, res) => {
 
 
 
-        const updatedUser = await userApplication.updateUser(id,updateData);
+        const updatedUser = await userApplication.updateUser(updateData);
         res.status(200).json(updatedUser);
 
     } catch (error) {

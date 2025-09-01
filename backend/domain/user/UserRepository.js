@@ -18,15 +18,17 @@ export default class UserRepository {
 
             const sql = 'INSERT INTO user (username,password,role,email) VALUES (?,?,?,?)';
             const [result] = await pool.query(sql, [
-                user.username,
+                user.username.value,
                 user.password,
                 user.role,
-                user.email
+                user.email.value
             ]);
 
 
             user.id = result.insertId;
-            return user;
+            const [rows] = await pool.query("SELECT * FROM user WHERE id = ?", [user.id]);
+
+            return userFactory.CreateUserFromDB(rows[0]);
 
         } catch (error) {
             console.error(error);
@@ -38,11 +40,11 @@ export default class UserRepository {
     async updateUser(user) {
         try {
 
-            const sql = "UPDATE user SET user.username=? ,user.password=?,user.email=? WHERE id=?"
+            const sql = "UPDATE user SET username=? ,password=?,email=? WHERE id=?"
             const [result] = await pool.query(sql, [
-                user.username,
+                user.username.value,
                 user.password,
-                user.email,
+                user.email.value,
                 user.id
             ]);
             return result;
@@ -83,7 +85,7 @@ export default class UserRepository {
             const sql = "SELECT * FROM user WHERE username = ? OR email = ?";
             const [result] = await pool.query(sql, [usernameOrEmail, usernameOrEmail]);
 
-            if (result.length === 0)return null;
+            if (result.length === 0) return null;
 
             return userFactory.CreateUserFromDB(result[0]);
 
