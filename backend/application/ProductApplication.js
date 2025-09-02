@@ -47,6 +47,14 @@ export default class ProductApplication {
 
     }
 
+    async getProductsBySupplier(id) {
+        try{
+            return  await this.productService.getProductsBySupplier(id);
+        }catch (error) {
+            throw error;
+        }
+    }
+
     async getAllProducts() {
         try{
          return    await this.productService.getAllProducts();

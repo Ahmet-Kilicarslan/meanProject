@@ -9,5 +9,18 @@ export  const pool = mysql.createPool({
     waitForConnections: true, //tree -I 'node_modules|dist|build'
     connectionLimit: 10,
     queueLimit: 0
+    /*
+    change password:
+    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YourStrongPassword';
+    FLUSH PRIVILEGES;
+
+
+    backup data :
+    mysqldump -u root -p frost > backup.sql
+
+    to insert existing data from outside sql file:
+    mysql -u root -p frost < /home/ahmet/Desktop/full_backup.sql
+
+        */
 
 });

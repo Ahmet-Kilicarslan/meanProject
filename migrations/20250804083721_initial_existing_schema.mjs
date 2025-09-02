@@ -1,5 +1,5 @@
 // 20250804083721_initial_existing_schema.mjs
-exports.up = function (knex) {
+export const up = function (knex) {
     return knex.schema
         .createTable("user", function (table) {
             table.increments('id').primary();
@@ -42,7 +42,7 @@ exports.up = function (knex) {
 
 };
 
-exports.down = function (knex) {
+export const down = function (knex) {
     return knex.schema
         .dropTableIfExists('purchasedProduct')
         .dropTableIfExists('purchase')

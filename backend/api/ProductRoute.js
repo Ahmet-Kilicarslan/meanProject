@@ -41,7 +41,7 @@ router.get("/getALL", async (req, res) => {
 /*get by supplier*/
 router.get('/getBySupplierId/:supplier', async (req, res) => {
     try {
-        const fetchedProducts = await productApplication.getProductBySupplier(req.params.supplier);
+        const fetchedProducts = await productApplication.getProductsBySupplier(req.params.supplier);
         res.status(200).json(fetchedProducts);
     } catch (error) {
 
