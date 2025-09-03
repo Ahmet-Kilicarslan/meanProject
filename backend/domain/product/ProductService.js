@@ -22,7 +22,7 @@ export default class ProductService {
         try {
             const newProduct = await ProductFactory.createProduct(product);
 
-            //await this.ensureUniqueName(newProduct.name);
+            await this.ensureUniqueName(newProduct.name);
 
             return await this.productRepository.save(newProduct);
         } catch (error) {

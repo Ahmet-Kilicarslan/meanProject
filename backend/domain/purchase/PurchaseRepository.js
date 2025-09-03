@@ -1,15 +1,16 @@
 import {pool} from "../../infrastructure/dbc.js";
-
+import purchaseFactory from "./PurchaseFactory.js";
 import {Purchase, PurchasedProduct} from "./Purchase.js";
 
 export default class PurchaseRepository {
 
     //creating purchase
-    static async CreatePurchase(purchase) {
+     async CreatePurchase(purchase) {
         try {
             const sql = 'INSERT INTO purchase (userId,totalAmount) VALUES (?,?)';
             const [result] = await pool.query(sql, [purchase.userId, purchase.totalAmount]);
             return new Purchase(result.insertId, purchase.userId, [], purchase.totalAmount, purchase.date,);
+
         } catch (err) {
             console.log(err);
             throw err;
@@ -17,7 +18,7 @@ export default class PurchaseRepository {
     }
 
 //get purchases by user id ascending or descending order
-    static async getPurchaseByUserId(userId, order = 'desc') {
+     async getPurchaseByUserId(userId, order = 'desc') {
         try {
             const orderClause = order === 'asc' ? 'ORDER BY date ASC' : 'ORDER BY date DESC';
 
@@ -42,7 +43,7 @@ export default class PurchaseRepository {
 
 
     //getting purchases by user id in ascending order
-        static async getPurchasesByUserIdInAscendingOrder(userId) {
+         async getPurchasesByUserIdInAscendingOrder(userId) {
             try {
                 const sql = 'SELECT * FROM purchase WHERE userId = ? ORDER BY DATE ASC ';
                 const [result] = await pool.query(sql, [userId]);
@@ -60,7 +61,7 @@ export default class PurchaseRepository {
         }
 
     //getting purchases by user id in descending order
-        static async getPurchasesByUserIdInDescendingOrder(userId) {
+         async getPurchasesByUserIdInDescendingOrder(userId) {
             try {
                 const sql = 'SELECT * FROM purchase WHERE userId = ? ORDER BY DATE DESC ';
                 const [result] = await pool.query(sql, [userId]);
@@ -79,7 +80,7 @@ export default class PurchaseRepository {
         }
 
     //get purchasedProducts by purchase id
-    static async getPurchasedProductsByPurchaseId(purchaseId) {
+     async getPurchasedProductsByPurchaseId(purchaseId) {
         try {
             const sql = `
                 SELECT bought.id,
@@ -112,7 +113,7 @@ export default class PurchaseRepository {
     }
 
     //get purchase with items
-    static async getPurchaseWithItems(purchaseId) {
+     async getPurchaseWithItems(purchaseId) {
         try {
             const sql = `
                 SELECT p.id  as purchaseId,
@@ -129,6 +130,7 @@ export default class PurchaseRepository {
             `;
 
             const [rows] = await pool.query(sql, [purchaseId]);
+
             if (rows.length === 0) {
                 return null; // Purchase not found
             }
@@ -136,13 +138,8 @@ export default class PurchaseRepository {
 
             const purchaseData = rows[0];
 
-            const purchase = new Purchase(
-                purchaseData.purchaseId,
-                purchaseData.userId,
-                [],
-                purchaseData.totalAmount,
-                purchaseData.date
-            );
+
+            const purchase = await purchaseFactory.createPurchaseFromDB(purchaseData);
 
             purchase.products = rows.filter(row => row.id !== null)
                 .map(row => new PurchasedProduct(
@@ -162,7 +159,7 @@ export default class PurchaseRepository {
         }
     }
 
-    static async addProductToPurchasedProduct(purchasedProduct) {
+     async addProductToPurchasedProduct(purchasedProduct) {
         try {
             const sql = 'insert into purchasedProduct ( purchaseId, productId, quantity, price) values (?,?,?,?) ';
             const [result] = await pool.query(sql, [
@@ -171,6 +168,7 @@ export default class PurchaseRepository {
                 purchasedProduct.quantity,
                 purchasedProduct.price
             ]);
+
             return new PurchasedProduct(
                 result.insertId,
                 purchasedProduct.purchaseId,

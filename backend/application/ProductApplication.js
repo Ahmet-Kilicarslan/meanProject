@@ -1,4 +1,6 @@
 export default class ProductApplication {
+
+
     constructor(productRepository, productService) {
         this.productRepository = productRepository;
         this.productService = productService;

@@ -39,6 +39,7 @@ export default class ProductRepository {
 
             const sql = 'SELECT * FROM products WHERE name=?';
             const [result] = await pool.query(sql, [name]);
+            if(result.length ===0) return null;
             return result;
 
         } catch (err) {

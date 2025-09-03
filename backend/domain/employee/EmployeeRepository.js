@@ -1,54 +1,58 @@
 import Employee from "./Employee.js";
-import {pool} from "../../infrastructure/dbc.js";
+import { pool } from "../../infrastructure/dbc.js";
 
 export default class EmployeeRepository {
 
-
-    static async getEmployee(id) {
-        const sql = 'select * from employee where id = ?';
+    async getEmployeeById(id) {
+        const sql = 'SELECT * FROM employee WHERE id = ?';
         const [result] = await pool.query(sql, [id]);
 
         if (!result || result.length === 0) {
             throw new Error(`Employee with id ${id} not found`);
         }
-        const employee=result[0];
+        const employee = result[0];
 
-        return new Employee
-            (
-                employee.id,
-                employee.name,
-                employee.position,
-                employee.salary,
-            );
+        return new Employee(
+            employee.id,
+            employee.name,
+            employee.position,
+            employee.salary
+        );
     }
 
-    static async addEmployee(employee) {
-        try {
+    async getEmployeeByName(name) {
+        const sql = 'SELECT * FROM employee WHERE name = ?';
+        const [result] = await pool.query(sql, [name]);
 
-            const sql = 'insert into employee (name, position, salary) values (?,?,?)';
+        if (!result || result.length === 0) {
+            throw new Error(`Employee with name ${name} not found`);
+        }
+        return result;
+    }
+
+    async addEmployee(employee) {
+        try {
+            const sql = 'INSERT INTO employee (name, position, salary) VALUES (?, ?, ?)';
             const [result] = await pool.query(sql, [
                 employee.name,
                 employee.position,
-                employee.salary,
+                employee.salary
             ]);
             employee.id = result.insertId;
             return employee;
         } catch (e) {
             console.log(e);
-
+            throw e; // Re-throw the error so calling code can handle it
         }
-
     }
 
-    static async deleteEmployee(id) {
-        let sql = 'delete from employee where id = ?';
+    async deleteEmployee(id) {
+        const sql = 'DELETE FROM employee WHERE id = ?';
         const [result] = await pool.query(sql, [id]);
-
 
         if (result.affectedRows === 0) {
             throw new Error(`Employee with id ${id} not found or already deleted`);
         }
-
 
         return {
             success: true,
@@ -58,22 +62,26 @@ export default class EmployeeRepository {
         };
     }
 
-    static async getAllEmployees() {
-        const sql = 'select * from employee ';
+    async getAllEmployees() {
+        const sql = 'SELECT * FROM employee';
         const [result] = await pool.query(sql);
+
         return result.map(employee => new Employee(
             employee.id,
             employee.name,
             employee.position,
-            employee.salary,
-
+            employee.salary
         ));
-
     }
 
-    static async updateEmployee(employee) {
-        const sql = 'update  employee set name=?,position=?,salary=? where id = ?';
-        const [result] = await pool.query(sql, [employee.name, employee.position, employee.salary, employee.id]);
+    async updateEmployee(employee) {
+        const sql = 'UPDATE employee SET name = ?, position = ?, salary = ? WHERE id = ?';
+        const [result] = await pool.query(sql, [
+            employee.name,
+            employee.position,
+            employee.salary,
+            employee.id
+        ]);
         return result;
     }
 }
