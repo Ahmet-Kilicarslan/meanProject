@@ -25,7 +25,7 @@ export default class UserService {
 
             newUser.password = await hash.hashPassword(newUser.password.value);
 
-            return  await this.userRepository.save(newUser);
+            return  await this.userRepository.createUser(newUser);
 
         } catch (err) {
             throw err;
@@ -99,7 +99,7 @@ export default class UserService {
             user.password = await hash.hashPassword(updateData.password);
         }
 
-        return await this.userRepository.save(user);
+        return await this.userRepository.updateUser(user);
 
 
     }

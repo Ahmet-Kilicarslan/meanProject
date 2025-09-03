@@ -5,13 +5,7 @@ import {pool} from "../../infrastructure/dbc.js";
 
 export default class UserRepository {
 
-    async save(user) {
-        if (user.id) {
-            return this.updateUser(user);
-        } else {
-            return this.createUser(user);
-        }
-    }
+
     async createUser(user) {
 
         try {
@@ -101,6 +95,8 @@ export default class UserRepository {
 
             const sql = 'SELECT * FROM user WHERE username = ?';
             const [result] = await pool.query(sql, [username]);
+
+            if (result.length === 0) return null;
 
             return userFactory.CreateUserFromDB(result[0]);
 
