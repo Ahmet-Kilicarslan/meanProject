@@ -29,6 +29,10 @@ export default class User{
         this.username = new Username(newUsername);
     }
 
+    changePassword(newPassword) {
+        this.password = new Password(newPassword);
+    }
+
     isAdmin(){
         return this.role === 'admin';
 

@@ -74,10 +74,10 @@ export default class UserRepository {
         }
     }
 
-    async getUserByUsernameOrEmail(usernameOrEmail) {
+    async getUserByEmail(email) {
         try {
-            const sql = "SELECT * FROM user WHERE username = ? OR email = ?";
-            const [result] = await pool.query(sql, [usernameOrEmail, usernameOrEmail]);
+            const sql = "SELECT * FROM user WHERE  email = ?";
+            const [result] = await pool.query(sql, [email]);
 
             if (result.length === 0) return null;
 

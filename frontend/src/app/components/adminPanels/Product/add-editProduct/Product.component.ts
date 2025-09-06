@@ -60,7 +60,7 @@ export default class ProductComponent implements OnInit, OnChanges {
     });
   }
 
-  // Filter suppliers based on user input
+
   onSupplierInputChange(): void {
     if (!this.typedSupplier.trim()) {
       this.filteredSuppliers = this.suppliers;

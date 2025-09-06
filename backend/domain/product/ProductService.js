@@ -24,7 +24,7 @@ export default class ProductService {
 
             await this.ensureUniqueName(newProduct.name);
 
-            return await this.productRepository.save(newProduct);
+            return await this.productRepository.createProduct(newProduct);
         } catch (error) {
             throw error;
         }
@@ -33,7 +33,7 @@ export default class ProductService {
     async updateProduct(product) {
 
         try {
-            const fetchedProduct = await this.productRepository.getProductById(product.id);
+            /*const fetchedProduct = await this.productRepository.getProductById(product.id);
 
             if (fetchedProduct.name) {
                 fetchedProduct.changeName(fetchedProduct.name);
@@ -46,9 +46,9 @@ export default class ProductService {
 
             if (fetchedProduct.price) {
                 fetchedProduct.changePrice(fetchedProduct.price);
-            }
+            }*/
 
-            return await this.productRepository.save(fetchedProduct);
+            return await this.productRepository.updateProduct(product);
         } catch (error) {
             throw error;
         }

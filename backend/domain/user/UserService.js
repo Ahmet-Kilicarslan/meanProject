@@ -2,6 +2,7 @@ import hash from "../../Utilities/hash.js";
 import {ConflictError,ValidationError,NotFoundError,UnauthorizedError} from '../../Utilities/errors.js';
 import UserFactory from "./UserFactory.js";
 import Username from "./valueObjects/Username.js";
+import Email from "./valueObjects/Email.js";
 
 
 export default class UserService {
@@ -79,28 +80,41 @@ export default class UserService {
 
 
     async updateUser( updateData) {
-        const user = await this.userRepository.getUserById(updateData.id);
+       try {
+           const user = await this.userRepository.getUserById(updateData.id);
 
-        if (!user) {
-            throw new NotFoundError("User not found");
-        }
+           if (!user) {
+               return  new NotFoundError("User not found");
+           }
 
-        if (updateData.username) {
-            await this.ensureUniqueUsername(new Username(updateData.username));
-            user.changeUsername(updateData.username);
+           if (updateData.username) {
+               const usernameValue = updateData.username.value || updateData.username;
+               await this.ensureUniqueUsername(new Username(usernameValue),updateData.id);
+               user.changeUsername(usernameValue);
 
-        }
-        if (updateData.email) {
-            await this.ensureUniqueEmail(updateData.email);
-            user.changeEmail(updateData.email);
-        }
+           }
+           if (updateData.email) {
+               const emailValue = updateData.email.value || updateData.email;
+               await this.ensureUniqueEmail(new Email(emailValue ), updateData.id);
+               user.changeEmail(emailValue);
+           }
 
-        if (updateData.password) {
-            user.password = await hash.hashPassword(updateData.password);
-        }
+           if (updateData.password) {
+               const passwordValue = updateData.password.value || updateData.password;
+               const hashedPassword = await hash.hashPassword(passwordValue);
+               if (typeof user.changePassword === 'function') {
+                   await user.changePassword(passwordValue);
+               } else {
+                   user.password = hashedPassword;
+               }
+           }
 
-        return await this.userRepository.updateUser(user);
+           return await this.userRepository.updateUser(user);
+       }catch (error) {
+           console.log(error);
+           throw error;
 
+       }
 
     }
 
@@ -111,16 +125,16 @@ export default class UserService {
 
     }
 
-    async ensureUniqueUsername(username) {
+    async ensureUniqueUsername(username ,excludeUserId = null) {
         const existingUser = await this.userRepository.GetByUsername(username.value);
-        if (existingUser) {
+        if (existingUser && existingUser.id !==  excludeUserId ) {
             throw new ConflictError("Username already exists");
         }
     }
 
-    async ensureUniqueEmail(email) {
-        const existingUser = await this.userRepository.getUserByUsernameOrEmail(email.value);
-        if (existingUser) {
+    async ensureUniqueEmail(email,excludeUserId = null) {
+        const existingUser = await this.userRepository.getUserByEmail(email.value);
+        if (existingUser && existingUser.id !==  excludeUserId) {
             throw new ConflictError("Email already exists");
         }
     }

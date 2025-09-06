@@ -16,7 +16,5 @@ export default class Username {
         return this._value;
     }
 
-    equals(other) {
-        return other instanceof Username && this._value === other._value;
-    }
+
 }

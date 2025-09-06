@@ -199,7 +199,7 @@ export default class LoginComponent implements OnInit {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(this.registerData.email.trim())) {
         this.registerError = 'Valid Email is required';
-        this.isRegisterLoading = false; // Add this
+        this.isRegisterLoading = false;
         return false;
       }
       return true;

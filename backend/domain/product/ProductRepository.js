@@ -6,12 +6,7 @@ import {pool} from "../../infrastructure/dbc.js";
 export default class ProductRepository {
 
 
-    async save(product) {
-        if (product.id) {
-            return this.updateProduct(product);
 
-        } else return this.createProduct(product);
-    }
 
     async createProduct(product) {
         try {
