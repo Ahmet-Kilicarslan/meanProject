@@ -61,7 +61,7 @@ export default class ProductService {
   }
 
   updateProductAmount(id: number, newAmount: number): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}`, {amount:newAmount}).pipe(
+    return this.http.put<Product>(`${this.apiUrl}/decreaseAmount/${id}`, {amount:newAmount}).pipe(
       tap((response) => {
         console.log("successfully updated product amount in service", response);
       }), catchError((error) => {

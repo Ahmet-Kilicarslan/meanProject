@@ -1,6 +1,9 @@
-/*import {Component, OnChanges,Input} from '@angular/core';
+import {Component, OnChanges,Input} from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
+
 
 @Component({
   selector: 'app-pie-chart',
@@ -31,9 +34,9 @@ export default class PieChart implements OnChanges {
   ngOnChanges() {
     this.chartData.labels=this.chartLabels;
     this.chartData.datasets[0].data=this.chartValues;
-    this.chartData.datasets[1].backgroundColor=this.chartColors;
+    this.chartData.datasets[0].backgroundColor=this.chartColors;
   }
 
 
 
-}*/
+}

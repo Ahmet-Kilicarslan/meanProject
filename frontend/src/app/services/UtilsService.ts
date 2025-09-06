@@ -19,6 +19,17 @@ export default class UtilsService {
     modal.show();
   }
 
+  generateRandomColors(count: number): string[] {
+    const colors: string[] = [];
+    for (let i = 0; i < count; i++) {
+      const hue = (i * 360 / count) + Math.random() * 60; // Spread hues evenly with some randomness
+      const saturation = 70 + Math.random() * 30; // 70-100%
+      const lightness = 50 + Math.random() * 20;  // 50-70%
+      colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+  }
+
 
 
 }

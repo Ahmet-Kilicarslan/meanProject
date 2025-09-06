@@ -13,6 +13,7 @@ import {purchasedProduct, Purchase} from '../../../models/Purchase';
 import PurchaseService from '../../../services/PurchaseService';
 import PurchaseStateService from '../../../services/PurchaseStateService';
 import {Toast} from 'bootstrap';
+import ProductWithDetails from '../../../models/ProductWithDetails';
 
 @Component({
   selector: 'app-client-view-products',
@@ -36,16 +37,37 @@ export default class ClientViewProducts implements OnInit {
 
   products: Product[] = [];
   suppliers: Supplier[] = [];
+
+  productsWithDetails: ProductWithDetails[] = [];
+
   cartItems: { product: Product, quantity: number }[] = [];
   itemQuantity: number = 0;
   totalPrice: number = 0;
   purchaseCompleted: boolean = true;
-
+error='';
 
   ngOnInit() {
-    this.loadSuppliers();
+this.loadProductsWithDetails()
     this.calculateTotalPrice()
     this.purchaseStateService.setStatusIdle();
+  }
+
+
+  loadProductsWithDetails() {
+    this.error = '';
+    console.log('Loading products with details...');
+
+    this.productService.getAllProductsWithDetails().subscribe({
+      next: products => {
+
+        this.productsWithDetails = products ;
+
+      }, error: error => {
+        console.error('Component error:', error);
+
+        this.error = 'failed to load products';
+      }
+    })
   }
 
   loadSuppliers() {
@@ -122,7 +144,7 @@ export default class ClientViewProducts implements OnInit {
           this.calculateTotalPrice();
           this.purchaseStateService.setStatusSuccess();
           this.updateProductAmountAfterPurchase();
-          this.loadSuppliers()
+          this.loadProductsWithDetails()
           this.handleCloseCart()
           this.showSuccessToaster()
           this.cartItems = [];

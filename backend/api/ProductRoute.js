@@ -77,7 +77,7 @@ router.put("/", async (req, res) => {
 })
 
 //update amount
-router.put("/:id", async (req, res) => {
+router.put("/decreaseAmount/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const {amount} = req.body;

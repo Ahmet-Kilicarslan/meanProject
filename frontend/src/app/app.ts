@@ -52,7 +52,7 @@ export default class App implements OnInit {
         if (response.isAuthenticated && response.user) {
           if (response.user.role === 'admin') this.router.navigate(['/Dashboard']);
 
-          else if (response.user.role === 'client') this.router.navigate(['/clientDashboard']);
+          else if (response.user.role === 'user') this.router.navigate(['/clientDashboard']);
         }
 
         this.updateUserRoles();

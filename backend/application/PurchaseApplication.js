@@ -9,7 +9,7 @@ export default class PurchaseApplication {
 
     async createPurchase(purchase) {
         try {
-            return await this.purchaseRepository.createPurchase(purchase);
+            return await this.purchaseService.createPurchase(purchase);
         } catch (err) {
             console.log(err);
             throw err;
@@ -36,7 +36,7 @@ export default class PurchaseApplication {
 
     async getPurchasesByUserIdInDescendingOrder(userId) {
         try{
-            return await this.purchaseService.getPurchasesByUserIdInDescendingOrder(userId);
+            return await this.purchaseService.getPurchaseByUserIdInDescendingOrder(userId);
         }catch(error){
             throw error;
         }

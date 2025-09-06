@@ -13,13 +13,19 @@
 
   </div>
   <div class="row g-4">
-    @for (product of products; track product.id) {
+    @for (product of productsWithDetails; track product.id) {
 
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="card h-20">
           <!-- Product Image Section -->
           <div class="card-img-top-container">
-
+            <img
+              [src]="product.imageUrl || `https://github.githubassets.com/images/mona-loading-default.gif`"
+              width="150"
+              height="150"
+              alt="Product imamge"
+              class="card-img-top"
+            />
           </div>
 
           <!-- Card Body -->
@@ -39,7 +45,7 @@
 
             <div class="mb-2">
               <small class="text-muted">Supplier</small>
-              <div>{{ this.getSupplierName(product.supplier) }}</div>
+              <div>{{ product.supplierName}}</div>
             </div>
 
             <!-- Action Buttons -->

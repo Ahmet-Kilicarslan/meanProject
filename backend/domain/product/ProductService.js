@@ -58,13 +58,13 @@ export default class ProductService {
     async updateAmount(id, amount) {
         try{
 
-            const fetchedProduct = await this.productRepository.getProductById(id);
+           /* const fetchedProduct = await this.productRepository.getProductById(id);
 
             if (!fetchedProduct.amount < 0) {
                 fetchedProduct.changeAmount(amount);
-            }
+            }*/
 
-            return await this.productRepository.save(fetchedProduct);
+            return await this.productRepository.updateAmount(id,amount);
         }catch (error) {
             throw error;
         }

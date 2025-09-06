@@ -5,7 +5,7 @@ import {Purchase, PurchasedProduct} from "./Purchase.js";
 export default class PurchaseRepository {
 
     //creating purchase
-     async CreatePurchase(purchase) {
+     async createPurchase(purchase) {
         try {
             const sql = 'INSERT INTO purchase (userId,totalAmount) VALUES (?,?)';
             const [result] = await pool.query(sql, [purchase.userId, purchase.totalAmount]);

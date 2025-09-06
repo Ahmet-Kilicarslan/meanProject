@@ -3,6 +3,7 @@ import { pool } from "../../infrastructure/dbc.js";
 import supplierFactory from "./SupplierFactory.js";
 
 export default class SupplierRepository {
+
     // Add a new supplier
      async createSupplier(supplier) {
         try {
@@ -91,5 +92,6 @@ export default class SupplierRepository {
             throw err;
         }
     }
+
 }
 
