@@ -6,15 +6,12 @@ import {
   ElementRef,
   ViewChild,
   AfterViewInit,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {Chart, ChartConfiguration, ChartType, registerables} from 'chart.js';
-
+import { CommonModule } from '@angular/common';
+import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
 Chart.register(...registerables);
-
 
 @Component({
   selector: 'app-purchases-line-chart',
@@ -25,27 +22,42 @@ Chart.register(...registerables);
 export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() purchaseData: { date: string, amount: number }[] = [];
-
-   chartValues: number[] = [];
-   chartLabels: string[] = [];
-
   @Input() title: string = 'Line Chart';
   @Input() lineColor: string = '#007bff';
   @Input() backgroundColor: string = 'rgba(0, 123, 255, 0.1)';
+  @Input() dateFormat: 'short' | 'medium' | 'full' = 'short';
 
-  @ViewChild('chartCanvas', {static: false}) chartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private chart: Chart<'line'> | null = null;
   public isDataLoaded: boolean = false;
 
+  // Processed data for chart
+  private chartLabels: string[] = [];
+  private chartValues: number[] = [];
+
   ngOnChanges(changes: SimpleChanges) {
-    if (this.chart && (changes['YValues'] || changes['XValues'])) {
-      this.updateChart();
+    console.log('Line chart ngOnChanges triggered');
+    console.log('Changes:', changes);
+    console.log('Current purchaseData:', this.purchaseData);
+
+    if (changes['purchaseData'] && this.purchaseData) {
+      console.log('Processing new purchase data...');
+      this.processData();
+
+      if (this.chart) {
+        console.log('Chart exists, updating...');
+        this.updateChart();
+      }
     }
   }
 
   ngAfterViewInit() {
+    console.log('Line chart AfterViewInit');
+    console.log('Purchase data at init:', this.purchaseData);
+
     setTimeout(() => {
+      this.processData();
       this.createChart();
     }, 100);
   }
@@ -57,7 +69,62 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
     }
   }
 
+  private processData(): void {
+    console.log('=== PROCESSING DATA ===');
+    console.log('Input purchaseData:', this.purchaseData);
+
+    if (!this.purchaseData || this.purchaseData.length === 0) {
+      console.log('No purchase data to process');
+      this.chartLabels = [];
+      this.chartValues = [];
+      this.isDataLoaded = false;
+      return;
+    }
+
+    // Sort data by date
+    const sortedData = [...this.purchaseData].sort((a, b) =>
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    // Extract labels and values
+    this.chartLabels = sortedData.map(item => this.formatDate(item.date));
+    this.chartValues = sortedData.map(item => item.amount);
+
+    console.log('Processed chartLabels:', this.chartLabels);
+    console.log('Processed chartValues:', this.chartValues);
+
+    this.isDataLoaded = this.chartLabels.length > 0 && this.chartValues.length > 0;
+  }
+
+  private formatDate(dateString: string): string {
+    const date = new Date(dateString);
+
+    switch (this.dateFormat) {
+      case 'short':
+        return `${date.getMonth() + 1}/${date.getDate()}`; // "8/14"
+
+      case 'medium':
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return `${months[date.getMonth()]} ${date.getDate()}`; // "Aug 14"
+
+      case 'full':
+        return date.toLocaleDateString('en-US', {
+          month: 'long',
+          day: 'numeric'
+        }); // "August 14"
+
+      default:
+        return `${date.getMonth() + 1}/${date.getDate()}`;
+    }
+  }
+
   createChart() {
+    console.log('=== CREATING CHART ===');
+    console.log('Canvas element:', this.chartCanvas);
+    console.log('Chart labels:', this.chartLabels);
+    console.log('Chart values:', this.chartValues);
+
     if (!this.chartCanvas) {
       console.error('Chart canvas not found');
       return;
@@ -68,8 +135,13 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
       console.error('Cannot get 2D context from canvas');
       return;
     }
-    this.processData() ;
 
+    // Check if we have valid data
+    if (this.chartLabels.length === 0 || this.chartValues.length === 0) {
+      console.log('No valid data for chart creation');
+      this.isDataLoaded = false;
+      return;
+    }
 
     const config: ChartConfiguration<'line'> = {
       type: 'line',
@@ -81,8 +153,8 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
           borderColor: this.lineColor,
           backgroundColor: this.backgroundColor,
           borderWidth: 3,
-          fill: true, // Fill area under the line
-          tension: 0.4, // Smooth curves
+          fill: true,
+          tension: 0.4,
           pointRadius: 6,
           pointHoverRadius: 8,
           pointBackgroundColor: this.lineColor,
@@ -117,7 +189,7 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
               label: (context) => {
                 const label = context.dataset.label || '';
                 const value = context.parsed.y;
-                return `${label}: ${value}`;
+                return `${label}: $${value}`;
               }
             }
           }
@@ -127,7 +199,7 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
             display: true,
             title: {
               display: true,
-              text: 'Time Period',
+              text: 'Date',
               font: {
                 size: 14,
                 weight: 'bold'
@@ -141,7 +213,7 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
             display: true,
             title: {
               display: true,
-              text: 'Values',
+              text: 'Amount (₺)',
               font: {
                 size: 14,
                 weight: 'bold'
@@ -150,7 +222,12 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
             grid: {
               color: 'rgba(0, 0, 0, 0.1)'
             },
-            beginAtZero: true
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '₺' + value;
+              }
+            }
           }
         },
         interaction: {
@@ -163,8 +240,6 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
           easing: 'easeInOutQuart'
         }
       }
-
-
     };
 
     try {
@@ -178,11 +253,17 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
   }
 
   updateChart() {
-    if (!this.chart ) {
-      console.log('Cannot update chart: no chart instance or invalid data');
+    console.log('=== UPDATING CHART ===');
+
+    if (!this.chart) {
+      console.log('No chart instance to update');
       return;
     }
-    this.processData();
+
+    if (this.chartLabels.length === 0 || this.chartValues.length === 0) {
+      console.log('No valid data to update chart');
+      return;
+    }
 
     // Update chart data
     this.chart.data.labels = this.chartLabels;
@@ -194,24 +275,20 @@ export default class PurchasesLineChart implements OnChanges, AfterViewInit, OnD
     this.chart.update('active');
     this.isDataLoaded = true;
 
-    console.log('Line chart updated with new data');
-
+    console.log('Line chart updated successfully');
   }
 
-  private processData(): void {
-    // Sort by date first
-    const sortedData = this.purchaseData.sort((a, b) =>
-      new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-
-    // Extract labels and values
-    this.chartLabels = sortedData.map(item => this.formatDate(item.date));
-    this.chartValues = sortedData.map(item => item.amount);
+  // Public methods for template
+  public getTotalValue(): number {
+    return this.chartValues.reduce((a, b) => a + b, 0);
   }
 
-  private formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return `${date.getMonth() + 1}/${date.getDate()}`; // "1/15" format
+  public getAverageValue(): number {
+    if (this.chartValues.length === 0) return 0;
+    return this.getTotalValue() / this.chartValues.length;
   }
 
+  public getDataPointCount(): number {
+    return this.chartValues.length;
+  }
 }

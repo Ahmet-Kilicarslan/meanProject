@@ -184,7 +184,7 @@ export default class PurchaseRepository {
         }
     }
 
-    async getAllPurchases(){
+    async getAllPurchase(){
          try{
              const sql =`SELECT * FROM purchase`;
              const [result] = await pool.query(sql);
