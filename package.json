@@ -14,11 +14,13 @@
     "express-mysql-session": "^3.0.3",
     "express-session": "^1.18.2",
     "knex": "^3.1.0",
+    "multer": "^2.0.2",
     "mysql2": "^3.14.4",
     "ng2-charts": "^8.0.0"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
+    "@types/chart.js": "^2.9.41",
     "@types/node": "^24.2.1"
   }
 }

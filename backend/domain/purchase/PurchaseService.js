@@ -54,5 +54,13 @@ export default class PurchaseService {
         }
     }
 
+    async getAllPurchase(){
+        try{
+            return await this.purchaseRepository.getAllPurchase();
+        }catch(error){
+            throw error;
+        }
+    }
+
 
 }

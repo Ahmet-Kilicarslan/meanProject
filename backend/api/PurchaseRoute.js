@@ -136,4 +136,18 @@ router.get("/byPurchase/:purchaseId", async (req,res)=>{
 
 })
 
+router.get("/getAll" , async (req,res)=>{
+    try{
+        const purchases = await purchaseApplication.getAllPurchase();
+        res.status(200).json(purchases);
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            error: 'Failed to get All purchases',
+            message: err.message
+        })
+    }
+})
+
 export default router;

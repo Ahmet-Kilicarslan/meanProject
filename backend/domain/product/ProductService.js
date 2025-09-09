@@ -91,6 +91,14 @@ export default class ProductService {
         return fetchedProduct;
     }
 
+    async getProductByAmount(amount) {
+        const fetchedProduct = await this.productRepository.getProductByAmount(amount);
+        if (!fetchedProduct) {
+            throw new NotFoundError('Product not found');
+        }
+        return fetchedProduct;
+    }
+
     async getProductsBySupplier(supplierId) {
 
         const fetchedProduct = await this.productRepository.getProductBySupplier(supplierId);

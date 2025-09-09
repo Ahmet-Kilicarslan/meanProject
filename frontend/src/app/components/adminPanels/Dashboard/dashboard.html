@@ -1,25 +1,66 @@
-<div class="container-fluid">
+<div class="container-fluid mt-3">
   <div class="row g-4">
-
-<h2>Dashboard</h2>
-<!--
-    <div class="col-3">
-      <app-pie-chart
-        [chartLabels]="brandLabels"
-        [chartValues]="brandValues"
-        [chartColors]="brandColors"
-      >
-      </app-pie-chart>
+    <div class="col-12">
+      <h2 class="dashboard-title">Dashboard</h2>
     </div>
 
+    <!-- Pie Chart Section -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="chart-wrapper">
+        <h4 class="chart-title">Products by Supplier</h4>
+        <app-pie-chart
+          [chartLabels]="brandLabels"
+          [chartValues]="brandValues"
+          [chartColors]="brandColors">
+        </app-pie-chart>
+      </div>
+    </div>
 
-    <div class="col-9">
+    <!-- Additional Charts Section -->
+    <div class="col-12 col-md-6 col-lg-8">
+      <div class="chart-wrapper">
+        <h4 class="chart-title">Sales Overview</h4>
+        <app-purchases-line-chart
+          [purchaseData]="dailyPurchases"
+          [title]="'Daily Sales'"
+          dateFormat="medium">
 
-    </div>-->
+        </app-purchases-line-chart>
+      </div>
+    </div>
 
+    <!-- Stats Cards Section -->
+    <div class="col-12">
+      <div class="row g-3">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h5>Total Products</h5>
+            <p class="stat-number">{{getTotalProducts() }}</p>
+          </div>
+        </div>
 
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h5>Suppliers</h5>
+            <p class="stat-number">{{ brandLabels.length }}</p>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h5>Total sales</h5>
+            <p class="stat-number">-</p>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <h5>Lowest Stock</h5>
+            <p class="stat-number">{{lowestStock}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-
 </div>
 

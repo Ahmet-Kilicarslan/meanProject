@@ -30,7 +30,7 @@ export default class User{
     }
 
     changePassword(newPassword) {
-        this.password = new Password(newPassword);
+        this.password = newPassword;
     }
 
     isAdmin(){

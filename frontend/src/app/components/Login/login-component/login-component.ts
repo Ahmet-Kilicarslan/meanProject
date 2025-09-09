@@ -1,10 +1,10 @@
-import {Component,OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {loginRequest, registerRequest,User} from '../../../models/User';
+import {loginRequest, registerRequest, User} from '../../../models/User';
 import userService from '../../../services/UserService';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {Observable,firstValueFrom} from 'rxjs';
+import {Observable, firstValueFrom} from 'rxjs';
 
 
 @Component({
@@ -44,7 +44,8 @@ export default class LoginComponent implements OnInit {
         if (user.role === 'admin') this.router.navigate(['/Dashboard']);
         else if (user.role === 'client') this.router.navigate(['/clientDashboard']);
       },
-      error: () => {}
+      error: () => {
+      }
     });
   }
 
@@ -57,17 +58,18 @@ export default class LoginComponent implements OnInit {
     } else if (role === "user") {
       route = '/clientDashboard';
 
-    }else {
+    } else {
 
       console.error('❌ Unknown user role:', role);
       route = '/login';
     }
-    this.router.navigate([route]).then((success:boolean) => {
+    this.router.navigate([route]).then((success: boolean) => {
       if (success) {
         console.log('✅ login successful');
       } else {
         console.log('❌ login failed');
-      }}).catch((error:any) => {
+      }
+    }).catch((error: any) => {
       console.error('❌ Navigation error:', error);
     });
   }
@@ -81,17 +83,19 @@ export default class LoginComponent implements OnInit {
     this.loginError = '';
 
     if (!this.validateLogin()) {
+
       return;
     }
 
     this.userService.login(this.loginData).subscribe({
         next: (response) => {
           console.log('Login successful, user role:', response.user.role);
+          this.isLoginLoading = true;
 
           this.navigateBasedOnRole(response.user.role);
 
         }, error: (error) => {
-          this.loginError = 'Login failed. ';
+
           console.error(this.loginError, error);
 
 
@@ -111,21 +115,20 @@ export default class LoginComponent implements OnInit {
       this.isLoginLoading = false; // Add this
       return false;
     }
-    /*if (!this.loginData.password.trim()) {
+    if (!this.loginData.password.trim()) {
       this.loginError = 'Password is required';
       this.isLoginLoading = false; // Add this
       return false;
+    } else {
+      this.loginError = 'Password or Username wrong';
     }
-    if (this.loginData.password.length < 6) {
-      this.loginError = 'Password must be at least 6 characters';
-      this.isLoginLoading = false;
-      return false;
-    }*/
+
+
     return true;
   }
 
 
- async handleRegister() {
+  async handleRegister() {
     this.registerError = '';
     this.isRegisterLoading = true;
 
@@ -149,8 +152,8 @@ export default class LoginComponent implements OnInit {
           }
 
         }, error: (error) => {
-          this.registerError = 'Register failed. ';
-          console.error(this.loginError, error);
+
+          console.error(this.registerError, error);
 
         }, complete: () => {
           console.log('register response complete');
@@ -159,7 +162,7 @@ export default class LoginComponent implements OnInit {
 
         }
       })
-    }catch(error) {
+    } catch (error) {
       console.log('validation error:', error);
       this.registerError = 'Register handling failed ';
       this.isRegisterLoading = false;
@@ -167,7 +170,6 @@ export default class LoginComponent implements OnInit {
 
 
   }
-
 
 
   private async validateRegister(): Promise<boolean> {
@@ -203,7 +205,7 @@ export default class LoginComponent implements OnInit {
         return false;
       }
       return true;
-    }catch(error) {
+    } catch (error) {
       console.error('Username check failed:', error);
       this.registerError = 'Error checking username. Please try again.';
       return false;
@@ -218,45 +220,45 @@ export default class LoginComponent implements OnInit {
       )
     );
   }
-/*
-  checkForDuplicateUsername(username: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.userService.getAllUsers().subscribe({
-        next: (response: User[]) => {
-          const isDuplicate = response.some(user =>
-            user.username.toLowerCase() === username.toLowerCase()
-          );
-          resolve(isDuplicate);
-        },
-        error: (error) => {
-          resolve(false);
-        }
+
+  /*
+    checkForDuplicateUsername(username: string): Promise<boolean> {
+      return new Promise((resolve) => {
+        this.userService.getAllUsers().subscribe({
+          next: (response: User[]) => {
+            const isDuplicate = response.some(user =>
+              user.username.toLowerCase() === username.toLowerCase()
+            );
+            resolve(isDuplicate);
+          },
+          error: (error) => {
+            resolve(false);
+          }
+        });
       });
-    });
-  }*/
+    }*/
 
-/*
-  checkForDuplicateUsername(inputUsername:string): boolean {
-    let isDuplicate = false;
-    this.userService.getAllUsers().subscribe({
-      next: (response:User[]) => {
-        this.users=response;
-      },error:(error:any) => {
-        console.log(error);
-      }})
+  /*
+    checkForDuplicateUsername(inputUsername:string): boolean {
+      let isDuplicate = false;
+      this.userService.getAllUsers().subscribe({
+        next: (response:User[]) => {
+          this.users=response;
+        },error:(error:any) => {
+          console.log(error);
+        }})
 
-      for(const user of this.users) {
-        if (user.username === inputUsername) {
-          console.log("Duplicate username ", user.username);
-          isDuplicate= false;
-        }else{
-          console.log("Valid username ", user.username);
-          isDuplicate= true;
+        for(const user of this.users) {
+          if (user.username === inputUsername) {
+            console.log("Duplicate username ", user.username);
+            isDuplicate= false;
+          }else{
+            console.log("Valid username ", user.username);
+            isDuplicate= true;
+          }
         }
-      }
-    return isDuplicate;
-  }*/
-
+      return isDuplicate;
+    }*/
 
 
   private switchToLoginTab(): void {

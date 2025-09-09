@@ -9,6 +9,8 @@ import ProductRoute from '../backend/api/ProductRoute.js';
 import SupplierRoute from "./api/SupplierRoute.js";
 import UserRoute from "./api/UserRoute.js";
 import PurchaseRoute from "./api/PurchaseRoute.js";
+import multer from 'multer';
+import path from 'path';
 
 
 const MysqlStore = new MySQLStoreFactory(session);
@@ -17,6 +19,7 @@ const app = express();
 
 //enable express to parse incoming requests
 app.use(express.json());
+app.use("/images", express.static(path.join(process.cwd(), "public")));
 
 app.use(cors({
     origin: 'http://localhost:4200',
@@ -29,6 +32,7 @@ app.use(cors({
 //enable express to parse incoming requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 const sessionStoreOptions = {
     host: process.env.DB_HOST,
@@ -47,6 +51,7 @@ const sessionStoreOptions = {
     }
 }
 
+
 const sessionStore=new MysqlStore(sessionStoreOptions);
 // Session middlewares configuration
 app.use(session({
@@ -63,11 +68,15 @@ app.use(session({
     }
 }));
 
+
+
 app.use('/Employee', EmployeeRoute);
 app.use('/Product', ProductRoute);
 app.use('/User', UserRoute);
 app.use('/Supplier', SupplierRoute);
 app.use('/Purchase',PurchaseRoute);
+
+
 
 async function testDatabaseConnection() {
     console.log('🔍 Testing database connection...');

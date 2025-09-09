@@ -51,12 +51,10 @@ export default class ProductRepository {
                                 product.amount,
                                 product.price,
                                 product.supplier,
-                                supplier.name as supplierName,
-                                asset.url     as imageUrl
+                                product.imageUrl,
+                                supplier.name as supplierName
                          FROM products product
-                                  LEFT JOIN supplier ON product.supplier = supplier.id
-                                  LEFT JOIN assets asset ON product.id = asset.productId
-            `;
+                                  LEFT JOIN supplier ON product.supplier = supplier.id `;
 
             const [result] = await pool.query(sql);
 
@@ -84,6 +82,7 @@ export default class ProductRepository {
 
         } catch (err) {
             console.log(err);
+            throw err;
         }
 
 
@@ -96,6 +95,19 @@ export default class ProductRepository {
             return result.map(row => productFactory.createProductFromDB(row));
         } catch (err) {
             console.log(err);
+            throw err;
+        }
+    }
+
+    async getProductByAmount(amount) {
+        try{
+            const sql = 'select * from products where amount=?';
+            const [result] = await pool.query(sql, [amount]);
+            return result.map(row => productFactory.createProductFromDB(row));
+        }
+        catch(err){
+            console.log(err);
+            throw err;
         }
     }
 
@@ -123,18 +135,15 @@ export default class ProductRepository {
 
     async updateAmount(id, amount) {
         try {
-            console.log(`🔄 DAO: updateAmount called with id=${id}, amount=${amount}`);
-            console.log(`📊 DAO: Amount type:`, typeof amount);
+
 
             const sql = 'update products set amount=? where id=?';
 
-            console.log(`📝 DAO: Executing SQL:`, sql);
-            console.log(`📝 DAO: With parameters:`, [amount, id]);
+
 
             const [result] = await pool.query(sql, [amount, id]);
 
-            console.log(`✅ DAO: Query result:`, result);
-            console.log(`✅ DAO: Affected rows:`, result.affectedRows);
+
 
             return result;
         } catch (err) {

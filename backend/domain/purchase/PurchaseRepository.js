@@ -183,4 +183,16 @@ export default class PurchaseRepository {
 
         }
     }
+
+    async getAllPurchases(){
+         try{
+             const sql =`SELECT * FROM purchase`;
+             const [result] = await pool.query(sql);
+             return result;
+
+         }catch(err){
+             console.log(err);
+             throw err;
+         }
+    }
 }

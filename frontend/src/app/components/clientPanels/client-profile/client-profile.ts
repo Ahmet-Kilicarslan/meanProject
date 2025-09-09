@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges,Input} from '@angular/core';
 import userService from '../../../services/UserService';
 import purchaseService from '../../../services/PurchaseService';
 import {purchasedProduct, Purchase, PurchasedProductWithDetails} from '../../../models/Purchase'
@@ -18,7 +18,7 @@ import utilService from '../../../services/UtilsService';
   styleUrl: './client-profile.css',
 
 })
-export default class ClientProfile implements OnInit {
+export default class ClientProfile implements OnInit  {
 
 
   constructor(private userService: userService,
@@ -27,7 +27,7 @@ export default class ClientProfile implements OnInit {
   ) {
   }
 
-  currentUser: any = null;
+currentUser: any = null;
 
   error = '';
   isLoading = false;
@@ -38,14 +38,16 @@ export default class ClientProfile implements OnInit {
 
   newestFirst: boolean = false;
 
-  ngOnInit() {
-    this.loadUserProfile();
+ async ngOnInit() {
+    await this.loadUserProfile();
 
   }
 
-  loadUserProfile() {
 
-    this.currentUser = this.userService.getCurrentUser();
+
+    loadUserProfile() {
+
+    this.currentUser =   this.userService.getCurrentUser();
 
     console.log('📋 Showing cached user data:', this.currentUser);
 
@@ -57,7 +59,7 @@ export default class ClientProfile implements OnInit {
       this.fetchFreshProfile();
     }
   }
-  isSorting = false;  // Add this property
+  isSorting = false;
 
   async toggleSort() {
     this.isSorting = true;
@@ -74,7 +76,7 @@ export default class ClientProfile implements OnInit {
     this.isSorting = false;
   }
 
-  // Add this for better performance
+
   trackByPurchaseId(index: number, purchase: any): any {
     return purchase.id;
   }
@@ -236,7 +238,7 @@ export default class ClientProfile implements OnInit {
 
   }
 
-  handleSave(updatedUser: Partial<User>): void {
+ handleSave(updatedUser: Partial<User>): void {
     this.error = '';
     const userToUpdate = {...this.currentUser, ...updatedUser};
 
@@ -244,12 +246,12 @@ export default class ClientProfile implements OnInit {
     this.userService.updateUser(userToUpdate).subscribe({
       next: (response: User) => {
 
-        this.currentUser = response;
-        this.loadUserProfile()
+
 
         console.log('Successfully updated user : ', response);
         this.utilService.closeModal('editProfileModal');
-
+        this.currentUser = response;
+         this.loadUserProfile()
       }, error: (error: any) => {
 
         console.error('❌ Failed to update user:', error);

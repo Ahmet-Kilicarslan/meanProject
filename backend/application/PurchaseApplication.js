@@ -58,4 +58,12 @@ export default class PurchaseApplication {
         }
     }
 
+    async getAllPurchase(){
+        try{
+            return await this.purchaseService.getAllPurchase();
+        }catch(error){
+            throw error;
+        }
+    }
+
 }

@@ -1,1 +1,26 @@
-<p>purchases-line-chart works!</p>
+
+
+<div class="Line-chart-container">
+
+  @if(!isDataLoaded){
+    <div class="loading-container">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+      <p class="loading-text">Loading chart...</p>
+    </div>
+  }
+  <!-- Chart Canvas -->
+  <div class="canvas-wrapper" [style.display]="isDataLoaded ? 'block' : 'none'">
+    <canvas #chartCanvas></canvas>
+  </div>
+
+  @if(YValues.length===0){
+    <div  class="no-data-container">
+      <div class="no-data-icon">📊</div>
+      <p class="no-data-text">No data available</p>
+      <small class="no-data-subtitle">Add some data to see the chart</small>
+    </div>
+  }
+
+</div>

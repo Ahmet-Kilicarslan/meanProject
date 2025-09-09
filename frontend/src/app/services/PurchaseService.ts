@@ -94,5 +94,16 @@ export default class PurchaseService {
     )
   }
 
+        getaAllPurchases():Observable<Purchase[]>{
+     return  this.http.get<Purchase[]>(`${this.apiUrl}/getAll`, {withCredentials: true}).pipe(
+       tap((response:any) => {
 
+         console.log("successfully fetched all purchases", response);
+
+       }),catchError((error:any)=>{
+         console.error('❌ Purchase service error:', error);
+         return throwError(() => error.message);
+       })
+     )
+        }
 }

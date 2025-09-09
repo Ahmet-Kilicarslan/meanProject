@@ -58,10 +58,16 @@ router.get("/", async (req, res) => {
 
 
 
-/*get one*/
+/*get one by id */
 router.get("/getByProductId/:id", async (req, res) => {
     const id = req.params.id;
     const product = await productApplication.getProductById(id);
+    res.json(product);
+})
+
+router.get("/ByAmount/:amount", async (req, res) => {
+    const amount = req.params.amount;
+    const product = await productApplication.getProductByAmount(req.params.amount);
     res.json(product);
 })
 

@@ -20,8 +20,8 @@
 }
 
 .btn-primary {
-  background-color: #667eea;
-  border: 1px solid #667eea;
+  background-color: var(--bluy);
+  border: 1px solid var(--bluy);
   color: white;
   padding: 8px 16px;
   border-radius: 4px;
@@ -46,4 +46,12 @@
   border-color: #4d5ec4;
   transform: translateY(0);
   box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.btn-outline-primary{
+  color:var(--bluy);
+  border-color:var(--bluy) ;
+}
+.btn-outline-primary:hover {
+  background-color: var(--bluy);
 }

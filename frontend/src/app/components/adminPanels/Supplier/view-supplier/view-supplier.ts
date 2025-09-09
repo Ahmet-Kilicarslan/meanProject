@@ -24,7 +24,9 @@ export default class ViewSupplier implements OnInit {
  selectedSupplier:any=null;
  expandedSupplierId:number|null=null;
 
- constructor(private supplierService:supplierService,private productService:ProductService,private utilsService:utilService) {}
+ constructor(private supplierService:supplierService,
+             private productService:ProductService,
+             private utilsService:utilService) {}
 
   ngOnInit(){
    this.loadSuppliers();

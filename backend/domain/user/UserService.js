@@ -100,16 +100,16 @@ export default class UserService {
            }
 
            if (updateData.password) {
-               const passwordValue = updateData.password.value || updateData.password;
-               const hashedPassword = await hash.hashPassword(passwordValue);
-               if (typeof user.changePassword === 'function') {
-                   await user.changePassword(passwordValue);
-               } else {
-                   user.password = hashedPassword;
-               }
+
+               const passwordValue =  updateData.password;
+               const hashedPassword= await hash.hashPassword(passwordValue);
+              await user.changePassword(hashedPassword);
+               console.log("updated values", hashedPassword);
            }
 
+
            return await this.userRepository.updateUser(user);
+
        }catch (error) {
            console.log(error);
            throw error;
