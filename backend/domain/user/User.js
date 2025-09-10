@@ -12,14 +12,16 @@ export default class User{
 
     }
 
+
+
     toSafeObject() {
         return {
             id: this.id,
-            username: this.username.value,
-            role: this.role,
-            email: this.email.value,
-
-        }
+            username: this.username?.value || this.username?._value || this.username,
+            email: this.email?.value || this.email?._value || this.email,
+            role: this.role
+            // Don't include password for security
+        };
     }
     changeEmail(newEmail) {
         this.email = new Email(newEmail);

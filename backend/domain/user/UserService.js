@@ -108,7 +108,7 @@ export default class UserService {
            }
 
 
-           return await this.userRepository.updateUser(user);
+            await this.userRepository.updateUser(user);
 
        }catch (error) {
            console.log(error);

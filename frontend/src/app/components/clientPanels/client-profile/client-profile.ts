@@ -39,7 +39,7 @@ currentUser: any = null;
   newestFirst: boolean = false;
 
  async ngOnInit() {
-    await this.loadUserProfile();
+     this.loadUserProfile();
 
   }
 
@@ -250,8 +250,13 @@ currentUser: any = null;
 
         console.log('Successfully updated user : ', response);
         this.utilService.closeModal('editProfileModal');
+        console.log('Successfully updated user:', response);
+        console.log('Response type:', typeof response);
+        console.log('Username specifically:', response.username);
+        console.log('Full response structure:', JSON.stringify(response, null, 2));
         this.currentUser = response;
-         this.loadUserProfile()
+        this.fetchFreshProfile();
+
       }, error: (error: any) => {
 
         console.error('❌ Failed to update user:', error);

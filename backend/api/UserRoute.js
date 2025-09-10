@@ -2,7 +2,6 @@ import express from 'express';
 
 import UserApplication from '../application/UserApplication.js';
 import {requireAuth} from '../infrastructure/middlewares/authenticate.js';
-import hash from "../Utilities/hash.js";
 import UserRepository from "../domain/user/UserRepository.js";
 import UserService from "../domain/user/UserService.js";
 
@@ -208,7 +207,7 @@ router.put('/', async (req, res) => {
 
 
         const updatedUser = await userApplication.updateUser(updateData);
-        res.status(200).json(updatedUser);
+        res.status(200).json(updatedUser.toSafeObject());
 
     } catch (error) {
         console.error("Failed update user backend router", error);

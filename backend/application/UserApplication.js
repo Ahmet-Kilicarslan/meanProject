@@ -55,7 +55,14 @@ export default class UserApplication {
 
     async updateUser(updateData) {
         try{
-            return await this.userService.updateUser( updateData);
+            // Add these debug logs:
+            console.log('🔍 UpdatedUser type:', typeof updateData);
+            console.log('🔍 UpdatedUser value:', updateData);
+            console.log('🔍 Has toSafeObject method:', typeof updateData?.toSafeObject);
+
+            await this.userService.updateUser( updateData);
+            return await this.userService.getUserById(updateData.id);
+
         }catch(err){
             throw err;
         }

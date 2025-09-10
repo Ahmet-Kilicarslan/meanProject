@@ -1,0 +1,162 @@
+/* client-dashboard.css */
+
+.welcome-title {
+  color: #333;
+  font-weight: 600;
+
+}
+
+/* Carousel Styling */
+.carousel-custom {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-image {
+  height: 500px;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.carousel-caption {
+
+  border-radius: 0 0 15px 15px;
+  padding: 2rem;
+}
+
+.carousel-caption h5 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-caption p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Stat Cards Styling */
+.stat-card {
+  background: linear-gradient(135deg, var(--lightGreen) 0%, var(--darkGreen) 100%);
+  border: 1px solid #e9ecef;
+  border-radius: 15px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  transition: left 0.5s;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card:hover::before {
+  left: 100%;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+  filter: grayscale(0.3);
+  transition: filter 0.3s ease;
+  color: white;
+}
+
+.stat-card:hover .stat-icon {
+  filter: grayscale(0);
+  transform: scale(1.1);
+}
+
+.stat-card h5 {
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-number {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .carousel-image {
+    height: 250px;
+  }
+
+  .carousel-caption {
+    padding: 1rem;
+  }
+
+  .carousel-caption h5 {
+    font-size: 1.3rem;
+  }
+
+  .carousel-caption p {
+    font-size: 0.9rem;
+  }
+
+  .stat-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-image {
+    height: 200px;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+}
+
+/* Additional hover effects */
+
+
+.stat-card:nth-child(2):hover {
+  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+}
+
+.stat-card:nth-child(3):hover {
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+}
+
+.stat-card:nth-child(4):hover {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffcc02 100%);
+}
