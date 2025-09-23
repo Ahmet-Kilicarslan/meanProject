@@ -31,7 +31,7 @@
 }
 
 .toggle-btn:hover {
-  background: linear-gradient(135deg, var(--bluy) 0%, var(--porpıl) 100%);
+  background: #6f6aad;
 }
 
 .nav-links {
@@ -54,7 +54,7 @@
 }
 
 .nav-links li:hover {
-  background: linear-gradient(135deg, var(--bluy) 0%, var(--porpıl)  100%);}
+  background: #6f6aad;}
 
 .nav-links li i {
   color: white;

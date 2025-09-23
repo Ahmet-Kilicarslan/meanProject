@@ -126,7 +126,7 @@ const cleanupFile = (filePath) => {
 
 // Generate secure URL for frontend
 const generateImageUrl = (filename) => {
-    return `/api/images/${filename}`;  // We'll create a secure route for this
+    return `/uploads/${filename}`;
 };
 
 export {
