@@ -30,4 +30,12 @@ class UnauthorizedError extends Error {
     }
 }
 
-export { ValidationError, ConflictError, NotFoundError, UnauthorizedError };
+class InternalServerError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InternalServerError';
+        this.statusCode = 500;
+    }
+}
+
+export { ValidationError, ConflictError, NotFoundError, UnauthorizedError,InternalServerError };

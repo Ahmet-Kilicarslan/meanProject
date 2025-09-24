@@ -10,6 +10,7 @@ import SupplierRoute from "./api/SupplierRoute.js";
 import UserRoute from "./api/UserRoute.js";
 import PurchaseRoute from "./api/PurchaseRoute.js";
 import multer from 'multer';
+import UploadsRoute from "./api/UploadsRoute.js";
 import path from 'path';
 
 
@@ -75,6 +76,7 @@ app.use('/Product', ProductRoute);
 app.use('/User', UserRoute);
 app.use('/Supplier', SupplierRoute);
 app.use('/Purchase',PurchaseRoute);
+app.use('/Uploads',UploadsRoute);
 
 
 
