@@ -11,7 +11,7 @@ import {unlinkSync,existsSync} from "node:fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadDir = path.join(__dirname, '../uploads');
+const uploadDir = path.join(__dirname, '../../../uploads');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = (req, file, cb) => {
-    const allowedExtensions = ['jpg', 'png', 'jpeg', 'gif'];
+    const allowedExtensions = ['.jpg', '.png', '.jpeg', '.gif'];
     const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/gif'];
 
     const fileExtension = path.extname(file.originalname).toLowerCase();
@@ -57,7 +57,7 @@ const upload = multer({
 
 })
 
-const handleMulterError = (error, req, res, next) => {
+/*const handleMulterError = (error, req, res, next) => {
     // Clean up uploaded file if there was an error
     if (req.file) {
         try {
@@ -108,7 +108,7 @@ const handleMulterError = (error, req, res, next) => {
     }
 
     next(error);
-};
+};*/
 
 // Utility function to clean up files
 const cleanupFile = (filePath) => {
@@ -131,7 +131,7 @@ const generateImageUrl = (filename) => {
 
 export {
     upload,
-    handleMulterError,
+    //handleMulterError,
     cleanupFile,
     generateImageUrl,
     uploadDir

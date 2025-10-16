@@ -1,5 +1,5 @@
 import express from "express";
-import {upload,generateImageUrl,handleMulterError,cleanupFile} from "../infrastructure/middlewares/upload.js";
+import {upload,generateImageUrl,cleanupFile} from "../infrastructure/middlewares/upload.js";
 import { ValidationError, ConflictError, NotFoundError, UnauthorizedError ,InternalServerError} from "../Utilities/errors.js";
 
 const router = express.Router();
@@ -18,7 +18,7 @@ if(!req.file){
     );
 }
 
-   const imageUrl= generateImageUrl(req.file.fileName);
+   const imageUrl= generateImageUrl(req.file.filename);
 
 
      return res.status(200).json({
@@ -30,7 +30,7 @@ if(!req.file){
 
 }catch(err){
     if(req.file){
-        cleanupFile(req.file.filePath);
+        cleanupFile(req.file.file.path);
     }
 
     return res.status(500).json({
@@ -41,6 +41,5 @@ if(!req.file){
 }
 })
 
-router.use(handleMulterError());
 
 export default router;

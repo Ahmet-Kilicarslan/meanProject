@@ -77,7 +77,7 @@ app.use('/User', UserRoute);
 app.use('/Supplier', SupplierRoute);
 app.use('/Purchase',PurchaseRoute);
 app.use('/Uploads',UploadsRoute);
-
+//app.use(handleMulterError);
 
 
 async function testDatabaseConnection() {
