@@ -4,6 +4,41 @@
       <form class="row g-3 needs-validation" novalidate (ngSubmit)="onSubmit()">
 
         <div class="col-12 mb-3">
+          <input
+          type="file"
+          class="form-control"
+          accept="image/jpeg,image/png,image/jpg,image/gif"
+          (change)="onFileSelected($event)"
+          [disabled]="isUploading">
+
+          @if(isUploading){
+          <div class="text mt-2">
+          <small>Uploading Image ...</small>
+          </div>
+          }
+
+          @if(imagePreviewUrl){
+            <div class="mt-3">
+              <img
+              [src]="imagePreviewUrl"
+              alt="Preview"
+              class="img-thumbnail"
+              style="max-width: 200px; max-height: 200px;"
+              >
+            </div>
+          }
+          @if(isEditMode && product.imageUrl && !imagePreviewUrl){
+            <div class="mt-3">
+              <img [src]="product.imageUrl"
+                   alt="Current Product image"
+                   class="img-thumbnail"
+                   style="max-width: 200px; max-height: 200px;">
+
+
+            </div>
+          }
+        </div>
+        <div class="col-12 mb-3">
           <input type="text" [(ngModel)]="product.name" [ngModelOptions]="{standalone: true}" required
                  class="form-control"
                  placeholder="Product Name" aria-label="Product Name">
@@ -73,20 +108,12 @@
           </div>
         </div>
 
-        <div class="col-12 mb-3">
-          <input [(ngModel)]="product.imageUrl"
-                 [ngModelOptions]="{standalone: true}"
-                 class="form-control"
-                 placeholder="Image URL (optional)"
-                 aria-label="imageUrl">
-        </div>
-
         <div class="col-12 d-flex justify-content-end gap-2">
           <button type="button" class="btn" (click)="onCancelClick()">
             Cancel
           </button>
           <button class="btn" type="submit">
-            {{ isEditMode ? 'Update' : 'Create' }}
+            {{isUploading? "Uploading..." :(isEditMode ? 'Update' : 'Create' )}}
           </button>
         </div>
       </form>

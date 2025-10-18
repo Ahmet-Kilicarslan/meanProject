@@ -5,6 +5,7 @@ import {catchError, tap} from 'rxjs/operators';
 import Product from '../models/Product';
 import ProductWithDetails from '../models/ProductWithDetails';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +14,21 @@ export default class ProductService {
 
   constructor(private http: HttpClient) {
   }
+
+   uploadProductImage(file: File):Observable<any> {
+    const formData = new FormData();
+    formData.append('productImage', file);
+    return this.http.post(`${this.apiUrl}/product-image`,formData).pipe(
+      tap((response)=>{
+        return response;
+      }),catchError((error)=>{
+        console.log(error);
+        return throwError(()=>error.message);
+      })
+    )
+
+  }
+
 
   getAllProductsWithDetails(): Observable<ProductWithDetails[]> {
 

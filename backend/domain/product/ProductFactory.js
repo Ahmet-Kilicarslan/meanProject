@@ -9,7 +9,8 @@ export default class ProductFactory {
             product.name,
             product.amount,
             product.price,
-            product.supplier
+            product.supplier,
+            product.imageUrl || null
         );
     }
 
@@ -19,7 +20,9 @@ export default class ProductFactory {
             row.name,
             row.amount,
             row.price,
-            row.supplier
+            row.supplier,
+            row.imageUrl || null
+
         )
     }
 

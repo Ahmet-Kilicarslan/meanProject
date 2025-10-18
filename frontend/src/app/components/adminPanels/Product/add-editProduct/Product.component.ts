@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import Supplier from '../../../../models/Supplier';
 import SupplierService from '../../../../services/SupplierService';
-
+import ProductService from '../../../../services/ProductService';
 @Component({
   selector: 'app-Product',
   standalone: true,
@@ -24,6 +24,11 @@ export default class ProductComponent implements OnInit, OnChanges {
   showDropdown: boolean = false;
   selectedSupplierId: number = 0;
 
+  isUploading:boolean = false;
+  imagePreviewUrl: string='';
+  selectedFile: any = null;
+
+
   product = {
     id: null,
     name: '',
@@ -34,7 +39,9 @@ export default class ProductComponent implements OnInit, OnChanges {
     imageUrl: ''
   }
 
-  constructor(private supplierService: SupplierService) {}
+  constructor(private supplierService: SupplierService,
+              private productService:ProductService
+  ) {}
 
   ngOnInit(): void {
     this.loadSuppliers();
@@ -46,6 +53,52 @@ export default class ProductComponent implements OnInit, OnChanges {
       this.resetForm();
     }
   }
+
+  uploadImage(): void {
+    if(!this.selectedFile){
+      return;
+    }
+    this.isUploading = true;
+    this.productService.uploadProductImage(this.selectedFile).subscribe({
+      next: result => {
+        console.log("successfully uploaded image",result);
+        this.isUploading = false;
+
+      },error: error => {
+        console.log(error);
+
+      }
+    })
+  }
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+    const allowedTypes=['image/png','image/jpeg','image/gif','image/jpg'];
+    if(!allowedTypes.includes(file.type)){
+      alert('Only jpeg,jpg,png and gif formats are allowed');
+      return;
+    }
+    const maxSize = 5*1024*1024;
+    if(file.size>maxSize){
+      alert('Maximum file size is exceeded');
+      return;
+
+    }
+
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.imagePreviewUrl = event.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    this.uploadImage();
+
+  }
+
 
   // Load suppliers once when component initializes
   loadSuppliers(): void {

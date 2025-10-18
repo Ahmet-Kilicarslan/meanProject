@@ -11,12 +11,13 @@ export default class ProductRepository {
     async createProduct(product) {
         try {
 
-            const sql = 'insert into products (name, amount, price,supplier) VALUES (?,?,?,?)';
+            const sql = 'insert into products (name, amount, price,supplier,imageUrl) VALUES (?,?,?,?,?)';
             const [result] = await pool.query(sql, [
                 product.name,
                 product.amount,
                 product.price,
-                product.supplier
+                product.supplier,
+                product.imageUrl || null,
             ]);
 
             product.id = result.insertId;
@@ -124,8 +125,8 @@ export default class ProductRepository {
     async updateProduct(product) {
         try {
 
-            const sql = 'update products set name=?,amount=?,price=? where id = ?';
-            const [result] = await pool.query(sql, [product.name, product.amount, product.price, product.id]);
+            const sql = 'update products set name=?,amount=?,price=?,imageUrl=? where id = ?';
+            const [result] = await pool.query(sql, [product.name, product.amount, product.price,product.imageUrl || null, product.id]);
             return result;
 
         } catch (err) {
