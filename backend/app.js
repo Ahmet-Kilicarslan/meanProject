@@ -33,7 +33,7 @@ app.use(cors({
 //enable express to parse incoming requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/uploads', express.static(path.join(process.cwd(), '../uploads')));
 
 const sessionStoreOptions = {
     host: process.env.DB_HOST,

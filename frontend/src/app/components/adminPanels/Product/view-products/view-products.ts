@@ -7,7 +7,7 @@ import SupplierService from '../../../../services/SupplierService';
 import ProductComponent from '../add-editProduct/Product.component';
 import UtilsService from '../../../../services/UtilsService';
 import removeAll from '../remove-all/remove-all';
-
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-view-products',
@@ -27,7 +27,7 @@ export default class ViewProducts implements OnInit {
   isEditMode = false;
   error: string = '';
   selectedProduct: any = null;
-
+ apiUrl : string = environment.apiUrl;
 
   constructor(private productService: ProductService,
               private supplierService: SupplierService,

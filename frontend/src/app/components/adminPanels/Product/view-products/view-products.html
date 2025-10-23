@@ -8,17 +8,21 @@
 
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="card h-100">
-          <!-- Product Image Section -->
+          <!-- Product Image Section
 
-            <div class="card-img-top-container">
-              <img
-                [src]="product.imageUrl || `https://github.githubassets.com/images/mona-loading-default.gif`"
-                width="150"
-                height="150"
-                alt="Product image"
-                class="card-img-top"
-              />
-            </div>
+                            -->
+
+          <div class="card-img-top-container">
+
+            <img
+              [src]="product.imageUrl ? apiUrl+product.imageUrl : 'assets/images/mona-loading-default.gif'"
+              width="150"
+              height="150"
+              alt="Product image"
+              class="card-img-top"
+            />
+
+          </div>
           <!-- Card Body -->
           <div class="card-body">
             <h5 class="card-title">{{ product.name }}</h5>
