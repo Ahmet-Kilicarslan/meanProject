@@ -18,7 +18,7 @@ export default class ProductService {
    uploadProductImage(file: File):Observable<any> {
     const formData = new FormData();
     formData.append('productImage', file);
-    return this.http.post(`${this.apiUrl}/product-image`,formData).pipe(
+    return this.http.post(`http://localhost:3000/Uploads/product-image`,formData).pipe(
       tap((response)=>{
         return response;
       }),catchError((error)=>{

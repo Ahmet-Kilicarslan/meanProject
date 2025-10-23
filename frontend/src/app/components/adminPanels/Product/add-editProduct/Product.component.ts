@@ -61,6 +61,7 @@ export default class ProductComponent implements OnInit, OnChanges {
     this.isUploading = true;
     this.productService.uploadProductImage(this.selectedFile).subscribe({
       next: result => {
+        this.product.imageUrl = result.imageUrl;
         console.log("successfully uploaded image",result);
         this.isUploading = false;
 
@@ -154,6 +155,8 @@ export default class ProductComponent implements OnInit, OnChanges {
   resetForm(): void {
     if (this.productData && this.isEditMode) {
       this.product = {...this.productData};
+      this.selectedFile=null;
+
       // Set the typed supplier name for edit mode
       if (this.productData.supplierName) {
         this.typedSupplier = this.productData.supplierName;
@@ -171,6 +174,7 @@ export default class ProductComponent implements OnInit, OnChanges {
       };
       this.typedSupplier = '';
       this.selectedSupplierId = 0;
+      this.selectedFile=null;
     }
   }
 
@@ -195,5 +199,6 @@ export default class ProductComponent implements OnInit, OnChanges {
 
   onCancelClick(): void {
     this.onCancel.emit();
+    this.resetForm();
   }
 }
