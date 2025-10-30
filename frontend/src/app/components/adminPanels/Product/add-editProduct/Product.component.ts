@@ -4,6 +4,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import Supplier from '../../../../models/Supplier';
 import SupplierService from '../../../../services/SupplierService';
 import ProductService from '../../../../services/ProductService';
+import {environment} from '../../../../../environments/environment';
+
 @Component({
   selector: 'app-Product',
   standalone: true,
@@ -27,6 +29,7 @@ export default class ProductComponent implements OnInit, OnChanges {
   isUploading:boolean = false;
   imagePreviewUrl: string='';
   selectedFile: any = null;
+  apiUrl:string = environment.apiUrl;
 
 
   product = {
@@ -35,7 +38,7 @@ export default class ProductComponent implements OnInit, OnChanges {
     amount: 0,
     price: 0,
     supplier: 0,
-    supplier_name: '',
+    supplierName: '',
     imageUrl: ''
   }
 
@@ -44,7 +47,6 @@ export default class ProductComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.loadSuppliers();
     this.resetForm();
   }
 
@@ -101,18 +103,7 @@ export default class ProductComponent implements OnInit, OnChanges {
   }
 
 
-  // Load suppliers once when component initializes
-  loadSuppliers(): void {
-    this.supplierService.getAllSupplier().subscribe({
-      next: (suppliers) => {
-        this.suppliers = suppliers;
-        this.filteredSuppliers = suppliers;
-      },
-      error: (error) => {
-        console.error('Error loading suppliers:', error);
-      }
-    });
-  }
+
 
 
   onSupplierInputChange(): void {
@@ -169,12 +160,10 @@ export default class ProductComponent implements OnInit, OnChanges {
         amount: 0,
         price: 0,
         supplier: 0,
-        supplier_name: '',
+        supplierName: '',
         imageUrl: ''
       };
-      this.typedSupplier = '';
-      this.selectedSupplierId = 0;
-      this.selectedFile=null;
+
     }
   }
 

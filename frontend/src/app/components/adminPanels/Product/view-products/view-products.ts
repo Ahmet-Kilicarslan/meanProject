@@ -40,11 +40,7 @@ export default class ViewProducts implements OnInit {
   }
 
 
-  getSupplierName(id: number): string {
-    const supplier = this.suppliers.find((supplier) => supplier.id === id);
-    return supplier ? supplier.name : "Unknown";
 
-  }
 
 
   loadProductsWithDetails() {
@@ -74,9 +70,9 @@ export default class ViewProducts implements OnInit {
     this.utilsService.openModal('add/editProductModal');
   }
 
-  openEditProductModal(product: Product) {
+  openEditProductModal(ProductWithDetails: ProductWithDetails) {
     this.isEditMode = true;
-    this.selectedProduct = {...product, supplierName: this.getSupplierName(product.supplier)}
+    this.selectedProduct = {...ProductWithDetails}
 
     this.utilsService.openModal('add/editProductModal');
   }
